@@ -1,6 +1,6 @@
 # NTUA ECE SAAS 2023 PROJECT
   
-## TEAM (XX)
+## TEAM (54)
   
   
 Περιγραφή - οδηγίες
