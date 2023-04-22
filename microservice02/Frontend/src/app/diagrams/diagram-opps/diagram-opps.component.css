@@ -1,0 +1,14 @@
+article{
+    text-align: center;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+.error{
+    color:red ;
+    font-style: italic;
+}
+h1{
+    color:red;
+    font-weight: bold;
+    text-align: center;
+}

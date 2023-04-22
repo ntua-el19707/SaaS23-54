@@ -1,0 +1,87 @@
+<div class="cont">
+    <section class="w-1/2">
+        <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="getdataSource()">
+
+                <!-- Type Column -->
+                <ng-container matColumnDef="Type">
+                    <th mat-header-cell *matHeaderCellDef> Type </th>
+                    <td mat-cell *matCellDef="let element"> {{element.Type}} </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef> chart name </th>
+                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                </ng-container>
+
+                <!-- Create at Column -->
+                <ng-container matColumnDef="CreatedAt">
+                    <th mat-header-cell *matHeaderCellDef> Created at </th>
+                    <td mat-cell *matCellDef="let element"> {{element.CreatedAt}} </td>
+                </ng-container>
+
+                <!-- Download Column -->
+                <ng-container matColumnDef="Download">
+                    <th mat-header-cell *matHeaderCellDef> download </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="cont">
+                            <section class="w-1/2">
+                                <button style="text-decoration: underline;color: blue ; font-style: italic;"
+                                    (click)="DownloadHtml(element.Download)">html</button>
+                            </section>
+                            <section class="w-1/2">
+                                <button style="text-decoration: underline;color: blue ; font-style: italic;"
+                                    (click)="DownloadPng(element.Download)">png</button>
+                            </section>
+
+
+                        </div>
+                        <div class="cont">
+                            <section class="w-1/2">
+                                <button style="text-decoration: underline;color: blue ; font-style: italic;"
+                                    (click)="DownloadSvg(element.Download)">svg</button>
+                            </section>
+                            <section class="w-1/2">
+                                <button style="text-decoration: underline;color: blue ; font-style: italic;"
+                                    (click)="DownloadPdf(element.Download)">pdf</button>
+                            </section>
+
+
+                        </div>
+
+                    </td>
+                </ng-container>
+                <!--Preview-->
+                &nbsp;
+                <ng-container matColumnDef="Preview">
+                    <th mat-header-cell *matHeaderCellDef> Preview </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button (click)="ViewChart(element.Preview)"><mat-icon> bar_chart</mat-icon></button>
+
+
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="getDisplayColumns()"></tr>
+                <tr mat-row *matRowDef="let row; columns: getDisplayColumns();"></tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 10]" showFirstLastButtons aria-label="Select page of chart elements">
+            </mat-paginator>
+        </div>
+
+    </section>
+    <section class="w-1/2" *ngIf="!hide" style="height: fit-content;">
+        <div class="cont" style="padding-top: 0;" #ChartPreview>
+            <mat-card style="width:100%;height: fit-content;">
+
+                <mat-card-content>
+                    <highcharts-chart [Highcharts]="GetHigcharts()" [options]="selectedChart "
+                        style="width: 100%; height: fit-content; display: block;">
+                    </highcharts-chart>
+                </mat-card-content>
+
+            </mat-card>
+        </div>
+    </section>
+</div>

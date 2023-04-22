@@ -1,0 +1,46 @@
+.no-scroll {
+    overflow-y: hidden;
+}
+.cont {
+    margin-left: 10%;
+    margin-right: 10%;
+
+}
+
+.middle {}
+
+.Box {
+    height: 400px;
+}
+
+.text {
+    text-align: center;
+    width: 100%
+}
+
+.form-control {
+    width: 100%;
+    background-color: white;
+    text-align: center;
+}
+
+.dButton {
+    margin-left: 30%;
+    margin-right: 30%;
+    width: 25px;
+}
+
+@media screen and (min-width:500px) {
+    .cont {
+        margin-left: 25%;
+        margin-right: 25%;
+        width: 50%
+    }
+
+    .dButton {
+        margin-left: 25%;
+        margin-right: 25%;
+        width: 50%;
+    }
+
+}

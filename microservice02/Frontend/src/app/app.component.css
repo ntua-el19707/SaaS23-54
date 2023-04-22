@@ -1,0 +1,46 @@
+.container {
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-top: 25px;
+    width: 80%;
+
+}
+
+.sectionTab {
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-top: 25px;
+    width: 80%;
+}
+
+.col-1 {
+    width: 100%
+}
+
+.col-2 {
+    width: 50%
+}
+
+.col-3 {
+    width: 33.33%
+}
+
+.noted {
+
+    text-decoration: underline;
+    color: blue;
+}
+
+.middle {
+    margin-left: 25%;
+    margin-right: 25%;
+    width: 50%;
+    padding-top: 2em;
+
+}
+
+.text-2 {
+    width: 50%;
+    text-align: center;
+
+}

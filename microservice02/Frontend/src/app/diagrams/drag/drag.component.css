@@ -1,0 +1,72 @@
+h3 {
+    color: green;
+    text-align: center;
+}
+
+.HoverUpload {
+    border: solid 1px green;
+    background-color: antiquewhite;
+    color: black
+}
+
+.Upload {
+    border: none;
+    color: grey;
+    background-color: #ffffff;
+}
+
+.fileupload {
+
+    background-repeat: no-repeat;
+    background-size: 100px;
+    background-position: center;
+
+
+    cursor: pointer;
+    /* border: 2px dashed #0f68ff; */
+    border-radius: 6px;
+    margin-bottom: 25px;
+    background-position: center 28px;
+    animation-name: borderChange;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+.ddinfo {
+    display: block;
+    text-align: center;
+    padding-top: 130px;
+
+}
+
+
+
+
+
+.fileUploadWrapper .card-body {
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+@keyframes borderChange {
+    0% {
+        border: none;
+        transform: rotate(-5deg);
+    }
+
+    25% {
+        border: 1px dashed grey;
+        transform: rotate(+5deg);
+    }
+
+    50% {
+        border: 1px solid grey;
+        transform: rotate(+5deg);
+    }
+
+    100% {
+        border: 1px solid black;
+        transform: rotate(-5deg);
+    }
+}

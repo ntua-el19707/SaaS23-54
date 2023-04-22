@@ -1,0 +1,33 @@
+<!--This will be the welcome component welcome new users -->
+<link href='https://unpkg.com/css.gg@2.0.0/icons/css/hello.css' rel='stylesheet'>
+<div class="container">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>
+                <article class="flex flex-row">
+                    <i class="gg-hello" style="color:green"></i> &nbsp; Welcome &nbsp;<span
+                        style="color:blue">{{getUsername()}}
+                    </span> &nbsp; to our Services
+                </article>
+            </mat-card-title>
+
+
+        </mat-card-header>
+        <mat-card-content>
+
+            <p> This is your first time loggin to our services <span class="noted">
+                    if</span>
+                you continue , your email
+                will be stored
+                in our user database </p>
+        </mat-card-content>
+
+
+        <mat-card-actions>
+            <button mat-button class="col-2" style="color:green">Continue</button>
+
+            <button mat-button class="col-2" style="color:red">Cancel</button>
+        </mat-card-actions>
+
+    </mat-card>
+</div>

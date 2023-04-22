@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="overflow-x-scroll Cards">
+        <div style="display: flex;padding: 0;" *ngFor="let d of getDiagrams()">
+            <button mat-button style="height: fit-content;">
+                <mat-card class="Card">
+                    <mat-card-header>
+                        <mat-card-title>{{d.title}}</mat-card-title>
+                        <mat-card-subtitle>{{d.disc}}</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <!--   <img mat-card-image src="/assets/images/graph.jpg" alt="Phot of grapf"> -->
+                        <highcharts-chart [Highcharts]="highcharts" [options]="chartOptions"
+                            style="width: 100%; height: 400px; display: block;">
+                        </highcharts-chart>
+                    </mat-card-content>
+
+                </mat-card>
+
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+</div>

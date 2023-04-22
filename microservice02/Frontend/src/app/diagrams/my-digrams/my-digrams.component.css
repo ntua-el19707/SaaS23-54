@@ -1,0 +1,10 @@
+.cont{
+    display: flex;
+    width: 90%;
+    padding-top: 5%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+table{
+    width: 100%;
+}

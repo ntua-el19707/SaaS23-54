@@ -1,0 +1,23 @@
+.container {
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-top: 25px;
+    width: 80%;
+
+}
+
+.Cards {
+    display: flex;
+    padding: 2.5em;
+
+
+}
+
+.Card {
+    width: 250px;
+}
+
+img {
+    background-size: cover;
+
+}
