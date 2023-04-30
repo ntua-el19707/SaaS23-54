@@ -1,12 +1,13 @@
 const { buildSeries } = require("./buildSeries");
 function buildPollarOptions(data) {
-  data = data.data;
+  data = data;
+
   let options = {
     chart: {
       polar: true,
     },
   };
-  console.log(data);
+
   data.plotOptions = buildPlot(data.plotOptions);
   data.series = buildSeries(data.series);
   if (data.title) {

@@ -1,7 +1,8 @@
 const dbURI =
   "mongodb+srv://vicgianndev0601:NC3Hv5LDHHoDpW5b@cluster0.ivrrqtw.mongodb.net/?retryWrites=true&w=majority";
 const { MongoClient, ServerApiVersion } = require("mongodb");
-const makeid = require("./genaratorString");
+const { makeid } = require("./genaratorString");
+
 const client = new MongoClient(dbURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -13,20 +14,33 @@ const client = new MongoClient(dbURI, {
  * @param {*} user //chart owner
  * @returns
  */
-function insertChart(data, user) {
+function insertChart(data, user, file) {
   return new Promise((resolve, reject) => {
-    _id = makeid(16);
+    const client = new MongoClient(dbURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverApi: ServerApiVersion.v1,
+    });
+    _id = makeid(32);
     client
       .db("Pollar")
       .collection("chartPollar")
-      .insertOne({ _id: _id, data, createAt: new Date(), owner: user })
+      .insertOne({
+        _id: _id,
+        data,
+        createAt: new Date(),
+        owner: user,
+        download_id: file,
+      })
       .then((rsp) => {
         console.log(rsp);
+        client.close();
         resolve(rsp);
       });
   }).catch((err) => {
     console.log(err);
-    resolve();
+    client.close();
+    reject(err);
   });
 }
 /**

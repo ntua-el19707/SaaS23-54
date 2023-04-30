@@ -1,37 +1,33 @@
-const { getJsonFromFile, destroy } = require("../utils/lib/csv/reader");
+const { getJsonFromFile } = require("../utils/lib/csv/reader");
+const { destroy } = require("../../../microservice08/upload/utils/lib/destroy");
+
 const { insertChart } = require("../utils/lib/mongodb");
 const { validateInput } = require("../utils/lib/valodators/validators");
-/** uploadPost -controller check if the upload happen and delete the copy files
- */
-exports.uploadPost = (req, res, next) => {
-  if (!req.file) {
-    console.log("no file to upload  ");
-    res.status(400).json({ errmsg: "no file to upload " });
-  } else {
-    const file = req.file.filename;
-    req.MultFilesB.forEach((f) => {
-      if (f !== file) {
-        destroy(f); //destroy copy of file
-        console.log("destory");
-      }
-    });
-    res.status(200).json({ msg: "File uploated", filename: file });
-  }
-};
-/**
- * saveDB - controller save data in DB and the delete the csv
- */
+const { buildAll } = require("../utils/lib/chartPollar/Pollar");
+const { makeid } = require("../utils/lib/genaratorString");
+
 exports.saveDB = (req, res, next) => {
   const file = req.body.file;
   if (file) {
     try {
       const data = getJsonFromFile(file); // get data from csv  ;
-      //   destroy(file);
-      console.log(validateInput(data));
+
       if (validateInput(data)) {
-        insertChart(data, "victoras").then(() => {
-          res.status(200).json({ msg: "ok" });
-        });
+        const owner = "victoras";
+        buildAll(data)
+          .then((file) => {
+            //now charts  have build 2 thing  chaerge  and save  db
+            insertChart(data, owner, file)
+              .then((rsp) => {
+                res.status(200).json({ rsp });
+              })
+              .catch((err) => {
+                res.status(400).json({ err });
+              });
+          })
+          .catch((err) => {
+            res.status(400).json(err);
+          });
       } else {
         res.status(400).json({ errmsg: "not valid input" });
       }
