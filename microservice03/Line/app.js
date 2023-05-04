@@ -2,7 +2,7 @@
  * module app 'export an express server'
  */
 const express = require("express");
-const { CreateChart, getJson } = require("./utils/lib/chartLine/linechart");
+
 const app = express();
 const cors = require("cors");
 var bodyParser = require("body-parser");
@@ -27,7 +27,7 @@ app.get("/", (req, res, next) => {
   getJson();
   res.send("ok");
 });
-app.use("/api", api);
+app.use("/api_Line", api);
 //set up 404
 app.use("/*", (req, res, next) => {
   res.status(404).json({ errmsg: "Resource not  found" });

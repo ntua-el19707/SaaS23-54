@@ -2,11 +2,10 @@ const { json } = require("body-parser");
 const { buildSeries } = require("./buildSeries");
 
 function buildLineOptions(data) {
-  data.data.series = buildSeries(data.data.series);
+  data.series = buildSeries(data.series);
   // console.log(JSON.stringify(data.data));
   let series = [];
 
-  data = data.data;
   data.series.forEach((s) => {
     series.push({
       type: "line",

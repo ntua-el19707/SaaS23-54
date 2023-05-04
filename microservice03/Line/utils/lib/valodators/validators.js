@@ -52,7 +52,7 @@ function subtitle(subtitle) {
  * @returns bool
  *  */
 function axis(axis) {
-  console.log(axis);
+  //console.log(axis);
   if (axis.categories) {
     if (!Array.isArray(axis.categories)) {
       return false;
@@ -67,7 +67,7 @@ const series_types = ["XY", "double"];
 function series(s) {
   let rsp = true;
   s.forEach((series) => {
-    console.log(s);
+    //console.log(s);
     if (series.type) {
       if (!series_types.includes(series.type)) {
         rsp = false;

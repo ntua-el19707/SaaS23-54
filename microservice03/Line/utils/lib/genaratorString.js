@@ -1,13 +1,18 @@
+/**
+ * makeid -function
+ * @returns string  random
+ */
 function makeid(length) {
-  let result = "";
+  let result = ""; //empty string
   const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"; //aplphabet
   const charactersLength = characters.length;
   let counter = 0;
   while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    result += characters.charAt(Math.floor(Math.random() * charactersLength)); //get a random character
     counter += 1;
   }
+
   return result;
 }
-module.exports = makeid;
+module.exports = { makeid };
