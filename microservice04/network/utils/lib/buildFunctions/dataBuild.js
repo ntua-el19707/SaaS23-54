@@ -1,11 +1,11 @@
 function buildnetworkOptions(data, anim) {
   let options = {};
-  console.log(anim);
+  //console.log(anim);
   options.chart = {
     type: "networkgraph",
     height: "100%",
   };
-  data = data.data;
+  data = data;
   console.log(data.title);
   if (data.title) {
     options.title = {};

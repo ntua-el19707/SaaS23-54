@@ -1,7 +1,7 @@
 const dbURI =
   "mongodb+srv://vicgianndev0601:NC3Hv5LDHHoDpW5b@cluster0.ivrrqtw.mongodb.net/?retryWrites=true&w=majority";
 const { MongoClient, ServerApiVersion } = require("mongodb");
-const makeid = require("./genaratorString");
+const { makeid } = require("./genaratorString");
 const client = new MongoClient(dbURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -13,20 +13,32 @@ const client = new MongoClient(dbURI, {
  * @param {*} user //chart owner
  * @returns
  */
-function insertChart(data, user) {
-  return new Promise((resolve, reject) => {
-    _id = makeid(16);
-    client
-      .db("network")
-      .collection("chartnetwork")
-      .insertOne({ _id: _id, data, createAt: new Date(), owner: user })
-      .then((rsp) => {
-        console.log(rsp);
-        resolve(rsp);
+function insertChart(data, user, file) {
+  return new Promise(async (resolve, reject) => {
+    const client = new MongoClient(dbURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverApi: ServerApiVersion.v1,
+    });
+    let _id = makeid(8);
+    let rsp;
+
+    try {
+      rsp = await client.db("network").collection("chartnetwork").insertOne({
+        _id: _id,
+        data,
+        createAt: new Date(),
+        owner: user,
+        download_id: file,
       });
-  }).catch((err) => {
-    console.log(err);
-    resolve();
+    } catch (err) {
+      client.close();
+      reject(err);
+    } finally {
+      client.close();
+      console.log(rsp);
+      resolve(rsp);
+    }
   });
 }
 /**
