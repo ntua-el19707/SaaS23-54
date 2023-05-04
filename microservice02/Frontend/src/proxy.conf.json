@@ -1,15 +1,34 @@
 {
-
-    "/api_Pollar/*":{
+     "/api_upload/*": {
+        "target": "http://localhost:3000/",
+        "secure": false,
+        "logLevel":"debug"     
+    },"/api_Pollar/*":{
         "target": "http://localhost:3001/",
         "secure": false,
         "logLevel":"debug"
      
     },
-        "/api/*": {
-        "target": "http://localhost:3000/",
+     "/api_Line/*": {
+        "target": "http://localhost:3002/",
+        "secure": false,
+        "logLevel":"debug"     
+    },"/api_network/*":{
+        "target": "http://localhost:3003/",
         "secure": false,
         "logLevel":"debug"
-      
-        }
+     
+    },
+      "/api_Download/*":{
+        "target": "http://localhost:3008/",
+        "secure": false,
+        "logLevel":"debug"
+     
+    },
+    "/api_Mydiagrams/*":{
+        "target": "http://localhost:3008/",
+        "secure": false,
+        "logLevel":"debug"
+     
+    }
 }
