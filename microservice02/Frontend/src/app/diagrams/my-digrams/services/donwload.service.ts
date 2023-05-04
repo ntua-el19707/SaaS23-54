@@ -5,7 +5,7 @@ import { Injectable } from "@angular/core";
   providedIn: "root",
 })
 export class DonwloadService {
-  private url: string = "/api_Pollar";
+  private url: string = "/api_Download";
   constructor(private http: HttpClient) {}
   /**
    * DownLoadPng

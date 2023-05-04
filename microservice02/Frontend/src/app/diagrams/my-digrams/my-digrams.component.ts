@@ -54,10 +54,9 @@ export class MyDigramsComponent implements OnInit {
   ngOnInit() {
     this.getDiagrams.getMyDiagrams().subscribe(
       (r) => {
+        console.log(r);
         this.diagramsList = r.charts;
         this.selectedChart = r.charts[0].data;
-        this.hide = false;
-        console.log(this.selectedChart);
       },
       (err) => {
         this.diagramsList = [];
@@ -66,10 +65,10 @@ export class MyDigramsComponent implements OnInit {
         this.diagramsList.forEach((d) => {
           this.data.push({
             name: d.name,
-            CreatedAt: d.createAt,
-            Type: d.type,
+            CreatedAt: d.CreatedAt,
+            Type: d.Type,
             Download: { _id: d._id, name: d.name },
-            Preview: d.data,
+            Preview: d._id,
           });
         });
 
@@ -162,17 +161,26 @@ export class MyDigramsComponent implements OnInit {
     return this.highcharts;
   }
   /**ViewChart */
-  ViewChart(d: any) {
+  ViewChart(Preview: string) {
     // this.hide = true;
     // this.renderer.removeChild(
     // this.host.nativeElement,
     //  this.ChartPreview.nativeElement
     //  );
     this.hide = true;
-    this.selectedChart = d;
-    setInterval(() => {
-      this.hide = false; //element want 10ms  to be destoyed  so wait 100ms
-    }, 100);
+    this.getDiagrams.getADiagrams(Preview).subscribe(
+      (r) => {
+        this.selectedChart = r.chart;
+        this.hide = false;
+      },
+      (err) => {
+        console.log(err);
+      },
+      () => {}
+    );
+    // setInterval(() => {
+    // this.hide = false; //element want 10ms  to be destoyed  so wait 100ms
+    // }, 100);
     // this.renderer.createElement(ViewChild("this.ChartPreview"));
   }
 }

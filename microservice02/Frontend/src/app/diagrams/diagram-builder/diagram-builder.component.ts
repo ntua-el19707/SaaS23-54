@@ -1,5 +1,6 @@
 import {
   AfterContentInit,
+  OnInit,
   AfterViewChecked,
   AfterViewInit,
   Component,
@@ -10,14 +11,15 @@ import { Diagram } from "../interfaces/diagram";
 import * as Highcharts from "highcharts";
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { DiagramOppsComponent } from "../diagram-opps/diagram-opps.component";
+import { ActivatedRoute } from "@angular/router";
 @Component({
   selector: "diagramBuilder",
   templateUrl: "./diagram-builder.component.html",
   styleUrls: ["./diagram-builder.component.css", "../../app.component.css"],
 })
-export class DiagramBuilderComponent {
+export class DiagramBuilderComponent implements OnInit {
   public showfiller = false;
-
+  private type: any = "";
   private Diagrams: Diagram[] = [];
   highcharts = Highcharts;
 
@@ -80,13 +82,21 @@ export class DiagramBuilderComponent {
    * constructor
    *
    */
-  constructor(private dialog: MatDialog) {
+  constructor(private dialog: MatDialog, private route: ActivatedRoute) {
     for (let i = 0; i < 10; i++) {
       this.Diagrams.push({
         title: "a",
         imgpath: "",
         disc: "This is description",
       });
+    }
+  }
+  ngOnInit(): void {
+    const valid_Types: string[] = ["Line", "Pollar", "network"];
+    this.type = this.route.snapshot.paramMap.get("type");
+    if (!valid_Types.includes(this.type)) {
+      //wrong url
+      console.log("Wrong url");
     }
   }
   /**
@@ -113,5 +123,20 @@ export class DiagramBuilderComponent {
     };
     //open dialog
     this.dialog.open(DiagramOppsComponent, dialogConfig);
+  }
+  getApi(): string {
+    let api: string = "";
+    switch (this.type) {
+      case "Lines":
+        api = "api_Line";
+        break;
+      case "Pollar":
+        api = "api_Pollar";
+        break;
+      case "network":
+        api = "api_network";
+        break;
+    }
+    return api;
   }
 }

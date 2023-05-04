@@ -5,14 +5,22 @@ import { Observable } from "rxjs";
   providedIn: "root",
 })
 export class GetDiagramsService {
-  private url: string = "/api_Pollar";
+  private url: string = "/api_Mydiagrams";
   constructor(private http: HttpClient) {}
   /**
    * getMyDiagrams() - return all of user purchased charts
    * @returns Observable<any>
    */
   public getMyDiagrams(): Observable<any> {
-    let url: string = `${this.url}/getDiagrams`;
+    let url: string = `${this.url}`;
+    return this.http.get(url); //get http request
+  }
+  /**
+   * getADiagrams - return a build chart of id in json
+   * @returns Observable<any>
+   */
+  public getADiagrams(id: string): Observable<any> {
+    let url: string = `${this.url}/${id}`;
     return this.http.get(url); //get http request
   }
 }

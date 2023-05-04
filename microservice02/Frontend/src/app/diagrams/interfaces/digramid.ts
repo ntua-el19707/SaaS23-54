@@ -1,8 +1,8 @@
 export interface diagramFromMongoLight {
   _id: string;
 
-  createAt: Date;
+  CreatedAt: Date;
   name: string;
-  type: string;
+  Type: string;
   data?: any;
 }

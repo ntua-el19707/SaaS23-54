@@ -4,6 +4,7 @@ import {
   ElementRef,
   OnInit,
   ViewChild,
+  Input,
 } from "@angular/core";
 import { UploadService } from "../services/upload.service";
 import { HttpEventType } from "@angular/common/http";
@@ -22,12 +23,15 @@ export class DragComponent implements OnInit, AfterViewInit {
   private progress: number = 0;
   private fileName: string = "";
   private uploadin: boolean = false;
+  @Input() api: string = "";
   @ViewChild("bar")
   barEl!: ElementRef;
   @ViewChild("upheader")
   upheadertEl!: ElementRef;
   constructor(private upploadService: UploadService) {}
-  ngOnInit() {}
+  ngOnInit() {
+    this.upploadService.setApi(this.api);
+  }
   ngAfterViewInit(): void {
     //  this.setBar();
   }

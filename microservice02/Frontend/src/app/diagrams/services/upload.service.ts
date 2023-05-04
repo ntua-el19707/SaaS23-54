@@ -5,6 +5,7 @@ import { Injectable } from "@angular/core";
 })
 export class UploadService {
   private url: string = "/api_upload/upload";
+  private api: string = "";
   constructor(private http: HttpClient) {}
   upload(file: any) {
     const formData = new FormData();
@@ -16,6 +17,9 @@ export class UploadService {
     return this.http.request(req);
   }
   confirm(file: string) {
-    return this.http.post(`/api_Line/confirm`, { file: file });
+    return this.http.post(`${this.api}/confirm`, { file: file });
+  }
+  setApi(api: string): void {
+    this.api = `${api}`;
   }
 }

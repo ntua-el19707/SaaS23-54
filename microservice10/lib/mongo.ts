@@ -45,13 +45,13 @@ function FindCharts(owner: string) {
           respose.push({
             name: name,
             CreatedAt: s.createAt,
-            Download: s._id,
-            Preview: s._id,
+            _id: s._id,
+
             Type: findType(s._id),
           });
         });
         console.log(respose);
-        resolve(rsp);
+        resolve(respose);
       })
       .catch((err) => {
         console.log(err);
@@ -131,12 +131,11 @@ interface ChartRsp {
   Type: string;
   name: string;
   CreatedAt: string;
-  Download: string;
-  Preview: string;
+  _id: string;
 }
 function findType(id: string): string {
   let type = "";
-
+  console.log(id);
   const size = id.length;
 
   switch (size) {
@@ -166,6 +165,7 @@ function findType(id: string): string {
     default:
       break;
   }
+  console.log(type);
   return type;
 }
 function BuildData(id: string, data: any) {

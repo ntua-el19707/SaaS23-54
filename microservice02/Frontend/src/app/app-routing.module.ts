@@ -12,7 +12,7 @@ import { WelcomeComponent } from "./user/welcome/welcome.component";
 const routes: Routes = [
   { path: "", component: DiagramsListComponent },
   { path: "demo", component: WelcomeComponent },
-  { path: "ChartBuild", component: DiagramBuilderComponent },
+  { path: "ChartBuild/:type", component: DiagramBuilderComponent },
   { path: "a", component: MyDigramsComponent },
 ];
 

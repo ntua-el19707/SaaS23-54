@@ -106,7 +106,8 @@ function buildnetworkOptions(data: any, anim: boolean) {
   return options;
 }
 function buildPollarOptions(data: any) {
-  let options: any;
+  let options: any = {};
+
   options.chart = {
     polar: true,
   };

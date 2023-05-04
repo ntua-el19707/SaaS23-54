@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 const find = (req: Request, res: Response, next: NextFunction) => {
   FindCharts("victoras")
     .then((rsp) => {
-      res.send("ok");
+      res.status(200).json({ charts: rsp });
     })
     .catch((err) => {
       res.send(err);
