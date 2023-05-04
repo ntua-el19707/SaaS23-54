@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
   providedIn: "root",
 })
 export class UploadService {
-  private url: string = "/api_Pollar/upload";
+  private url: string = "/api_upload/upload";
   constructor(private http: HttpClient) {}
   upload(file: any) {
     const formData = new FormData();
@@ -16,16 +16,6 @@ export class UploadService {
     return this.http.request(req);
   }
   confirm(file: string) {
-    return this.http.post(`/api_Pollar/confirm`, { file: file });
-  }
-  Download(file: string) {
-    return this.http.post(
-      `api/download`,
-      {},
-      {
-        responseType: "blob",
-        headers: new HttpHeaders().append("Content-Type", "application/json"),
-      }
-    );
+    return this.http.post(`/api_Line/confirm`, { file: file });
   }
 }

@@ -1,7 +1,13 @@
 <div class="middle fileUploadWrapper">
     <section>
-        <h3 class="text">Please upload the csv file</h3>
-        <div class="middle">
+        <h3 class="text" #upheader>Please upload the csv file</h3>
+
+        <div *ngIf="uploading()" class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+            <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                style="width: 0%;" #bar> 45%</div>
+
+        </div>
+        <div class="middle" *ngIf="!uploading()">
             <div class='fileupload' appDragDropFileUpload (click)=" fileField.click()" (fileDropped)="upload($event)">
                 <span class="ddinfo">Choose a file or drag here</span>
                 <input type="file" name="fileInput" #fileField (change)="upload($any($event).target.files)" hidden
