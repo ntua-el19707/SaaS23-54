@@ -21,7 +21,7 @@ function insertChart(data, user, file) {
       useUnifiedTopology: true,
       serverApi: ServerApiVersion.v1,
     });
-    _id = makeid(32);
+    let _id = makeid(9);
     client
       .db("Pollar")
       .collection("chartPollar")
