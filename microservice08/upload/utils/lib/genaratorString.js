@@ -16,4 +16,4 @@ function makeid(length) {
   result += `_${timestamp}`;
   return result;
 }
-module.exports = makeid;
+module.exports = { makeid };
