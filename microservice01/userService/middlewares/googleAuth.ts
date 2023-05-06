@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { validateGoogleToken } from "../utils/googleauth";
-import { AuthRequest } from "../utils/AuthRequest";
+import { AuthRequest } from "../utils/interfaces/AuthRequest";
 
 const auth = (req: AuthRequest, res: Response, next: NextFunction) => {
   const token = req.headers.authorization;

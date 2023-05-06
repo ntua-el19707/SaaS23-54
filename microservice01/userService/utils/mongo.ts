@@ -1,4 +1,4 @@
-import { MongoClient, MongoClientOptions, ObjectId } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { packet } from "./interfaces/packet";
 import { generateRandomString } from "./genarateRandomString";
 import { purchasedChart, purchasedPacket } from "./interfaces/Purchsased";
@@ -36,14 +36,7 @@ function logIn(userName: string) {
     FindUser(userName)
       .then((user) => {
         if (user === null) {
-          InserteUser(userName)
-            .then((u) => {
-              console.log(u);
-              resolve(u);
-            })
-            .catch((err) => {
-              reject(err);
-            });
+          resolve(null);
         } else {
           LogUser(userName)
             .then((u) => {
@@ -84,8 +77,9 @@ function FindUser(userName: string): Promise<user | null> {
                   .finally(() => {
                     if (u === null) {
                       resolve(null);
+                    } else {
+                      resolve(userInterfaceTrick(u));
                     }
-                    resolve(userInterfaceTrick(u));
                   });
               })
               .catch((err) => {
@@ -156,38 +150,75 @@ async function closeconection(client: MongoClient): Promise<boolean> {
  * @returns
  */
 //? there is need to  check if  a user exist because it already happen in LogIn() function which is the one tha is actually exported
-async function InserteUser(userName: string): Promise<any> {
-  try {
-    const connectionClient = StartConection();
-    if (connectionClient === false) {
-      throw new Error("there is no url for atlas");
-    } else {
-      if (typeof connectionClient !== "boolean") {
-        const client = connectionClient.db(UserDatabaseANdColection.db);
-        const userCollection = client.collection(
-          UserDatabaseANdColection.collection
-        );
-        const LastLogin = Date();
-
-        const user = {
-          userName: userName,
-          LastLogin,
-          role: "client",
-          credits: 3,
-        };
-        const result = await userCollection.insertOne(user);
-        await closeconection(connectionClient);
-        console.log(`User with username ${userName} inserted`);
-        return result;
+function InserteUser(userName: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+    try {
+      const connectionClient = StartConection();
+      if (typeof connectionClient === "boolean") {
+        reject("there is no url for atlas");
       } else {
-        throw new Error("no connection with atlas");
+        if (typeof connectionClient !== "boolean") {
+          const userCollection = connectionClient
+            .db(UserDatabaseANdColection.db)
+            .collection(UserDatabaseANdColection.collection);
+
+          const LastLogin = Date();
+
+          const user = {
+            userName: userName,
+            LastLogin,
+            role: "client",
+            credits: 0,
+          };
+
+          userCollection
+            .insertOne(user)
+            .then((result) => {
+              console.log("here");
+              closeconection(connectionClient)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  console.log(result);
+                  console.log(`User with username ${userName} inserted`);
+                  FindUser(userName)
+                    .then((u) => {
+                      gift(
+                        userInterfaceTrick(u),
+                        getAvailplePackets()[1],
+                        "Registation gift"
+                      )
+                        .then(() => {
+                          resolve(result);
+                        })
+                        .catch((err) => {
+                          resolve(result);
+                        });
+                    })
+                    .catch((err) => {
+                      reject(err);
+                    });
+                });
+            })
+            .catch((err) => {
+              closeconection(connectionClient)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  reject(err);
+                });
+            });
+        } else {
+          reject("no connection with atlas");
+        }
       }
+    } catch (error) {
+      console.log(error);
+      reject(error);
     }
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
+  });
 }
+
 /**
  * LogUser - user already exist update his last login
  * @param userName:string
@@ -226,37 +257,38 @@ async function LogUser(userName: string) {
  */
 function Purchase(userName: string, RequestedPacket: packet, Payment: any) {
   return new Promise((resolve, reject) => {
-    const AvailablePackage = getAvailplePackets();
     FindUser(userName)
       .then((user) => {
         if (user === null) {
           reject("Not such a user in  DB");
-        }
-        if (!AvailablePackage.includes(RequestedPacket)) {
+        } else if (!PlanExist(RequestedPacket)) {
           reject("We do not provide the Requested Packet");
-        }
-        //TODO later
-        //check Pyament and do payment
+        } else {
+          //TODO later
+          //check Pyament and do payment
 
-        //if all go well  i will be  waiting  a transaction_id ;
-        const transaction_id: string = generateRandomString(16);
-        const timestamp = Date();
-        const purchased: purchasedPacket = {
-          transaction_id: transaction_id,
-          client: userName,
-          charge: true,
-          packet: RequestedPacket,
-          date_of_transaction: timestamp,
-        };
-        const user_record: user = userInterfaceTrick(user);
-        InsertPurchasedPacket(purchased, user_record)
-          .then((packet_user_record) => {
-            //TODO later
-            //check Pyament and do payment if faild delete recort or att a field failed Purchaed and remove the credits
-          })
-          .catch((err) => {
-            reject(err);
-          });
+          //if all go well  i will be  waiting  a transaction_id ;
+          const transaction_id: string = generateRandomString(16);
+          const timestamp = Date();
+          const purchased: purchasedPacket = {
+            transaction_id: transaction_id,
+            client: userName,
+            charge: true,
+            packet: RequestedPacket,
+            date_of_transaction: timestamp,
+          };
+          const user_record: user = userInterfaceTrick(user);
+          InsertPurchasedPacket(purchased, user_record)
+            .then((packet_user_record) => {
+              //TODO later
+
+              resolve(packet_user_record);
+              //check Pyament and do payment if faild delete recort or att a field failed Purchaed and remove the credits
+            })
+            .catch((err) => {
+              reject(err);
+            });
+        }
       })
       .catch((err) => {
         reject(err);
@@ -288,7 +320,7 @@ function InsertPurchasedPacket(packet: purchasedPacket, user: user) {
           };
           Promise.all([
             purchasedLog.insertOne(packet),
-            users.findOneAndUpdate({ _id: user._id }, update),
+            users.findOneAndUpdate({ _id: user._id }, { $set: update }),
           ])
             .then((rsp) => {
               const packet_record = rsp[0];
@@ -303,6 +335,7 @@ function InsertPurchasedPacket(packet: purchasedPacket, user: user) {
                 .then(() => {})
                 .catch((err) => {})
                 .finally(() => {
+                  console.log("done");
                   resolve(PromiseResponse);
                 });
             })
@@ -368,6 +401,21 @@ function getAvailplePackets(): packet[] {
   return AvailabPackage;
 }
 /**
+ * PlanExist - check if apacket is available
+ * @param p packet
+ * @returns
+ */
+function PlanExist(p: packet): boolean {
+  const plans = getAvailplePackets();
+  let rsp = false;
+  plans.forEach((pl) => {
+    if (pl.name === p.name && p.credits === pl.credits) {
+      rsp = true;
+    }
+  });
+  return rsp;
+}
+/**
  * purchasedChartFunction - purchase a chart this will be exported
  * @param chart_id string
  * @param userName userName
@@ -379,18 +427,20 @@ function purchasedChartFunction(chart_id: string, userName: string) {
       .then((u) => {
         if (u === null) {
           reject("Not such a user in  DB");
-        }
-        try {
-          const user: user = userInterfaceTrick(u);
-          insertPurchasedChart(chart_id, user)
-            .then((rsp) => {
-              resolve(rsp);
-            })
-            .catch((err) => {
-              reject(err);
-            });
-        } catch (err) {
-          reject(err);
+        } else {
+          try {
+            const user: user = userInterfaceTrick(u);
+            console.log(user);
+            insertPurchasedChart(chart_id, user)
+              .then((rsp) => {
+                resolve(rsp);
+              })
+              .catch((err) => {
+                reject(err);
+              });
+          } catch (err) {
+            reject(err);
+          }
         }
       })
       .catch((err) => {
@@ -426,7 +476,10 @@ function insertPurchasedChart(chart_id: string, user: user) {
             .db(UserDatabaseANdColectionPurchaseChart.db)
             .collection(UserDatabaseANdColectionPurchaseChart.collection);
           Promise.all([
-            users_collection.findOneAndUpdate({ _id: user._id }, update),
+            users_collection.findOneAndUpdate(
+              { _id: user._id },
+              { $set: update }
+            ),
             user_chart_collections.insertOne(purchased_Chart),
           ])
             .then((rsp) => {
@@ -458,10 +511,54 @@ function insertPurchasedChart(chart_id: string, user: user) {
     }
   });
 }
+/**
+ * function gift - give gift credits to user sucha a refistation or  in "Future holiday gifts"
+ * @param user user
+ * @param packet  packet
+ * @param comment  string
+ * @returns
+ */
+function gift(user: user, packet: packet, comment: string) {
+  return new Promise((resolve, reject) => {
+    const gift: purchasedPacket = {
+      charge: false,
+      transaction_id: generateRandomString(16),
+      comment_if_gift: comment,
+      packet: { name: "gift", credits: packet.credits },
+      client: user.userName,
+      date_of_transaction: Date(),
+    };
+    InsertPurchasedPacket(gift, user)
+      .then((rsp) => {
+        resolve(rsp);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+/**
+ * Register - register  a user in DB
+ * @param userName string
+ * @returns
+ */
+function Register(userName: string) {
+  return new Promise((resolve, reject) => {
+    InserteUser(userName)
+      .then((u) => {
+        resolve(u);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
 export {
   logIn,
   FindUser,
   purchasedChartFunction,
   Purchase,
   getAvailplePackets,
+  userInterfaceTrick,
+  Register,
 };
