@@ -1,0 +1,56 @@
+<div>
+    <button mat-button (click)="onCancel()">Close</button>
+    <h1><span style="color:green">{{getPacket().name}}</span> Plan</h1>
+</div>
+<h1 class="text-2xl font-bold mb-4">Enter Credit Card Information:</h1>
+<form [formGroup]="getForm()">
+    <div class="mb-4">
+        <label class="block font-bold mb-2" for="cardNumber">Credit Card Number:</label>
+        <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            type="text" formControlName="cardNumber" id="cardNumber">
+        <div *ngIf="getForm().controls['cardNumber'].invalid" class="text-red-500 text-sm mt-1">
+            Please enter a valid credit card number
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <div class="flex justify-between">
+            <label class="block font-bold mb-2" for="expirationMonth">Expiration Month:</label>
+            <label class="block font-bold mb-2" for="expirationYear">Expiration Year:</label>
+        </div>
+        <div class="flex justify-between">
+            <input
+                class="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="text" formControlName="expirationMonth" id="expirationMonth" placeholder="MM">
+            <input
+                class="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="text" formControlName="expirationYear" id="expirationYear" placeholder="YYYY">
+        </div>
+        <div *ngIf="getForm().controls['expirationMonth'].invalid || getForm().controls['expirationYear'].invalid"
+            class="text-red-500 text-sm mt-1">
+            Please enter a valid expiration date
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <label class="block font-bold mb-2" for="cvv">CVV:</label>
+        <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            type="text" formControlName="cvv" id="cvv">
+        <div *ngIf="getForm().controls['cvv'].invalid" class="text-red-500 text-sm mt-1">
+            Please enter a valid CVV
+        </div>
+    </div>
+    <div>
+        <h1>price:$Prise</h1>
+    </div>
+
+    <div class="flex items-center justify-between">
+        <input
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="button" value="Purchase" [disabled]="getForm().invalid">
+    </div>
+
+    <hr class="my-8">
+</form>

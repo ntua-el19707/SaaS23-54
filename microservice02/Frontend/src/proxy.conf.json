@@ -31,4 +31,10 @@
         "logLevel":"debug"
      
     }
+   ,   "/api_user/*":{
+        "target": "http://localhost:3010/",
+        "secure": false,
+        "logLevel":"debug"
+     
+    }
 }

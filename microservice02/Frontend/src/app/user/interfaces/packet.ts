@@ -1,4 +1,4 @@
 export interface Packet {
-  type: string;
-  tokens: number;
+  name: string;
+  credits: number;
 }

@@ -15,6 +15,11 @@ import { GetDiagramsService } from "./services/get-diagrams.service";
 import HighchartsMore from "highcharts/highcharts-more";
 import * as Highcharts from "highcharts";
 HighchartsMore(Highcharts);
+Highcharts.setOptions({
+  exporting: {
+    enabled: false,
+  },
+});
 @Component({
   selector: "app-my-digrams",
   templateUrl: "./my-digrams.component.html",
@@ -37,7 +42,6 @@ export class MyDigramsComponent implements OnInit {
     this.hide = !this.hide;
   }
   public selectedChart: Highcharts.Options = {};
-
   private dataSource: MatTableDataSource<ChartElements> =
     new MatTableDataSource<ChartElements>([]);
 
@@ -171,6 +175,7 @@ export class MyDigramsComponent implements OnInit {
     this.getDiagrams.getADiagrams(Preview).subscribe(
       (r) => {
         this.selectedChart = r.chart;
+
         this.hide = false;
       },
       (err) => {

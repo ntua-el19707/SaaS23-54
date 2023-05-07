@@ -1,0 +1,71 @@
+.avanilia-card {
+    position: relative;
+    width: 90%;
+    height:max-content;
+    margin: 0 10px;
+    border-radius: 20px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+}
+
+.avanilia-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.avanilia-card-header {
+    position: relative;
+    padding: 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.avanilia-card-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.avanilia-card-subtitle {
+    font-size: 14px;
+    color: #999;
+    margin: 10px 0;
+}
+.avanilia-card-subtitle-price{
+    font-size: 25px;
+        color: #999;
+        margin: 10px 0;
+        text-align: center;
+        font-size: 2em;
+        /* twice the size of the title */
+        color: grey;
+}
+.avanilia-card-actions {
+    
+    width: 100%;
+}
+
+.avanilia-card-actions button {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width:80%;
+    margin:0 10%
+}
+
+.avanilia-card-actions button:hover {
+    background-color: #3e8e41;
+}

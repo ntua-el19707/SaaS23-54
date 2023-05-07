@@ -2,6 +2,11 @@ import { Component, OnInit } from "@angular/core";
 import { Diagram } from "../interfaces/diagram";
 import { NgOptimizedImage } from "@angular/common";
 import * as Highcharts from "highcharts";
+Highcharts.setOptions({
+  exporting: {
+    enabled: false,
+  },
+});
 @Component({
   selector: "app-diagrams-list",
   templateUrl: "./diagrams-list.component.html",
