@@ -17,7 +17,21 @@
         "target": "http://localhost:3003/",
         "secure": false,
         "logLevel":"debug"
-     
+    },
+    "/api_DependancyWheel/*":{
+        "target": "http://localhost:3004/",
+        "secure": false,
+        "logLevel":"debug"
+    },
+    "/api_column/*":{
+        "target": "http://localhost:3005/",
+        "secure": false,
+        "logLevel":"debug"
+    }, 
+    "/api_LinewithAnnotations/*":{
+        "target": "http://localhost:3006/",
+        "secure": false,
+        "logLevel":"debug"
     },
       "/api_Download/*":{
         "target": "http://localhost:3007/",

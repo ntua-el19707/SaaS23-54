@@ -92,7 +92,14 @@ export class DiagramBuilderComponent implements OnInit {
     }
   }
   ngOnInit(): void {
-    const valid_Types: string[] = ["Line", "Pollar", "network"];
+    const valid_Types: string[] = [
+      "Line",
+      "Pollar",
+      "network",
+      "collumns",
+      "LineAnotations",
+      "DependencyWheel",
+    ];
     this.type = this.route.snapshot.paramMap.get("type");
     if (!valid_Types.includes(this.type)) {
       //wrong url
@@ -135,6 +142,15 @@ export class DiagramBuilderComponent implements OnInit {
         break;
       case "network":
         api = "api_network";
+        break;
+      case "collumns":
+        api = "api_column";
+        break;
+      case "LineAnotations":
+        api = "api_LinewithAnnotations";
+        break;
+      case "DependencyWheel":
+        api = "api_DependancyWheel";
         break;
     }
     return api;
