@@ -1,157 +1,422 @@
-import { MongoClient, MongoClientOptions } from "mongodb";
 import {
-  buildLineOptions,
-  buildPollarOptions,
-  buildnetworkOptions,
-} from "./buildFunctions/dataBuild";
+  Collection,
+  MongoClient,
+  ObjectId,
+  Document,
+  InsertOneResult,
+} from "mongodb";
+import {
+  ChartRecord,
+  NetworkChart,
+  PollarChart,
+  linesChart,
+} from "./interfaces/sechema";
+import { diagrams } from "./interfaces/responcesFunctions";
+
+const DB: string = "PurchasedCharts";
 const options: any = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 };
-const dbURI: string =
-  "mongodb+srv://vicgianndev0601:NC3Hv5LDHHoDpW5b@cluster0.ivrrqtw.mongodb.net/?retryWrites=true&w=majority";
-interface DB {
-  db: string;
-  collection: string;
-}
-function FindCharts(owner: string) {
-  return new Promise((resolve, reject) => {
-    let DB_array: DB[] = [
-      { db: "Lines", collection: "ChartLine" },
-      { db: "network", collection: "chartnetwork" },
-      { db: "Pollar", collection: "chartPollar" },
-    ];
-    const promises = DB_array.map((DB) => FindChart(owner, DB));
+const LineCollection: string = "Lines";
+const NetworkCollection: string = "Netwotk";
+const PollarCollection: string = "Pollar";
 
-    Promise.all(promises)
-      .then((rsp: any[]) => {
-        //console.log(rsp);
-        let charts: any[] = [];
-        rsp.forEach((ar: any[]) => {
-          //   console.log(ar);
-          charts = [...charts, ...ar[0]];
-        });
-        const sortedArray = quickSortByCreateAt(charts);
+/**
+ *
+ * @param owner string  id 'id  random genarated  by mongo //* Not  email '
+ */
+export function findMyDiagrams(owner: string): Promise<diagrams[]> {
+  return new Promise(async (resolve, reject) => {
+    const conn: MongoClient | boolean = StartConection();
+    if (typeof conn === "boolean") {
+      reject("failed to create a client for mongo db");
+    } else {
+      connection(conn)
+        .then(() => {
+          const lineCollection: Collection<Document> = DB_collection(
+            conn,
+            LineCollection
+          );
+          const networkCollection: Collection<Document> = DB_collection(
+            conn,
+            NetworkCollection
+          );
+          const pollarCollection: Collection<Document> = DB_collection(
+            conn,
+            PollarCollection
+          );
 
-        let respose: ChartRsp[] = [];
-        sortedArray.forEach((s) => {
-          let name = "";
-          if (s.data) {
-            if (s.data.title) {
-              if (s.data.title.text) name = s.data.title.text;
-            }
-          }
+          const lineCharts = lineCollection
+            .find({
+              ownerShip: owner,
+            })
+            .toArray();
 
-          respose.push({
-            name: name,
-            CreatedAt: s.createAt,
-            _id: s._id,
+          const networkCharts = networkCollection
+            .find({
+              ownerShip: owner,
+            })
+            .toArray();
 
-            Type: findType(s._id),
-          });
-        });
-        console.log(respose);
-        resolve(respose);
-      })
-      .catch((err) => {
-        console.log(err);
-        reject(err);
-      });
-  });
-}
+          const pollarCharts = pollarCollection
+            .find({
+              ownerShip: owner,
+            })
+            .toArray();
+          Promise.all([lineCharts, networkCharts, pollarCharts])
+            .then((chartsArray) => {
+              let charts: diagrams[] = [];
+              chartsArray.forEach((charray: any) => {
+                let list = charray as ChartRecord[];
+                list.forEach((item) => {
+                  charts.push({
+                    _id: item.chart._id,
+                    name: item.chart.title.text,
+                    createAT: item.createAT,
+                    Type: findType(item.chart._id),
+                  });
+                });
+              });
 
-function FindChart(owner: string, DB: DB) {
-  return new Promise((resolve, reject) => {
-    const client = new MongoClient(dbURI, options);
-    const charts = client.db(DB.db).collection(DB.collection);
-    let fetch = new Promise((resolve, reject) => {
-      //console.log(owner);
-      charts
-        .find({ owner: owner })
-        .toArray()
-        .then(async (files) => {
-          //   console.log(files);
-          resolve(files);
+              closeconection(conn)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  resolve(charts);
+                });
+            })
+            .catch((err) => {
+              closeconection(conn)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  reject(err);
+                });
+            });
         })
-        .catch(async (err) => {
+        .catch((err) => {
           reject(err);
         });
-    });
-    Promise.all([fetch])
-      .then(async (file) => {
-        await client.close();
-        //console.log(file);
-        resolve(file);
-      })
-      .catch(async (err) => {
-        console.log(err);
-        await client.close();
-        resolve([]); //i do not want all fail appart send only
-      });
+    }
   });
 }
 
-function quickSortByCreateAt(
-  arr: any[],
-  left = 0,
-  right = arr.length - 1
-): any[] {
-  if (arr.length > 1) {
-    const pivotIndex = partition(arr, left, right);
-    if (left < pivotIndex - 1) {
-      quickSortByCreateAt(arr, left, pivotIndex - 1);
-    }
-    if (pivotIndex < right) {
-      quickSortByCreateAt(arr, pivotIndex, right);
-    }
-  }
-  return arr;
-}
-
-function partition(arr: any[], left: number, right: number): number {
-  const pivot = arr[Math.floor((left + right) / 2)].createAt;
-  let i = left;
-  let j = right;
-  while (i <= j) {
-    while (arr[i].createAt > pivot) {
-      i++;
-    }
-    while (arr[j].createAt < pivot) {
-      j--;
-    }
-    if (i <= j) {
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-      i++;
-      j--;
+/**
+ * StartConection() - starts a Mongo conrction if fails return false
+ * @returns
+ */
+function StartConection(): MongoClient | boolean {
+  if (process.env.mongo_url) {
+    try {
+      const client = new MongoClient(process.env.mongo_url, options);
+      return client;
+    } catch (err) {
+      console.log(err);
     }
   }
-  return i;
+  return false;
 }
-interface ChartRsp {
-  Type: string;
-  name: string;
-  CreatedAt: string;
-  _id: string;
+/**
+ * connection - test if we can connect to db
+ * @param client MongoClient
+ */
+async function connection(client: MongoClient): Promise<void> {
+  try {
+    await client.connect();
+    console.log("There is a connection with Atlas");
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 }
-function findType(id: string): string {
-  let type = "";
-  console.log(id);
-  const size = id.length;
+/**
+ * closeconection - cloase  a mongo connection
+ * @param client MongoClient
+ * @returns
+ */
+async function closeconection(client: MongoClient): Promise<void> {
+  try {
+    await client.close();
+  } catch (err) {
+    throw err;
+  }
+}
+/**
+ * DB_collection - get mongo collection document
+ * @param conn MongoClient
+ * @param collection  string name of collectiomn
+ * @returns
+ */
+function DB_collection(
+  conn: MongoClient,
+  collection: string
+): Collection<Document> {
+  const collection_db = conn.db(DB).collection(collection);
+  return collection_db;
+}
+export function insertLineChart(
+  chart: linesChart,
+  ownerShip: string
+): Promise<InsertOneResult<Document>> {
+  return new Promise((resolve, reject) => {
+    const chartR: ChartRecord = {
+      chart: chart,
+      ownerShip: ownerShip,
+      createAT: Date(),
+    };
+    const mongoConnection = StartConection();
+    if (typeof mongoConnection === "boolean") {
+      reject("Not able to create  a connetion");
+    } else {
+      connection(mongoConnection)
+        .then(() => {
+          const lineCollection: Collection<Document> = DB_collection(
+            mongoConnection,
+            LineCollection
+          );
 
+          lineCollection
+            .insertOne(chartR)
+            .then((registerChart: InsertOneResult<Document>) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  resolve(registerChart);
+                });
+            })
+            .catch((err) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  reject(err);
+                });
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
+  });
+}
+export function insertPollarChart(
+  chart: PollarChart,
+  ownerShip: string
+): Promise<InsertOneResult<Document>> {
+  return new Promise((resolve, reject) => {
+    const chartR: ChartRecord = {
+      chart: chart,
+      ownerShip: ownerShip,
+      createAT: Date(),
+    };
+    const mongoConnection = StartConection();
+    if (typeof mongoConnection === "boolean") {
+      reject("Not able to create  a connetion");
+    } else {
+      connection(mongoConnection)
+        .then(() => {
+          const pollarCollection: Collection<Document> = DB_collection(
+            mongoConnection,
+            PollarCollection
+          );
+
+          pollarCollection
+            .insertOne(chartR)
+            .then((registerChart: InsertOneResult<Document>) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  resolve(registerChart);
+                });
+            })
+            .catch((err) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  reject(err);
+                });
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
+  });
+}
+export function insertNetworkChart(
+  chart: NetworkChart,
+  ownerShip: string
+): Promise<InsertOneResult<Document>> {
+  return new Promise((resolve, reject) => {
+    const chartR: ChartRecord = {
+      chart: chart,
+      ownerShip: ownerShip,
+      createAT: Date(),
+    };
+    const mongoConnection = StartConection();
+    if (typeof mongoConnection === "boolean") {
+      reject("Not able to create a connetion");
+    } else {
+      connection(mongoConnection)
+        .then(() => {
+          const networkCollection: Collection<Document> = DB_collection(
+            mongoConnection,
+            NetworkCollection
+          );
+
+          networkCollection
+            .insertOne(chartR)
+            .then((registerChart: InsertOneResult<Document>) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  resolve(registerChart);
+                });
+            })
+            .catch((err) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  reject(err);
+                });
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
+  });
+}
+export function findLine(id: string): Promise<ChartRecord> {
+  return new Promise((resolve, reject) => {
+    const mongoConnection = StartConection();
+    if (typeof mongoConnection === "boolean") {
+      reject("Not able to create a connetion");
+    } else {
+      connection(mongoConnection)
+        .then(() => {
+          const Linecollection: Collection<Document> = DB_collection(
+            mongoConnection,
+            LineCollection
+          );
+
+          Linecollection.findOne({ "chart._id": id })
+            .then((data: any) => {
+              const chart = data as ChartRecord;
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  resolve(chart);
+                });
+            })
+            .catch((err) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  reject(err);
+                });
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
+  });
+}
+export function findNetwork(id: string): Promise<ChartRecord> {
+  return new Promise((resolve, reject) => {
+    const mongoConnection = StartConection();
+    if (typeof mongoConnection === "boolean") {
+      reject("Not able to create a connetion");
+    } else {
+      connection(mongoConnection)
+        .then(() => {
+          const Networkcollection: Collection<Document> = DB_collection(
+            mongoConnection,
+            NetworkCollection
+          );
+
+          Networkcollection.findOne({ "chart._id": id })
+            .then((data: any) => {
+              const chart = data as ChartRecord;
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  resolve(chart);
+                });
+            })
+            .catch((err) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  reject(err);
+                });
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
+  });
+}
+export function findPollar(id: string): Promise<ChartRecord> {
+  return new Promise((resolve, reject) => {
+    const mongoConnection = StartConection();
+    if (typeof mongoConnection === "boolean") {
+      reject("Not able to create a connetion");
+    } else {
+      connection(mongoConnection)
+        .then(() => {
+          const Pollarcollection: Collection<Document> = DB_collection(
+            mongoConnection,
+            LineCollection
+          );
+
+          Pollarcollection.findOne({ "chart._id": id })
+            .then((data: any) => {
+              const chart = data as ChartRecord;
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  resolve(chart);
+                });
+            })
+            .catch((err) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  reject(err);
+                });
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
+  });
+}
+function findType(id: string) {
+  let type: string = "";
+  const size: number = id.length;
   switch (size) {
-    case 5:
-      //line  anottation
-      type = "line anotattion";
-      break;
-    case 6:
-      //for collum
-      type = "collunm";
-      break;
     case 7:
-      type = "lines";
+      type = "Line";
+
       break;
     case 8:
-      type = "network";
+      type = "Network";
 
       break;
     case 9:
@@ -165,98 +430,5 @@ function findType(id: string): string {
     default:
       break;
   }
-  console.log(type);
   return type;
 }
-function BuildData(id: string, data: any) {
-  let data_rsp: any;
-  const size = id.length;
-
-  switch (size) {
-    case 5:
-      //line  anottation
-
-      break;
-    case 6:
-      //for collum
-
-      break;
-    case 7:
-      //for  lines
-      data_rsp = buildLineOptions(data);
-      break;
-    case 8:
-      //for  network
-      data_rsp = buildnetworkOptions(data, true);
-      break;
-    case 9:
-      //for  pollar
-      data_rsp = buildPollarOptions(data);
-      break;
-    case 10:
-      //for  dependency wheel
-
-      break;
-    default:
-      break;
-  }
-  return data_rsp;
-}
-function reaturnDB(id: string): { db: string; collection: string } {
-  const size = id.length;
-  let db: { db: string; collection: string } = { db: "", collection: "" };
-  switch (size) {
-    case 5:
-      //line  anottation
-      break;
-    case 6:
-      //for collum
-      break;
-    case 7:
-      db = {
-        db: "Lines",
-        collection: "ChartLine",
-      };
-      break;
-    case 8:
-      db = {
-        db: "network",
-        collection: "chartnetwork",
-      };
-
-      break;
-    case 9:
-      db = {
-        db: "Pollar",
-        collection: "chartPollar",
-      };
-      break;
-    case 10:
-      db = {
-        db: "DependancyWheel",
-        collection: "chartDependancyWheel",
-      };
-      break;
-    default:
-      break;
-  }
-  return db;
-}
-function findSpecific(id: any) {
-  return new Promise(async (resolve, reject) => {
-    const DB: { db: string; collection: string } = reaturnDB(id);
-    const client = new MongoClient(dbURI, options);
-    const charts = client.db(DB.db).collection(DB.collection);
-    let chart: any;
-    try {
-      chart = await charts.findOne({ _id: id });
-    } catch (err) {
-      await client.close();
-      reject(err);
-    } finally {
-      await client.close();
-      resolve(BuildData(id, chart.data));
-    }
-  });
-}
-export { FindCharts, findSpecific };
