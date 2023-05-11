@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const router = Router();
 var multer = require("multer"); //use for  upload
-const { uploadPost, saveDB } = require("../controllers/upload");
+const { uploadPost, saveDB, getData } = require("../controllers/upload");
 const { makeid } = require("../utils/lib/genaratorString");
 const path = "utils/Files/CSV";
 //set storage to store the files
@@ -20,11 +20,10 @@ var upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
     cb(null, true);
-    if (/*file.mimetype == "text/csv"*/ true) {
+    if (file.mimetype == "text/csv") {
       cb(null, true);
     } else {
-      cb(null, false);
-      return cb(new Error("Only csv Files"));
+      return cb(new Error("Only csv Files"), false);
     }
   },
 });
@@ -38,5 +37,5 @@ router.post(
   upload.single("file"),
   uploadPost
 );
-
+router.route("/getFile/:id").get(getData);
 module.exports = router;
