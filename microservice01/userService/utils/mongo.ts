@@ -1,7 +1,5 @@
-import { MongoClient, ObjectId } from "mongodb";
-import { packet } from "./interfaces/packet";
-import { generateRandomString } from "./genarateRandomString";
-import { purchasedChart, purchasedPacket } from "./interfaces/Purchsased";
+import { MongoClient } from "mongodb";
+
 import { user } from "./interfaces/user";
 
 const options: any = {
@@ -15,30 +13,23 @@ interface DB {
 }
 //The database and collection that this modules wiil acsess and modify
 const UserDatabaseANdColection: DB = {
-  db: "Clients",
+  db: "Users",
   collection: "users",
-};
-const UserDatabaseANdColectionPurchaseLog: DB = {
-  db: "Clients",
-  collection: "PurchaseLog",
-};
-const UserDatabaseANdColectionPurchaseChart: DB = {
-  db: "Clients",
-  collection: "PurchaseChart",
 };
 /**
  * logIn - log a user into the system
  * @param userName string
  * @returns
  */
-function logIn(userName: string) {
+function logIn(userName: string): Promise<user | null> {
   return new Promise((resolve, reject) => {
     FindUser(userName)
       .then((user) => {
         if (user === null) {
           resolve(null);
         } else {
-          LogUser(userName)
+          console.log(user.LastLogin);
+          LogUser(user)
             .then((u) => {
               console.log(u);
               resolve(u);
@@ -78,7 +69,8 @@ function FindUser(userName: string): Promise<user | null> {
                     if (u === null) {
                       resolve(null);
                     } else {
-                      resolve(userInterfaceTrick(u));
+                      const client = u as user;
+                      resolve(client);
                     }
                   });
               })
@@ -135,13 +127,12 @@ async function connection(client: MongoClient): Promise<void> {
  * @param client MongoClient
  * @returns
  */
-//TODO remove boolean and make it void  remove returns and fix all the functions
-async function closeconection(client: MongoClient): Promise<boolean> {
+
+async function closeconection(client: MongoClient): Promise<void> {
   try {
     await client.close();
-    return true;
   } catch (err) {
-    return false;
+    throw err;
   }
 }
 /**
@@ -164,9 +155,9 @@ function InserteUser(userName: string): Promise<any> {
 
           const LastLogin = Date();
 
-          const user = {
+          const user: user = {
             userName: userName,
-            LastLogin,
+            LastLogin: [LastLogin],
             role: "client",
             credits: 0,
           };
@@ -182,19 +173,7 @@ function InserteUser(userName: string): Promise<any> {
                   console.log(result);
                   console.log(`User with username ${userName} inserted`);
                   FindUser(userName)
-                    .then((u) => {
-                      gift(
-                        userInterfaceTrick(u),
-                        getAvailplePackets()[1],
-                        "Registation gift"
-                      )
-                        .then(() => {
-                          resolve(result);
-                        })
-                        .catch((err) => {
-                          resolve(result);
-                        });
-                    })
+                    .then((u) => {})
                     .catch((err) => {
                       reject(err);
                     });
@@ -224,317 +203,44 @@ function InserteUser(userName: string): Promise<any> {
  * @param userName:string
  * @returns
  */
-async function LogUser(userName: string) {
+async function LogUser(client: user): Promise<user> {
   return new Promise((resolve, reject) => {
     const connectionClient = StartConection();
     if (connectionClient === false) {
       reject("there is no URL for atlas");
     } else {
       if (typeof connectionClient !== "boolean") {
-        connection(connectionClient).then(() => {
-          const LastLogin = Date();
-          const user = connectionClient
-            .db(UserDatabaseANdColection.db)
-            .collection(UserDatabaseANdColection.collection);
-          user
-            .findOneAndUpdate({ userName: userName }, { $set: { LastLogin } })
-            .then((updatedUser) => {
-              closeconection(connectionClient).then((rsp) => {
-                resolve(updatedUser.value);
+        connection(connectionClient)
+          .then(() => {
+            const LastLogin: string = Date();
+
+            console.log(client.LastLogin);
+            const update = {
+              LastLogin: [...client.LastLogin, LastLogin],
+            }; //to hold all the login  i can simply  do
+            console.log(update);
+            //this  LastLogin = [client.LastLogin[client.LastClient.length -1 ] , LastLogin]
+            const user = connectionClient
+              .db(UserDatabaseANdColection.db)
+              .collection(UserDatabaseANdColection.collection);
+            user
+              .findOneAndUpdate(
+                { _id: client._id },
+                { $set: update },
+                { returnDocument: "after" }
+              )
+              .then((updatedUser) => {
+                closeconection(connectionClient).then((rsp) => {
+                  const user = updatedUser.value as user;
+                  resolve(user);
+                });
               });
-            });
-        });
+          })
+          .catch((err) => {
+            reject(err);
+          });
       }
     }
-  });
-}
-/**
- * Purchase - `purchase a plan ` this will be exported
- * @param userName string
- * @param RequestedPacket packet
- * @param Payment any temporary
- * @returns
- */
-function Purchase(userName: string, RequestedPacket: packet, Payment: any) {
-  return new Promise((resolve, reject) => {
-    FindUser(userName)
-      .then((user) => {
-        if (user === null) {
-          reject("Not such a user in  DB");
-        } else if (!PlanExist(RequestedPacket)) {
-          reject("We do not provide the Requested Packet");
-        } else {
-          //TODO later
-          //check Pyament and do payment
-
-          //if all go well  i will be  waiting  a transaction_id ;
-          const transaction_id: string = generateRandomString(16);
-          const timestamp = Date();
-          const purchased: purchasedPacket = {
-            transaction_id: transaction_id,
-            client: userName,
-            charge: true,
-            packet: RequestedPacket,
-            date_of_transaction: timestamp,
-          };
-          const user_record: user = userInterfaceTrick(user);
-          InsertPurchasedPacket(purchased, user_record)
-            .then((packet_user_record) => {
-              //TODO later
-
-              resolve(packet_user_record);
-              //check Pyament and do payment if faild delete recort or att a field failed Purchaed and remove the credits
-            })
-            .catch((err) => {
-              reject(err);
-            });
-        }
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-}
-/**
- * InsertPurchasedPacket - purchase a plan records at db
- * @param packet purchasedPacket
- * @param user user
- * @returns
- */
-function InsertPurchasedPacket(packet: purchasedPacket, user: user) {
-  return new Promise((resolve, reject) => {
-    const conectionClient = StartConection();
-    if (typeof conectionClient === "boolean") {
-      reject("No uri for db");
-    } else {
-      connection(conectionClient)
-        .then(() => {
-          const purchasedLog = conectionClient
-            .db(UserDatabaseANdColectionPurchaseLog.db)
-            .collection(UserDatabaseANdColectionPurchaseLog.collection);
-          const users = conectionClient
-            .db(UserDatabaseANdColection.db)
-            .collection(UserDatabaseANdColection.collection);
-          const update = {
-            credits: user.credits + packet.packet.credits,
-          };
-          Promise.all([
-            purchasedLog.insertOne(packet),
-            users.findOneAndUpdate({ _id: user._id }, { $set: update }),
-          ])
-            .then((rsp) => {
-              const packet_record = rsp[0];
-              const user_record = rsp[1];
-              const PromiseResponse = {
-                packet_record,
-                user_record,
-              };
-              //? if the connection does not happen the purchased has alraedy happen and register so that is why i do not reject promsie
-              //it is  unlikly tha connecion will nor close in this point.
-              closeconection(conectionClient)
-                .then(() => {})
-                .catch((err) => {})
-                .finally(() => {
-                  console.log("done");
-                  resolve(PromiseResponse);
-                });
-            })
-            .catch((err) => {
-              closeconection(conectionClient)
-                .then(() => {})
-                .catch((err) => {})
-                .finally(() => {
-                  reject(err);
-                });
-            });
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    }
-  });
-}
-/**
- * userInterfaceTrick - beause i did not use moongoose and i used mongodb i need a trick to set the type of the response  from users collection
- * @param user any
- * @returns user
- */
-function userInterfaceTrick(user: any): user {
-  let userL: user = {
-    _id: new ObjectId(),
-    userName: "",
-    credits: 0,
-    LastLogin: "",
-    role: "",
-  };
-  if (user._id) {
-    userL._id = user._id;
-  } else {
-    throw new Error("there is no _id");
-  }
-  if (user.userName) {
-    userL.userName = user.userName;
-  }
-  if (user.credits !== undefined) {
-    userL.credits = user.credits;
-  }
-  if (user.LastLogin) {
-    userL.LastLogin = user.LastLogin;
-  }
-  if (user.role) {
-    userL.role = user.role;
-  }
-  return userL;
-}
-/**
- * getAvailplePackets() - this wll return the puckage that we are selling  this will be exported
- * @returns
- */
-function getAvailplePackets(): packet[] {
-  //TODO later add price
-  const AvailabPackage: packet[] = [
-    { name: "Basic", credits: 1 },
-    { name: "Standard", credits: 3 },
-    { name: "Premium", credits: 10 },
-    { name: "Enterprise", credits: 100 },
-  ];
-  return AvailabPackage;
-}
-/**
- * PlanExist - check if apacket is available
- * @param p packet
- * @returns
- */
-function PlanExist(p: packet): boolean {
-  const plans = getAvailplePackets();
-  let rsp = false;
-  plans.forEach((pl) => {
-    if (pl.name === p.name && p.credits === pl.credits) {
-      rsp = true;
-    }
-  });
-  return rsp;
-}
-/**
- * purchasedChartFunction - purchase a chart this will be exported
- * @param chart_id string
- * @param userName userName
- * @returns
- */
-function purchasedChartFunction(chart_id: string, userName: string) {
-  return new Promise((resolve, reject) => {
-    FindUser(userName)
-      .then((u) => {
-        if (u === null) {
-          reject("Not such a user in  DB");
-        } else {
-          try {
-            const user: user = userInterfaceTrick(u);
-            console.log(user);
-            insertPurchasedChart(chart_id, user)
-              .then((rsp) => {
-                resolve(rsp);
-              })
-              .catch((err) => {
-                reject(err);
-              });
-          } catch (err) {
-            reject(err);
-          }
-        }
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-}
-/**
- * insertPurchasedChart  - insert purchase and charge client
- * @param chart_id string
- * @param user user
- * @returns
- */
-function insertPurchasedChart(chart_id: string, user: user) {
-  return new Promise((resolve, reject) => {
-    const timestamp: string = Date();
-    const update = { credits: user.credits - 1 };
-    const purchased_Chart: purchasedChart = {
-      chart_id: chart_id,
-      client: user.userName,
-      date_of_transaction: timestamp,
-    };
-    const conectionClient = StartConection();
-    if (typeof conectionClient === "boolean") {
-      reject("No uri for db");
-    } else {
-      connection(conectionClient)
-        .then(() => {
-          const users_collection = conectionClient
-            .db(UserDatabaseANdColection.db)
-            .collection(UserDatabaseANdColection.collection);
-          const user_chart_collections = conectionClient
-            .db(UserDatabaseANdColectionPurchaseChart.db)
-            .collection(UserDatabaseANdColectionPurchaseChart.collection);
-          Promise.all([
-            users_collection.findOneAndUpdate(
-              { _id: user._id },
-              { $set: update }
-            ),
-            user_chart_collections.insertOne(purchased_Chart),
-          ])
-            .then((rsp) => {
-              let response = {
-                users: rsp[0],
-                purchase: rsp[1],
-              };
-              //? if the connection does not happen the purchased has alraedy happen and register so that is why i do not reject promsie
-              //it is  unlikly tha connecion will nor close in this point.
-              closeconection(conectionClient)
-                .then(() => {})
-                .catch((err) => {})
-                .finally(() => {
-                  resolve(response);
-                });
-            })
-            .catch((err) => {
-              closeconection(conectionClient)
-                .then(() => {})
-                .catch((err) => {})
-                .finally(() => {
-                  reject(err);
-                });
-            });
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    }
-  });
-}
-/**
- * function gift - give gift credits to user sucha a refistation or  in "Future holiday gifts"
- * @param user user
- * @param packet  packet
- * @param comment  string
- * @returns
- */
-function gift(user: user, packet: packet, comment: string) {
-  return new Promise((resolve, reject) => {
-    const gift: purchasedPacket = {
-      charge: false,
-      transaction_id: generateRandomString(16),
-      comment_if_gift: comment,
-      packet: { name: "gift", credits: packet.credits },
-      client: user.userName,
-      date_of_transaction: Date(),
-    };
-    InsertPurchasedPacket(gift, user)
-      .then((rsp) => {
-        resolve(rsp);
-      })
-      .catch((err) => {
-        reject(err);
-      });
   });
 }
 /**
@@ -553,12 +259,4 @@ function Register(userName: string) {
       });
   });
 }
-export {
-  logIn,
-  FindUser,
-  purchasedChartFunction,
-  Purchase,
-  getAvailplePackets,
-  userInterfaceTrick,
-  Register,
-};
+export { logIn, FindUser, Register };
