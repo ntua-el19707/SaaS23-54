@@ -164,8 +164,7 @@ function readSeries(lines, index) {
   }
   return { json, index };
 }
-function getJsonFromFile(file) {
-  let data = readCsv(file);
+function getJsonFromFile(data) {
   return csvJSON(data);
 }
 function destroy(filename) {

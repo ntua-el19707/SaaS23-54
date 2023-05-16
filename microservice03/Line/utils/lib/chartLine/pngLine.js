@@ -24,10 +24,7 @@ function buildAll(options) {
       //& downnload mechanism will work idChart => file_id  => send file_id
 
       // create  the folder paths ;
-      const downloadFolder = path.join(
-        __dirname,
-        "../../../../../microservice09/Download/utils/Files"
-      );
+      const downloadFolder = path.join(__dirname, "../../Files");
 
       const html_path = `${downloadFolder}/html/${file_id}.html`;
       const svg_path = `${downloadFolder}/svg/${file_id}.svg`;

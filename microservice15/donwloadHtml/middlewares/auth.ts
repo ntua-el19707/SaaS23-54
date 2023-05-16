@@ -34,6 +34,6 @@ export const auth = (req: AuthRequest, res: Response, next: NextFunction) => {
     .catch((error) => {
       console.log(error);
       // If there's an error, send error response with error code and message
-      res.status(error.response.status).json({ error });
+      res.status(400).json({ error });
     });
 };

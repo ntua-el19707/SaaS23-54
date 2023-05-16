@@ -17,8 +17,9 @@ app.use(cors(corsOptions));
 
 //import routes
 import { router } from "./routes/master";
+import { consumeFile } from "./utils/lib/consumer";
 //set up routers
-
+consumeFile();
 app.get("/", (req, res, next) => {
   res.send("ok");
 });

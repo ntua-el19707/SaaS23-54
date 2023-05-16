@@ -4,5 +4,6 @@ export interface AuthRequest extends Request {
   File_id?: string;
 }
 export interface uploadRequest extends AuthRequest {
+  file: any;
   MultFilesB?: string[];
 }

@@ -1,4 +1,5 @@
 function buildSeries(series) {
+  let return_seires = [];
   series.forEach((s) => {
     if (s.type == "XY") {
       let xarray = [];
@@ -10,17 +11,66 @@ function buildSeries(series) {
       s.datay.forEach((y) => {
         yarray.push(parseFloat(y));
       });
-      for (let i = 0; i < xarray.length; i++) {
-        s.data.push([xarray[i], yarray[i]]);
-      }
-    } else if (s.type == "double") {
       let data = [];
-      s.data.forEach((d) => {
-        data.push(parseFloat(d));
+      for (let i = 0; i < xarray.length; i++) {
+        data.push([xarray[i], yarray[i]]);
+      }
+      return_seires = [
+        ...return_seires,
+        {
+          name: s.name,
+          data: data,
+        },
+      ];
+    } else if (s.type == "X") {
+      let datax = [];
+
+      s.datax.forEach((d) => {
+        datax.push(parseFloat(d));
       });
-      s.data = data;
+      let data = [];
+      for (let i = 0; i < data.length; i++) {
+        data.push([datax[i], s.datay[i]]);
+      }
+      return_seires = [
+        ...return_seires,
+        {
+          name: s.name,
+          data: data,
+        },
+      ];
+    } else if (s.type == "Y") {
+      let datay = [];
+
+      s.datay.forEach((d) => {
+        datay.push(parseFloat(d));
+      });
+
+      let data = [];
+      for (let i = 0; i < datay.length; i++) {
+        data.push([s.datax[i], datay[i]]);
+      }
+      return_seires = [
+        ...return_seires,
+        {
+          name: s.name,
+          data: data,
+        },
+      ];
+    } else {
+      let data = [];
+      for (let i = 0; i < s.datay.length; i++) {
+        data.push([s.datax[i]], s.datay[y]);
+      }
+      return_seires = [
+        ...return_seires,
+        {
+          name: s.name,
+          data: data,
+        },
+      ];
     }
   });
-  return series;
+  return return_seires;
 }
 module.exports = { buildSeries };
