@@ -1,6 +1,8 @@
 import { MongoClient } from "mongodb";
 
 import { user } from "./interfaces/user";
+import { PruduceGifts } from "./interfaces/ProducerGifts";
+import { generateRandomString } from "../../../microservice11/PurchaseService/utils/genarateRandomString";
 
 const options: any = {
   useUnifiedTopology: true,
@@ -156,10 +158,11 @@ function InserteUser(userName: string): Promise<any> {
           const LastLogin = Date();
 
           const user: user = {
+            user_id: generateRandomString(10),
             userName: userName,
             LastLogin: [LastLogin],
             role: "client",
-            credits: 0,
+            credits: 3,
           };
 
           userCollection
@@ -173,7 +176,20 @@ function InserteUser(userName: string): Promise<any> {
                   console.log(result);
                   console.log(`User with username ${userName} inserted`);
                   FindUser(userName)
-                    .then((u) => {})
+                    .then(async (u) => {
+                      if (u !== null) {
+                        let us = u as user;
+                        await PruduceGifts(
+                          us.user_id,
+                          "Registarion Gift",
+                          3,
+                          "RegistrationPacket"
+                        );
+                        resolve(us);
+                      } else {
+                        resolve(u);
+                      }
+                    })
                     .catch((err) => {
                       reject(err);
                     });

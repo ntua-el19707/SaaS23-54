@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import { consumeGiftMessages } from "./utils/consumer";
 const app = express();
 app.use(bodyParser.json());
 app.use(
@@ -17,6 +18,8 @@ app.use(cors(corsOptions));
 
 //import routes
 import { MasterRouter } from "./routes/master";
+
+consumeGiftMessages();
 //set up routers
 
 app.get("/", (req, res, next) => {

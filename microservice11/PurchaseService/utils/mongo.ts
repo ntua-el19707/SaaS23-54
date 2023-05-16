@@ -28,56 +28,6 @@ const UserDatabaseANdColectionPurchaseChart: DB = {
 };
 
 /**
- * FindUser - find a user in db
- * @param user_id:string
- * @returns
- */
-function FindUser(user_id: string): Promise<clients | null> {
-  return new Promise((resolve, reject) => {
-    try {
-      const connectionUsers = StartConection();
-      if (typeof connectionUsers !== "boolean") {
-        connection(connectionUsers)
-          .then(() => {
-            const users = connectionUsers
-              .db(UserDatabaseANdColection.db)
-              .collection(UserDatabaseANdColection.collection);
-            users
-              .findOne({ user_id: user_id })
-              .then((u) => {
-                const user = u as clients;
-                closeconection(connectionUsers)
-                  .then(() => {})
-                  .catch((err) => {})
-                  .finally(() => {
-                    if (u === null) {
-                      resolve(null);
-                    } else {
-                      resolve(user);
-                    }
-                  });
-              })
-              .catch((err) => {
-                closeconection(connectionUsers)
-                  .then(() => {})
-                  .catch((err) => {})
-                  .finally(() => {
-                    reject(err);
-                  });
-              });
-          })
-          .catch((err) => {
-            reject(err);
-          });
-      } else {
-        reject("the is no conection");
-      }
-    } catch (err) {
-      reject(err);
-    }
-  });
-}
-/**
  * StartConection() - starts a Mongo conrction if fails return false
  * @returns
  */
@@ -119,96 +69,6 @@ async function closeconection(client: MongoClient): Promise<boolean> {
     return false;
   }
 }
-/**
- * InserteUser - insert a new  user to db
- * @param user_id:string
- * @returns
- */
-//? there is need to  check if  a user exist because it already happen in LogIn() function which is the one tha is actually exported
-function InserteUser(user_id: string): Promise<ObjectId> {
-  return new Promise((resolve, reject) => {
-    try {
-      const connectionClient = StartConection();
-      if (typeof connectionClient === "boolean") {
-        reject("there is no url for atlas");
-      } else {
-        if (typeof connectionClient !== "boolean") {
-          const userCollection = connectionClient
-            .db(UserDatabaseANdColection.db)
-            .collection(UserDatabaseANdColection.collection);
-          const user = {
-            user_id: user_id,
-            credits: 0,
-          };
-          userCollection
-            .findOne({ user_id: user.user_id })
-            .then((u) => {
-              if (u !== null) {
-                reject("user already exist");
-              } else {
-                userCollection
-                  .insertOne(user)
-                  .then((result: InsertOneResult<Document>) => {
-                    console.log("here");
-                    closeconection(connectionClient)
-                      .then(() => {})
-                      .catch((err) => {})
-                      .finally(() => {
-                        console.log(result);
-                        console.log(`User with user_id ${user_id} inserted`); //this  must bee done  by mesasging actually .
-
-                        FindUser(user_id)
-                          .then((u) => {
-                            console.log("use r found " + u);
-                            if (u !== null) {
-                              gift(
-                                u,
-                                getAvailplePackets()[1],
-                                "Registation gift"
-                              )
-                                .then(() => {
-                                  resolve(result.insertedId);
-                                })
-                                .catch((err) => {
-                                  resolve(result.insertedId);
-                                });
-                            } else {
-                              reject("user not  found");
-                            }
-                          })
-                          .catch((err) => {
-                            reject(err);
-                          });
-                      });
-                  })
-                  .catch((err) => {
-                    closeconection(connectionClient)
-                      .then(() => {})
-                      .catch((err) => {})
-                      .finally(() => {
-                        reject(err);
-                      });
-                  });
-              }
-            })
-            .catch((err) => {
-              closeconection(connectionClient)
-                .then(() => {})
-                .catch((err) => {})
-                .finally(() => {
-                  reject(err);
-                });
-            });
-        } else {
-          reject("no connection with atlas");
-        }
-      }
-    } catch (error) {
-      console.log(error);
-      reject(error);
-    }
-  });
-}
 
 /**
  * Purchase - `purchase a plan ` this will be exported
@@ -219,42 +79,34 @@ function InserteUser(user_id: string): Promise<ObjectId> {
  */
 function Purchase(user_id: string, RequestedPacket: packet, Payment: any) {
   return new Promise((resolve, reject) => {
-    FindUser(user_id)
-      .then((user: clients | null) => {
-        if (user === null) {
-          reject("Not such a user in  DB");
-        } else if (!PlanExist(RequestedPacket)) {
-          reject("We do not provide the Requested Packet");
-        } else {
+    if (!PlanExist(RequestedPacket)) {
+      reject("We do not provide the Requested Packet");
+    } else {
+      //TODO later
+      //check Pyament and do payment
+
+      //if all go well  i will be  waiting  a transaction_id ;
+      const transaction_id: string = generateRandomString(16);
+      const timestamp = Date();
+      const purchased: purchasedPacket = {
+        transaction_id: transaction_id,
+        client: user_id,
+        charge: true,
+        packet: RequestedPacket,
+        date_of_transaction: timestamp,
+      };
+      const user_record: clients = { user_id: user_id };
+      InsertPurchasedPacket(purchased, user_record)
+        .then((packet_user_record) => {
           //TODO later
-          //check Pyament and do payment
 
-          //if all go well  i will be  waiting  a transaction_id ;
-          const transaction_id: string = generateRandomString(16);
-          const timestamp = Date();
-          const purchased: purchasedPacket = {
-            transaction_id: transaction_id,
-            client: user_id,
-            charge: true,
-            packet: RequestedPacket,
-            date_of_transaction: timestamp,
-          };
-          const user_record: clients = user;
-          InsertPurchasedPacket(purchased, user_record)
-            .then((packet_user_record) => {
-              //TODO later
-
-              resolve(packet_user_record);
-              //check Pyament and do payment if faild delete recort or att a field failed Purchaed and remove the credits
-            })
-            .catch((err) => {
-              reject(err);
-            });
-        }
-      })
-      .catch((err) => {
-        reject(err);
-      });
+          resolve(packet_user_record);
+          //check Pyament and do payment if faild delete recort or att a field failed Purchaed and remove the credits
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
   });
 }
 /**
@@ -277,19 +129,19 @@ function InsertPurchasedPacket(packet: purchasedPacket, user: clients) {
           const users = conectionClient
             .db(UserDatabaseANdColection.db)
             .collection(UserDatabaseANdColection.collection);
-          const update = {
-            credits: user.credits + packet.packet.credits,
-          };
+          // const update = {
+          //  credits: user.credits + packet.packet.credits,
+          //   };
           Promise.all([
             purchasedLog.insertOne(packet),
-            users.findOneAndUpdate({ _id: user._id }, { $set: update }),
+            // users.findOneAndUpdate({ _id: user._id }, { $set: update }),
           ])
             .then((rsp) => {
               const packet_record = rsp[0];
-              const user_record = rsp[1];
+              //   const user_record = rsp[1];
               const PromiseResponse = {
                 packet_record,
-                user_record,
+                //   user_record,
               };
               //? if the connection does not happen the purchased has alraedy happen and register so that is why i do not reject promsie
               //it is  unlikly tha connecion will nor close in this point.
@@ -354,29 +206,19 @@ function PlanExist(p: packet): boolean {
  */
 function purchasedChartFunction(chart_id: string, user_id: string) {
   return new Promise((resolve, reject) => {
-    FindUser(user_id)
-      .then((u) => {
-        if (u === null) {
-          reject("Not such a user in  DB");
-        } else {
-          try {
-            const user: clients = u;
-            console.log(user);
-            insertPurchasedChart(chart_id, user)
-              .then((rsp) => {
-                resolve(rsp);
-              })
-              .catch((err) => {
-                reject(err);
-              });
-          } catch (err) {
-            reject(err);
-          }
-        }
-      })
-      .catch((err) => {
-        reject(err);
-      });
+    try {
+      const user: clients = { user_id };
+      console.log(user);
+      insertPurchasedChart(chart_id, user)
+        .then((rsp) => {
+          resolve(rsp);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    } catch (err) {
+      reject(err);
+    }
   });
 }
 /**
@@ -388,7 +230,7 @@ function purchasedChartFunction(chart_id: string, user_id: string) {
 function insertPurchasedChart(chart_id: string, user: clients) {
   return new Promise((resolve, reject) => {
     const timestamp: string = Date();
-    const update = { credits: user.credits - 1 };
+    // const update = { credits: user.credits - 1 };
     const purchased_Chart: purchasedChart = {
       chart_id: chart_id,
       client: user.user_id,
@@ -407,16 +249,16 @@ function insertPurchasedChart(chart_id: string, user: clients) {
             .db(UserDatabaseANdColectionPurchaseChart.db)
             .collection(UserDatabaseANdColectionPurchaseChart.collection);
           Promise.all([
-            users_collection.findOneAndUpdate(
-              { _id: user._id },
-              { $set: update }
-            ),
+            //   users_collection.findOneAndUpdate(
+            //     { _id: user._id },
+            //     { $set: update }
+            //    ),
             user_chart_collections.insertOne(purchased_Chart),
           ])
             .then((rsp) => {
               let response = {
-                users: rsp[0],
-                purchase: rsp[1],
+                //users: rsp[0],
+                purchase: rsp[0],
               };
               //? if the connection does not happen the purchased has alraedy happen and register so that is why i do not reject promsie
               //it is  unlikly tha connecion will nor close in this point.
@@ -469,10 +311,4 @@ function gift(user: clients, packet: packet, comment: string) {
   });
 }
 
-export {
-  FindUser,
-  purchasedChartFunction,
-  Purchase,
-  getAvailplePackets,
-  InserteUser,
-};
+export { purchasedChartFunction, Purchase, getAvailplePackets, gift };

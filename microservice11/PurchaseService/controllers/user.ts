@@ -1,9 +1,7 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/interfaces/AuthRequest";
 import {
-  FindUser,
   getAvailplePackets,
-  InserteUser,
   Purchase,
   purchasedChartFunction,
 } from "../utils/mongo";
@@ -64,53 +62,5 @@ const FindAvailablePacks = (
   const Plans = getAvailplePackets();
   res.status(200).json({ plans: Plans });
 };
-/**
- * client  get client
- * @param Req
- * @param Res
- * @param next
- */
-const GetClient = (req: AuthRequest, res: Response, next: NextFunction) => {
-  const client = req.sub;
-  console.log("one");
-  if (client) {
-    FindUser(client)
-      .then((user: clients | null) => {
-        if (user === null) {
-          res.status(200).json({ msg: "client not register in db" });
-        } else {
-          res.status(200).json({ user });
-        }
-      })
-      .catch((err) => {
-        res.status(400).json({ err });
-      });
-  } else {
-    res.status(401).json({ errmsg: "user not authenticated" });
-  }
-};
-const postClient = (req: AuthRequest, res: Response, next: NextFunction) => {
-  const client = req.sub;
 
-  if (client) {
-    InserteUser(client)
-      .then((id: ObjectId) => {
-        res
-          .status(200)
-          .json({ msg: `client have been  register with _id:${id}` });
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(400).json({ err });
-      });
-  } else {
-    res.status(401).json({ errmsg: "user not authenticated" });
-  }
-};
-export {
-  PurchasePlan,
-  PurchaseChart,
-  FindAvailablePacks,
-  GetClient,
-  postClient,
-};
+export { PurchasePlan, PurchaseChart, FindAvailablePacks };
