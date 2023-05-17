@@ -156,15 +156,10 @@ function DB_collection(
   return collection_db;
 }
 export function insertLineChart(
-  chart: linesChart,
-  ownerShip: string
+  chart: ChartRecord
 ): Promise<InsertOneResult<Document>> {
   return new Promise((resolve, reject) => {
-    const chartR: ChartRecord = {
-      chart: chart,
-      ownerShip: ownerShip,
-      createAT: Date(),
-    };
+    const chartR: ChartRecord = chart;
     const mongoConnection = StartConection();
     if (typeof mongoConnection === "boolean") {
       reject("Not able to create  a connetion");

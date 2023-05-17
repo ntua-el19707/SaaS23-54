@@ -3,6 +3,7 @@ import { packet } from "./interfaces/packet";
 import { generateRandomString } from "./genarateRandomString";
 import { purchasedChart, purchasedPacket } from "./interfaces/Purchsased";
 import { clients } from "./interfaces/user";
+import { PublishPurchasedPackage } from "./Producers";
 
 const options: any = {
   useUnifiedTopology: true,
@@ -97,9 +98,9 @@ function Purchase(user_id: string, RequestedPacket: packet, Payment: any) {
       };
       const user_record: clients = { user_id: user_id };
       InsertPurchasedPacket(purchased, user_record)
-        .then((packet_user_record) => {
+        .then(async (packet_user_record) => {
           //TODO later
-
+          await PublishPurchasedPackage(user_id, RequestedPacket.credits); //send  message to auth to increase  credirts
           resolve(packet_user_record);
           //check Pyament and do payment if faild delete recort or att a field failed Purchaed and remove the credits
         })

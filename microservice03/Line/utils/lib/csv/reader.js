@@ -12,10 +12,7 @@ const pathM = require("path");
  * @returns file context
  */
 function readCsv(FileName) {
-  const path = pathM.join(
-    __dirname,
-    `../../../../../microservice08/upload/utils/Files/CSV/${FileName}`
-  );
+  const path = `utils/Files/CSV/${FileName}`;
 
   const data = readFileSync(path, { encoding: "utf8", flag: "r" });
   return data;
@@ -164,7 +161,9 @@ function readSeries(lines, index) {
   }
   return { json, index };
 }
-function getJsonFromFile(data) {
+function getJsonFromFile(fileName) {
+  const data = readCsv(fileName);
+  destroy(fileName);
   return csvJSON(data);
 }
 function destroy(filename) {

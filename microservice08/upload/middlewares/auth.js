@@ -12,6 +12,7 @@ exports.auth = (req, res, next) => {
     .get(`${auth_server}/api_user/user`)
     .then((response) => {
       const user = response.data.user;
+      console.log(user);
       if (user.credits > 0) {
         req.sub = user._id;
         next();

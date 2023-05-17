@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import router from "./routes/master";
+import { Consumers } from "./utils/consumer";
 const app = express();
 app.use(bodyParser.json());
 app.use(
@@ -13,7 +14,7 @@ var corsOptions = {
   origin: "http://127.0.0.1:4200", // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
-
+Consumers();
 app.use("/api_user", router);
 app.use(
   "/*",

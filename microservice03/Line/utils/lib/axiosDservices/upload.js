@@ -2,7 +2,7 @@ require("dotenv").config();
 const axios = require("axios");
 const FormData = require("form-data");
 const { createReadStream } = require("fs");
-const { sendFiles } = require("../Producers");
+const { sendFiles, PublisDiagram, Charge } = require("../Producers");
 
 function RequestData(filename, jwt) {
   return new Promise((resolve, reject) => {
@@ -112,8 +112,13 @@ function InsertData(data, jwt, id) {
     }
   });
 }
-function UpdateApis(filename, jwt, data, id) {
-  return sendFiles(id, jwt, filename); // new Promise((resolve, reject) => {
+function UpdateApis(filename, owner, data, id) {
+  data._id = id;
+  return Promise.all([
+    sendFiles(id, owner, filename),
+    PublisDiagram(data, owner),
+    Charge(owner),
+  ]); // new Promise((resolve, reject) => {
   //let dserviceP = uploadAll4(filename, jwt, id);
   //let insertP = InsertData(data, jwt, id);
 

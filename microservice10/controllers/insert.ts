@@ -11,7 +11,7 @@ import {
   insertPollarChart,
 } from "../lib/mongo";
 const PostLine = (req: PostLineRequest, res: Response, next: NextFunction) => {
-  const chart = req.body.chart;
+  /* const chart = req.body.chart;
 
   if (req.sub && chart) {
     insertLineChart(chart, req.sub)
@@ -23,7 +23,7 @@ const PostLine = (req: PostLineRequest, res: Response, next: NextFunction) => {
       });
   } else {
     res.status(401).json({ err: "acess decliend" });
-  }
+  }*/
 };
 const PostNetork = (
   req: PostNetworkRequest,

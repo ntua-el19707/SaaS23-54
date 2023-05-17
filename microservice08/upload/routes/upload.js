@@ -3,6 +3,7 @@ const router = Router();
 var multer = require("multer"); //use for  upload
 const { uploadPost, saveDB, getData } = require("../controllers/upload");
 const { makeid } = require("../utils/lib/genaratorString");
+const { typeVerification } = require("../middlewares/type");
 const path = "utils/Files/CSV";
 //set storage to store the files
 var storage = multer.diskStorage({
@@ -29,12 +30,13 @@ var upload = multer({
 });
 //upload route
 router.post(
-  "/upload",
+  "/upload/:type",
   (req, res, next) => {
     req.MultFilesB = []; //multer will upload file more than once
     next();
   },
   upload.single("file"),
+  typeVerification,
   uploadPost
 );
 router.route("/getFile/:id").get(getData);

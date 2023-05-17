@@ -1,3 +1,3 @@
 node_modules
 utils/Files/CSv/*.csv
-env
+.env

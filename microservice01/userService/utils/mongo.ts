@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, Collection, Document } from "mongodb";
 
 import { user } from "./interfaces/user";
 import { PruduceGifts } from "./interfaces/ProducerGifts";
@@ -275,4 +275,38 @@ function Register(userName: string) {
       });
   });
 }
-export { logIn, FindUser, Register };
+/**
+ * chargeOrGive - charger  a user -1  credits
+ * @params user_id
+ * @returns Promise
+ */
+function chargeOrGive(user_id: string, credits: number): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const connectionClient = StartConection();
+    if (typeof connectionClient === "boolean") {
+      reject("failed to create a connection");
+    } else {
+      connection(connectionClient)
+        .then(() => {
+          // Document filter criteria
+          const filter = { user_id };
+          // Update operation
+          const decreaseBy = credits;
+          const update = { $inc: { credits: decreaseBy } };
+          const collection: Collection<Document> = connectionClient
+            .db(UserDatabaseANdColection.db)
+            .collection(UserDatabaseANdColection.collection);
+          collection
+            .updateOne(filter, update)
+            .then(() => {
+              resolve();
+            })
+            .catch((err) => {
+              reject(err);
+            });
+        })
+        .catch((err) => {});
+    }
+  });
+}
+export { logIn, FindUser, Register, chargeOrGive };

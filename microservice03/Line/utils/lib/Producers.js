@@ -1,5 +1,6 @@
 const amqp = require("amqplib");
 const fs = require("fs");
+const { resolve } = require("path");
 function sendFile(filePath, filInfo, queueName) {
   return new Promise(async (resolve, reject) => {
     const RABBITMQ_URL = process.env.RABBITMQ_URL;
@@ -72,7 +73,7 @@ function sendFiles(chart_id, owner, fileName) {
   if (pngChannel) {
     promises.push(sendFile(PngPath, FileInfo, pngChannel));
   }
-
+  promises.push(PurchaceChart(chart_id, owner));
   // Return a promise that resolves when all file uploads are completed
   return Promise.all(promises);
 }
@@ -85,4 +86,92 @@ function streamToBuffer(stream) {
     stream.on("end", () => resolve(Buffer.concat(chunks)));
   });
 }
-module.exports = { sendFiles };
+function PurchaceChart(chart_id, user_id) {
+  return new Promise(async (resolve, reject) => {
+    const RABBITMQ_URL = process.env.RABBITMQ_URL;
+    const PURCHASE_CHANNEL = process.env.PURCHASE_CHANNEL;
+    console.log(RABBITMQ_URL && PURCHASE_CHANNEL);
+    if (RABBITMQ_URL) {
+      try {
+        const connection = await amqp.connect(RABBITMQ_URL);
+        const channel = await connection.createChannel();
+        channel.assertQueue(PURCHASE_CHANNEL, { durable: true });
+        const message = {
+          chart_id,
+          user_id,
+        };
+        console.log("here");
+        const payload = Buffer.from(JSON.stringify(message));
+        channel.sendToQueue(PURCHASE_CHANNEL, payload);
+        console.log("send");
+        // Close the channel and connection
+        //await channel.close();
+        // /await connection.close();
+        resolve();
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    }
+  });
+}
+function PublisDiagram(chart, ownerShip) {
+  return new Promise(async (resolve, reject) => {
+    const message = {
+      chart,
+      ownerShip,
+      create: Date(),
+    };
+    const payload = Buffer.from(JSON.stringify(message));
+    const RABBITMQ_URL = process.env.RABBITMQ_URL;
+    const queueName = process.env.TOMYDIAGRAMSQUES;
+    console.log(RABBITMQ_URL);
+    if (RABBITMQ_URL && queueName) {
+      try {
+        const connection = await amqp.connect(RABBITMQ_URL);
+        const channel = await connection.createChannel();
+        channel.assertQueue(queueName, { durable: true });
+        console.log("here" + queueName);
+
+        channel.sendToQueue(queueName, payload);
+        console.log("send");
+        // Close the channel and connection
+        //await channel.close();
+        // /await connection.close();
+        resolve();
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    }
+  });
+}
+function Charge(user_id) {
+  return new Promise(async (resolve, reject) => {
+    const RABBITMQ_URL = process.env.RABBITMQ_URL;
+    const queueName = process.env.TOAUTHQUEUE;
+    console.log(RABBITMQ_URL && queueName);
+    if (RABBITMQ_URL) {
+      try {
+        const connection = await amqp.connect(RABBITMQ_URL);
+        const channel = await connection.createChannel();
+        channel.assertQueue(queueName, { durable: true });
+        const message = {
+          user_id,
+        };
+        console.log("here");
+        const payload = Buffer.from(JSON.stringify(message));
+        channel.sendToQueue(queueName, payload);
+        console.log("send to ", queueName);
+        // Close the channel and connection
+        //await channel.close();
+        // /await connection.close();
+        resolve();
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    }
+  });
+}
+module.exports = { sendFiles, PublisDiagram, Charge };

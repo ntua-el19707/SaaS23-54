@@ -21,8 +21,9 @@ app.use(cors(corsOptions));
 
 //import routes
 const api = require("./routes/upload");
+const { consumeFile } = require("./utils/lib/consumer");
 //set up routers
-
+consumeFile();
 app.get("/", (req, res, next) => {
   getJson();
   res.send("ok");

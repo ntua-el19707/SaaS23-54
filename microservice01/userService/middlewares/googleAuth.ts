@@ -10,6 +10,7 @@ const auth = (req: AuthRequest, res: Response, next: NextFunction) => {
       .then((rsp) => {
         if (rsp.valid) {
           req.sub = rsp.userEmail;
+
           next();
         } else {
           res.status(401).json({ errmsg: "Access Denied" });

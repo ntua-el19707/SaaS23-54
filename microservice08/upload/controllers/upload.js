@@ -4,6 +4,7 @@ const chalk = require("chalk");
 const { destroy } = require("../utils/lib/destroy");
 const { readCsv } = require("../utils/lib/reader");
 const { FileDoesNotExist, FileIsNotCsv } = require("../utils/lib/Error");
+const { sendCSVFile } = require("../utils/lib/Producer");
 const success = chalk.green;
 const error = chalk.red.bold;
 const red = chalk.red;
@@ -14,6 +15,7 @@ exports.uploadPost = (req, res, next) => {
     console.log(error("no file to upload  "));
     res.status(400).json({ errmsg: "no file to upload " });
   } else {
+    console.log("one");
     const file = req.file.filename;
     req.MultFilesB.forEach((f) => {
       if (f !== file) {
@@ -22,7 +24,13 @@ exports.uploadPost = (req, res, next) => {
       }
     });
     console.log(success(`file ${file} has suceesfully uploaded`));
-    res.status(200).json({ msg: "File uploated", filename: file });
+    sendCSVFile(file, req.params.type)
+      .then(() => {
+        res.status(200).json({ msg: "File uploated", filename: file });
+      })
+      .catch((err) => {
+        res.status(400).json({ err });
+      });
   }
 };
 exports.getData = (req, res, next) => {
