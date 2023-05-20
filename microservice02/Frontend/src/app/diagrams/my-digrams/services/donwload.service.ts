@@ -5,7 +5,11 @@ import { Injectable } from "@angular/core";
   providedIn: "root",
 })
 export class DonwloadService {
-  private url: string = "/api_Download";
+  private urlPng: string = "/api_DonloadPng";
+  private urlSvg: string = "/api_DonloadSvg";
+  private urlHtml: string = "/api_DonloadHtml";
+  private urlPdf: string = "/api_DonloadPdf";
+
   constructor(private http: HttpClient) {}
   /**
    * DownLoadPng
@@ -13,7 +17,7 @@ export class DonwloadService {
    */
   public DownLoadPng(id: string) {
     console.log(id);
-    let url = `${this.url}/getPng/${id}`;
+    let url = `${this.urlPng}/getPng/${id}`;
     return this.http.get(
       url,
 
@@ -28,7 +32,7 @@ export class DonwloadService {
    * @params id String
    */
   public DownLoadHtml(id: string) {
-    let url = `${this.url}/getHtml/${id}`;
+    let url = `${this.urlHtml}/getHtml/${id}`;
     return this.http.get(
       url,
 
@@ -43,7 +47,7 @@ export class DonwloadService {
    * @params id String
    */
   public DownLoadSvg(id: string) {
-    let url = `${this.url}/getSvg/${id}`;
+    let url = `${this.urlSvg}/getSvg/${id}`;
     return this.http.get(
       url,
 
@@ -58,7 +62,7 @@ export class DonwloadService {
    * @params id String
    */
   public DownLoadPdf(id: string) {
-    let url = `${this.url}/getPdf/${id}`;
+    let url = `${this.urlPdf}/getPdf/${id}`;
     return this.http.get(
       url,
 

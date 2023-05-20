@@ -73,9 +73,15 @@ export class DragComponent implements OnInit, AfterViewInit {
   }
   uploadTodb() {
     this.upploadService.confirm(this.fileName).subscribe(
-      (r) => {},
-      (err) => {},
-      () => {}
+      (r) => {
+        console.log(r);
+      },
+      (err) => {
+        console.log(err);
+      },
+      () => {
+        console.log("one");
+      }
     );
   }
   uploading(): Boolean {

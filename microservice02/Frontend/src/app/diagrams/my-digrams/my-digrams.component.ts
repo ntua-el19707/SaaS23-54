@@ -69,7 +69,7 @@ export class MyDigramsComponent implements OnInit {
         this.diagramsList.forEach((d) => {
           this.data.push({
             name: d.name,
-            CreatedAt: d.CreatedAt,
+            CreatedAt: d.createAT,
             Type: d.Type,
             Download: { _id: d._id, name: d.name },
             Preview: d._id,
@@ -109,7 +109,9 @@ export class MyDigramsComponent implements OnInit {
       (r) => {
         saveAs(r, `line-${Download.name}.png`);
       },
-      (err) => {},
+      (err) => {
+        console.log(err);
+      },
       () => {}
     );
   }

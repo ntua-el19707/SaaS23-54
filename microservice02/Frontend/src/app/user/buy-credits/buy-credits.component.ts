@@ -26,6 +26,13 @@ export class BuyCreditsComponent implements OnInit, AfterViewInit {
     this.resize(); //resize  box according to openning
   }
   ngOnInit(): void {
+    this.purchase.PostOffer({ credits: 3, name: "Standard" }).subscribe(
+      (r) => {
+        console.log("ok");
+      },
+      (err) => {},
+      () => {}
+    );
     this.purchase.offers().subscribe(
       (r: any) => {
         if (r.plans) this.packets = r.plans;

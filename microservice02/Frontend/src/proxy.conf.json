@@ -3,42 +3,9 @@
         "target": "http://localhost:3000/",
         "secure": false,
         "logLevel":"debug"     
-    },"/api_Pollar/*":{
-        "target": "http://localhost:3001/",
-        "secure": false,
-        "logLevel":"debug"
-     
     },
-     "/api_Line/*": {
-        "target": "http://localhost:3002/",
-        "secure": false,
-        "logLevel":"debug"     
-    },"/api_network/*":{
-        "target": "http://localhost:3003/",
-        "secure": false,
-        "logLevel":"debug"
-    },
-    "/api_DependancyWheel/*":{
-        "target": "http://localhost:3004/",
-        "secure": false,
-        "logLevel":"debug"
-    },
-    "/api_column/*":{
-        "target": "http://localhost:3005/",
-        "secure": false,
-        "logLevel":"debug"
-    }, 
-    "/api_LinewithAnnotations/*":{
-        "target": "http://localhost:3006/",
-        "secure": false,
-        "logLevel":"debug"
-    },
-      "/api_Download/*":{
-        "target": "http://localhost:3007/",
-        "secure": false,
-        "logLevel":"debug"
-     
-    },
+
+
     "/api_Mydiagrams/*":{
         "target": "http://localhost:3008/",
         "secure": false,
@@ -48,7 +15,37 @@
    ,   "/api_user/*":{
         "target": "http://localhost:3010/",
         "secure": false,
+        "logLevel":"debug"     
+        , "headers": {
+      "Connection": "keep-alive"}
+    
+     
+    },
+     "/api_purchase/*":{
+        "target": "http://localhost:3011/",
+        "secure": false,
+        "logLevel":"debug"
+     
+    },      "/api_DonloadPng/*":{
+        "target": "http://localhost:3014/",
+        "secure": false,
+        "logLevel":"debug"
+     
+    },      "/api_DonloadHtml/*":{
+        "target": "http://localhost:3015/",
+        "secure": false,
+        "logLevel":"debug"
+     
+    },      "/api_DonloadPdf/*":{
+        "target": "http://localhost:3013/",
+        "secure": false,
+        "logLevel":"debug"
+     
+    },      "/api_DonloadSvg/*":{
+        "target": "http://localhost:3012/",
+        "secure": false,
         "logLevel":"debug"
      
     }
+
 }
