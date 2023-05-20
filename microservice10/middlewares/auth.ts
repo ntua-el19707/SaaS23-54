@@ -1,7 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { NextFunction, Response } from "express";
 import { AuthRequest } from "../lib/interfaces/Request";
-
 /**
  * auth middleware - checks if the request has a valid jwt token and retrieves the user information
  * @param req Request
@@ -20,14 +19,13 @@ export const auth = (req: AuthRequest, res: Response, next: NextFunction) => {
 
   // Make request to auth service to get user information
   axios
-    .get(`${auth_server}api_user/user`)
+    .get(`${auth_server}/api_user/services/getUser`)
     .then((response: AxiosResponse) => {
       // Get user information from response
       const user = response.data.user;
-      console.log(user);
 
       // Set user id as sub property of request object
-      req.sub = user._id;
+      req.sub = user;
 
       // Call next middleware
       next();
@@ -35,6 +33,6 @@ export const auth = (req: AuthRequest, res: Response, next: NextFunction) => {
     .catch((error) => {
       console.log(error);
       // If there's an error, send error response with error code and message
-      res.status(400).json({ error });
+      res.status(error.response.status).json({ error });
     });
 };

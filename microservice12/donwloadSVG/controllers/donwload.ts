@@ -2,7 +2,7 @@ import { AuthRequest } from "../utils/interfaces/Request";
 import { downloadDocs } from "../utils/interfaces/docs";
 import { findChart } from "../utils/lib/mongodb";
 import { Response, NextFunction } from "express";
-
+import * as fs from "fs";
 import path from "path";
 
 /** Middleware to find a chart based on its ID */
@@ -39,8 +39,25 @@ export const downloadSvgController = (
   next: NextFunction
 ) => {
   // Send the SVG file to the client
-  res.sendFile(
-    path.join(__dirname, "../utils/Files/svg", `${req.File_id}`),
-    function (err) {}
-  );
+
+  if (req.File_id) {
+    console.log(req.File_id);
+    console.log(__dirname);
+    const filepath = path.join(
+      __dirname,
+      `../utils/Files/svg/${req.File_id}.svg`
+    );
+    console.log(filepath);
+    fs.access(filepath, fs.constants.F_OK, (err) => {
+      if (err) {
+        console.error("File does not exist.");
+      } else {
+        console.log("File exists.");
+      }
+    });
+
+    res.sendFile(filepath, function (err) {});
+  } else {
+    res.status(400).json({ err: "not fileid" });
+  }
 };

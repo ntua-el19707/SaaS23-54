@@ -40,8 +40,15 @@ export const downloadhtmlController = (
   next: NextFunction
 ) => {
   // Send the html file to the client
-  res.sendFile(
-    path.join(__dirname, "../utils/Files/html", `${req.File_id}`),
-    function (err) {}
-  );
+  if (req.File_id) {
+    console.log(req.File_id);
+    console.log(__dirname);
+    const filepath = path.join(
+      __dirname,
+      `../utils/Files/html/${req.File_id}.html`
+    );
+    res.sendFile(filepath, function (err) {});
+  } else {
+    res.status(400).json({ err: "not fileid" });
+  }
 };

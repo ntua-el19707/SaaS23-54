@@ -1,4 +1,5 @@
 const typeVerification = (req, res, next) => {
+  console.log("verification");
   const validTypes = [
     "line",
     "network",
@@ -9,6 +10,7 @@ const typeVerification = (req, res, next) => {
   ];
   const type = req.params.type;
   if (validTypes.includes(type)) {
+    console.log(type);
     next();
   } else {
     res.status(400).json({

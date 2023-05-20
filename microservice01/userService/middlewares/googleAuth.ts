@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { validateGoogleToken } from "../utils/googleauth";
 import { AuthRequest } from "../utils/interfaces/AuthRequest";
 
@@ -23,4 +23,5 @@ const auth = (req: AuthRequest, res: Response, next: NextFunction) => {
     res.status(401).json({ errmsg: "you have not provided login jwt" });
   }
 };
+
 export { auth };

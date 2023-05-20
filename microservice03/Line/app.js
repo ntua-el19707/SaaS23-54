@@ -25,12 +25,14 @@ const { consumeFile } = require("./utils/lib/consumer");
 //set up routers
 consumeFile();
 app.get("/", (req, res, next) => {
-  getJson();
+  //getJson();
   res.send("ok");
 });
+
 app.use("/api_Line", api);
 //set up 404
 app.use("/*", (req, res, next) => {
+  console.log(req);
   res.status(404).json({ errmsg: "Resource not  found" });
 });
 

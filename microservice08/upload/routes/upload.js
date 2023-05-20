@@ -33,6 +33,7 @@ router.post(
   "/upload/:type",
   (req, res, next) => {
     req.MultFilesB = []; //multer will upload file more than once
+    console.log("i am listening");
     next();
   },
   upload.single("file"),

@@ -40,8 +40,16 @@ export const downloadPdfController = (
   next: NextFunction
 ) => {
   // Send the Pdf file to the client
-  res.sendFile(
-    path.join(__dirname, "../utils/Files/Pdf", `${req.File_id}`),
-    function (err) {}
-  );
+  if (req.File_id) {
+    console.log(req.File_id);
+    console.log(__dirname);
+    const filepath = path.join(
+      __dirname,
+      `../utils/Files/pdf/${req.File_id}.pdf`
+    );
+
+    res.sendFile(filepath, function (err) {});
+  } else {
+    res.status(400).json({ err: "not fileid" });
+  }
 };

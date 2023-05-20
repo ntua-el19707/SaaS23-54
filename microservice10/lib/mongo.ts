@@ -197,15 +197,9 @@ export function insertLineChart(
   });
 }
 export function insertPollarChart(
-  chart: PollarChart,
-  ownerShip: string
+  chartR: ChartRecord
 ): Promise<InsertOneResult<Document>> {
   return new Promise((resolve, reject) => {
-    const chartR: ChartRecord = {
-      chart: chart,
-      ownerShip: ownerShip,
-      createAT: Date(),
-    };
     const mongoConnection = StartConection();
     if (typeof mongoConnection === "boolean") {
       reject("Not able to create  a connetion");
@@ -243,15 +237,9 @@ export function insertPollarChart(
   });
 }
 export function insertNetworkChart(
-  chart: NetworkChart,
-  ownerShip: string
+  chartR: ChartRecord
 ): Promise<InsertOneResult<Document>> {
   return new Promise((resolve, reject) => {
-    const chartR: ChartRecord = {
-      chart: chart,
-      ownerShip: ownerShip,
-      createAT: Date(),
-    };
     const mongoConnection = StartConection();
     if (typeof mongoConnection === "boolean") {
       reject("Not able to create a connetion");

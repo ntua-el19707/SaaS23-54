@@ -1,3 +1,4 @@
+import fs from "fs";
 import { AuthRequest } from "../utils/interfaces/Request";
 import { downloadDocs } from "../utils/interfaces/docs";
 import { findChart } from "../utils/lib/mongodb";
@@ -40,8 +41,28 @@ export const downloadpngController = (
   next: NextFunction
 ) => {
   // Send the png file to the client
-  res.sendFile(
-    path.join(__dirname, "../utils/Files/png", `${req.File_id}`),
-    function (err) {}
-  );
+
+  if (req.File_id) {
+    console.log(req.File_id);
+    console.log(__dirname);
+    const filepath = path.join(
+      __dirname,
+      `../utils/Files/png/${req.File_id}.png`
+    );
+    console.log(filepath);
+    console.log(checkFileExists(filepath));
+    res.sendFile(filepath, function (err) {});
+  } else {
+    res.status(400).json({ err: "not fileid" });
+  }
 };
+
+function checkFileExists(filePath: string): boolean {
+  try {
+    // Check if the file exists
+    fs.accessSync(filePath, fs.constants.F_OK);
+    return true; // File exists
+  } catch (error) {
+    return false; // File does not exist
+  }
+}

@@ -12,7 +12,7 @@ function sendFile(filePath, queueName, filInfo) {
         channel.assertQueue(queueName, { durable: true });
         const filestream = fs.createReadStream(filePath);
         const streamContent = await streamToBuffer(filestream);
-        console.log("here");
+
         const messageHeaders = {
           FleInfo: JSON.stringify(filInfo),
         };
@@ -20,7 +20,7 @@ function sendFile(filePath, queueName, filInfo) {
           headers: messageHeaders,
           persistent: true,
         });
-        console.log("send");
+        console.log(`Send  to ${queueName}`);
 
         resolve();
       } catch (err) {
@@ -74,10 +74,10 @@ function getChannel(type) {
       channel = process.env.LINECHANNEL;
       break;
     case "network":
-      channel = process.env.NETWORKCHANNEL;
+      channel = process.env.NETWORKQUEUE;
       break;
     case "pollar":
-      channel = process.env.POLLARCHANNEL;
+      channel = process.env.POLLARQUEUE;
       break;
     case "dependency_wheel":
       channel = process.env.DEPENDENCYWHEELCHANNEL;

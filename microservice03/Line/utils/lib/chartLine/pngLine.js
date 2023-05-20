@@ -37,7 +37,10 @@ function buildAll(options) {
       fs.writeFileSync(html_path, getHtml(chartOptions));
 
       //now  we are gone  lunch puppeteer
-      const browser = await puppeteer.launch();
+      const browser = await puppeteer.launch({
+        executablePath: "/usr/bin/google-chrome",
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
       const page = await browser.newPage();
 
       await page.setContent(html);

@@ -1,7 +1,10 @@
+const { UpdateApis } = require("../utils/lib/Producers.js/Producers");
 const { buildAll } = require("../utils/lib/chartnetwork/network");
 const { getJsonFromFile, destroy } = require("../utils/lib/csv/reader");
-const { insertChart } = require("../utils/lib/mongodb");
+const { makeid } = require("../utils/lib/genaratorString");
 const { validateInput } = require("../utils/lib/valodators/validators");
+
+require("dotenv").config();
 
 /**
  * saveDB - controller save data in DB and the delete the csv
@@ -11,18 +14,21 @@ exports.saveDB = (req, res, next) => {
   if (file) {
     try {
       const data = getJsonFromFile(file); // get data from csv  ;
-      //   destroy(file);
-      //console.log(validateInput(data));
-      if (/*validateInput(data)*/ true) {
-        const owner = "victoras";
+
+      if (validateInput(data)) {
+        const owner = req.sub;
+        console.log("here" + owner);
         buildAll(data)
           .then((file) => {
-            //now charts  have build 2 thing  chaerge  and save  db
-            insertChart(data, owner, file)
-              .then((rsp) => {
-                res.status(200).json({ rsp });
+            console.log(file);
+            const id = makeid(8);
+            console.log(`files  build`);
+            UpdateApis(file, req.sub, data, id)
+              .then((respapis) => {
+                res.status(200).json({ msg: `purchased diagram ${id} ` });
               })
               .catch((err) => {
+                console.log("err");
                 console.log(err);
                 res.status(400).json({ err });
               });

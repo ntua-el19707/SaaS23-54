@@ -20,10 +20,10 @@ app.use(cors(corsOptions));
 
 //import routes
 const api_network = require("./routes/master");
+const { consumeFile } = require("./utils/lib/consumer");
 //set up routers
-
+consumeFile();
 app.get("/", (req, res, next) => {
-
   res.send("ok");
 });
 app.use("/api_network", api_network);

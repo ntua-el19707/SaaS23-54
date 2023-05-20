@@ -14,19 +14,19 @@ export const auth = (req: AuthRequest, res: Response, next: NextFunction) => {
 
   // Get jwt token from authorization header
   const jwt = req.headers.authorization;
-
+  console.log(jwt);
   // Set authorization header for axios requests
   axios.defaults.headers.common["authorization"] = jwt;
 
   // Make request to auth service to get user information
   axios
-    .get(`${auth_server}api_user/user`)
+    .get(`${auth_server}api_user/services/getUser`)
     .then((response: AxiosResponse) => {
       // Get user information from response
       const user = response.data.user;
-
+      console.log(user);
       // Set user id as sub property of request object
-      req.sub = user._id;
+      req.sub = user;
 
       // Call next middleware
       next();

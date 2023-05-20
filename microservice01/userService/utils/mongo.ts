@@ -2,7 +2,7 @@ import { MongoClient, Collection, Document } from "mongodb";
 
 import { user } from "./interfaces/user";
 import { PruduceGifts } from "./interfaces/ProducerGifts";
-import { generateRandomString } from "../../../microservice11/PurchaseService/utils/genarateRandomString";
+import { generateRandomString } from "./genarateRandomString";
 
 const options: any = {
   useUnifiedTopology: true,

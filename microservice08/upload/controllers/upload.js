@@ -11,6 +11,7 @@ const red = chalk.red;
 /** uploadPost -controller check if the upload happen and delete the copy files
  */
 exports.uploadPost = (req, res, next) => {
+  console.log("here");
   if (!req.file) {
     console.log(error("no file to upload  "));
     res.status(400).json({ errmsg: "no file to upload " });

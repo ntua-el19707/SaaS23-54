@@ -2,6 +2,12 @@ import { Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/interfaces/AuthRequest";
 import { FindUser, logIn, Register } from "../utils/mongo";
 import { user } from "../utils/interfaces/user";
+import { issueJWT, verifyJWT } from "../utils/Gennarator.JWT";
+import {
+  ExpiredTokken,
+  JwtWrongFormat,
+  VerrificationError,
+} from "../utils/error";
 
 const Login = (req: AuthRequest, res: Response) => {
   const user: string | undefined = req.sub;
@@ -12,7 +18,10 @@ const Login = (req: AuthRequest, res: Response) => {
         if (u === null) {
           res.status(200).json({ msg: "User is not Register" });
         } else {
-          res.status(200).json({ user: u });
+          console.log("about  to verify user");
+          const jwt = issueJWT(u);
+
+          res.status(200).json({ user: jwt });
         }
       })
       .catch((err) => {

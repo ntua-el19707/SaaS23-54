@@ -12,7 +12,7 @@ const { makeid } = require("../genaratorString");
 function buildAll(options) {
   return new Promise(async (resolve, reject) => {
     try {
-      const chartOptions = buildnetworkOptions(options, true);
+      const chartOptions = buildnetworkOptions(options);
 
       const html = getHtml(chartOptions); //now  i have ready the html
       //* From  Html  i will produce  the  remaining 3
@@ -24,10 +24,7 @@ function buildAll(options) {
       //& downnload mechanism will work idChart => file_id  => send file_id
 
       // create  the folder paths ;
-      const downloadFolder = path.join(
-        __dirname,
-        "../../../../../microservice09/Download/utils/Files"
-      );
+      const downloadFolder = path.join(__dirname, "../../Files");
 
       const html_path = `${downloadFolder}/html/${file_id}.html`;
       const svg_path = `${downloadFolder}/svg/${file_id}.svg`;
@@ -40,13 +37,20 @@ function buildAll(options) {
       fs.writeFileSync(html_path, getHtml(chartOptions));
 
       //now  we are gone  lunch puppeteer
-      const browser = await puppeteer.launch();
+      const browser = await puppeteer.launch({
+        executablePath: "/usr/bin/google-chrome",
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
       const page = await browser.newPage();
 
       await page.setContent(html);
       await page.emulateMediaType("screen");
-      await page.setViewport({ width: 600, height: 400 });
+      await page.setViewport({ width: 600, height: 600, deviceScaleFactor: 1 });
+      await page.evaluate(() => {
+        document.body.style.height = "max-content";
+      });
       setTimeout(() => {
+        console.log("one");
         Promise.all([
           buildPdf(page, pdf_path),
           buildPng(page, png_path),
@@ -54,17 +58,19 @@ function buildAll(options) {
         ])
           .then(async () => {
             await browser.close();
-
+            console.log("ok");
             resolve(file_id);
           })
           .catch(async (err) => {
             await browser.close();
+            console.log(err);
             reject(err);
           });
       }, 1000);
 
       //now  the chart  is  ready  to be exported to the  other types
     } catch (err) {
+      console.log(err);
       reject(err);
     }
   });
@@ -79,11 +85,10 @@ function getHtml(chartOptions) {
 
 <head>
     <meta charset="utf-8">
-    <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
   
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-    
     <style>
         .highcharts-figure,
         .highcharts-data-table table {
@@ -163,7 +168,7 @@ function buildSvg(page, filename) {
 
       // Get the SVG element from the page source
       const svg = await page.$eval("#container svg", (el) => el.outerHTML);
-
+      console.log("svg build");
       fs.writeFileSync(filename, svg);
       resolve();
     } catch (err) {
@@ -186,7 +191,7 @@ function buildPdf(page, filename) {
         printBackground: true,
         format: "A4",
       });
-
+      console.log("pdf build");
       resolve();
     } catch (err) {
       reject(err);
@@ -203,6 +208,7 @@ function buildPng(page, filename) {
   return new Promise(async (resolve, reject) => {
     try {
       await page.screenshot({ path: `${filename}` });
+      console.log("png build");
       resolve();
     } catch (err) {
       reject(err);

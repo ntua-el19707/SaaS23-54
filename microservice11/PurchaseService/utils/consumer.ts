@@ -48,6 +48,7 @@ async function consumeGiftMessages() {
       });
     } catch (err) {
       console.error(err);
+      setTimeout(consumeGiftMessages, 2000);
     }
   }
 }
@@ -73,6 +74,7 @@ async function consumePurchases() {
             user_id: string;
             chart_id: string;
           };
+          console.log(purchasedChart);
 
           purchasedChartFunction(
             purchasedChart.chart_id,
@@ -92,6 +94,7 @@ async function consumePurchases() {
       });
     } catch (err) {
       console.error(err);
+      setTimeout(consumePurchases, 2000);
     }
   }
 }

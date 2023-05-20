@@ -1,0 +1,79 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: some-rabbit
+    hostname: my-rabbit
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=v
+      - RABBITMQ_DEFAULT_PASS=123456
+    command: sh -c "rabbitmq-plugins enable rabbitmq_management && rabbitmq-server"
+  auth:
+    image: authservice
+    ports: 
+      - 3010:3010
+    depends_on:
+      - rabbitmq
+  pollar:
+    image: pollarservice
+    ports: 
+      - 3001:3001
+    depends_on:
+      - rabbitmq
+  line:
+    image: lineservice
+    ports: 
+      - 3002:3002
+    depends_on:
+      - rabbitmq
+  network:
+    image: networkservice
+    ports: 
+      - 3003:3003
+    depends_on:
+      - rabbitmq
+  upload:
+    image: upload
+    ports: 
+      - 3000:3000
+  myDiagrams:
+    image: mydiagrams
+    ports: 
+      - 3008:3008
+    depends_on:
+      - rabbitmq
+  purchaseService:
+    image: purchaseservice
+    ports: 
+    - 3011:3011
+    depends_on:
+    - rabbitmq
+  donwloadSvg:
+    image: donwloadsvg
+    ports: 
+    - 3012:3012
+    depends_on:
+    - rabbitmq
+  donwloadPdf:
+    image: donwloadpdf 
+    ports: 
+    - 3013:3013
+    depends_on:
+    - rabbitmq
+  donwloadPng:
+    image: donwloadpng
+    ports: 
+    - 3014:3014
+    depends_on:
+    - rabbitmq
+  donwloadHtml:
+    image: donwloadhtml 
+    ports: 
+    - 3015:3015
+    depends_on:
+    - rabbitmq
+
+  

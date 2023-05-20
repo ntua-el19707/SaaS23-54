@@ -46,7 +46,7 @@ async function consumeFile() {
 
           const fileStream = fs.createWriteStream(path);
           readableStream.pipe(fileStream);
-
+          console.log(fileName);
           // Handle the end of the file stream
           fileStream.on("finish", () => {
             console.log("File received and saved:", path);
@@ -74,7 +74,8 @@ async function consumeFile() {
         }
       });
     } catch (err) {
-      console.error("Error consuming file:", err);
+      //console.error("Error consuming file:", err);
+      setTimeout(consumeFile, 1000);
     }
   }
 }

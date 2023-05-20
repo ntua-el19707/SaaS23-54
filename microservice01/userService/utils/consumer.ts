@@ -43,6 +43,7 @@ async function consumeCharge() {
       });
     } catch (err) {
       console.error("Error consuming file:", err);
+      setTimeout(consumeCharge, 1000);
     }
   }
 }
@@ -69,7 +70,7 @@ async function consumePacket() {
             user_id: string;
             credits: number;
           };
-
+          console.log(purchaseto);
           if (purchaseto.credits > 0) {
             chargeOrGive(purchaseto.user_id, purchaseto.credits)
               .then(() => {})
@@ -87,6 +88,7 @@ async function consumePacket() {
       });
     } catch (err) {
       console.error("Error consuming file:", err);
+      setTimeout(consumePacket, 1000);
     }
   }
 }
