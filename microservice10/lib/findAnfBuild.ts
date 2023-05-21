@@ -46,7 +46,7 @@ interface NetworkBuild {
     };
     id: string;
     data: [string, string][];
-  };
+  }[];
 }
 
 function findAndBuilNetwork(id: string): Promise<NetworkBuild> {
@@ -54,23 +54,26 @@ function findAndBuilNetwork(id: string): Promise<NetworkBuild> {
     findNetwork(id)
       .then((chart: ChartRecord) => {
         const networkOptions = chart.chart as NetworkChart;
+        console.log(networkOptions);
         let data: NetworkBuild = {
           chart: {
             type: "networkgraph",
             height: "100%",
           },
           title: networkOptions.title,
-          series: {
-            accessibility: {
-              enabled: false,
+          series: [
+            {
+              accessibility: {
+                enabled: false,
+              },
+              dataLabels: {
+                enabled: true,
+                linkFormat: "",
+              },
+              id: "lang-tree",
+              data: networkOptions.series,
             },
-            dataLabels: {
-              enabled: true,
-              linkFormat: "",
-            },
-            id: "lang-tree",
-            data: networkOptions.series,
-          },
+          ],
           plotOptions: {
             networkgraph: {
               keys: ["from", "to"],
@@ -124,9 +127,12 @@ interface PollarBuild {
 
 function findAndBuildPollar(id: string): Promise<PollarBuild> {
   return new Promise((resolve, reject) => {
+    console.log(`looking  For ${id}`);
     findPollar(id)
       .then((chart: ChartRecord) => {
+        console.log(chart);
         const PollarOptions = chart.chart as PollarChart;
+
         let data: PollarBuild = {
           chart: {
             polar: true,
@@ -185,6 +191,7 @@ export function FindPreview(
       case 8:
         findAndBuilNetwork(id)
           .then((network: NetworkBuild) => {
+            console.log(JSON.stringify(network));
             resolve(network);
           })
           .catch((err) => {

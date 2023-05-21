@@ -50,6 +50,7 @@ const findSpec = (req: AuthRequest, res: Response, next: NextFunction) => {
   const id: string = req.params.id;
   FindPreview(id)
     .then((chart) => {
+      console.log(chart);
       res.status(200).json({ chart });
     })
     .catch((err) => {

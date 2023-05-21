@@ -317,6 +317,7 @@ export function findLine(id: string): Promise<ChartRecord> {
 export function findNetwork(id: string): Promise<ChartRecord> {
   return new Promise((resolve, reject) => {
     const mongoConnection = StartConection();
+    console.log(`Looking  for  Network diagram ${id}`);
     if (typeof mongoConnection === "boolean") {
       reject("Not able to create a connetion");
     } else {
@@ -362,7 +363,7 @@ export function findPollar(id: string): Promise<ChartRecord> {
         .then(() => {
           const Pollarcollection: Collection<Document> = DB_collection(
             mongoConnection,
-            LineCollection
+            PollarCollection
           );
 
           Pollarcollection.findOne({ "chart._id": id })

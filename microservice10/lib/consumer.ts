@@ -96,6 +96,7 @@ async function consumeChartNetwork() {
             createAT: info.create,
           };
 
+          console.log(chart);
           // Insert the network chart into the database
           insertNetworkChart(chart)
             .then(() => {})
