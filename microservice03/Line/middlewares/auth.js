@@ -1,5 +1,5 @@
 const axios = require("axios");
-
+const Redis = require("ioredis");
 require("dotenv").config();
 
 exports.auth = (req, res, next) => {
@@ -15,7 +15,31 @@ exports.auth = (req, res, next) => {
       console.log(user);
 
       req.sub = user;
-      next();
+      const redis = new Redis({
+        host: "saas23-54-redis-1", // the service name defined in the docker-compose.yml file
+        port: 6379, // the mapped port
+      });
+      // Retrieve the value
+      console.log(`${user}Credits`);
+      redis.get(`${user}Credits`, (err, value) => {
+        if (err) {
+          res.status(400).json({ err });
+        } else if (value === null) {
+          res.status(400).json({
+            errmsg: "something  went wrong in the procees  try again ",
+          });
+        } else {
+          if (value > 0) {
+            req.credits = value;
+            console.log(`You have ${value} credits`);
+            next();
+          } else {
+            res.status(200).json({
+              msg: "You have not enough credits to purchase a fiagram",
+            });
+          }
+        }
+      });
     })
     .catch((error) => {
       console.log(error);

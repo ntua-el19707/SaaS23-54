@@ -309,4 +309,50 @@ function chargeOrGive(user_id: string, credits: number): Promise<void> {
     }
   });
 }
-export { logIn, FindUser, Register, chargeOrGive };
+function FindUserByUser_id(user_id: string): Promise<user> {
+  return new Promise((resolve, reject) => {
+    const mongoConnection = StartConection();
+    if (typeof mongoConnection === "boolean") {
+      reject("Not able to create a connetion");
+    } else {
+      connection(mongoConnection)
+        .then(() => {
+          const Usercollection: Collection<Document> = mongoConnection
+            .db(UserDatabaseANdColection.db)
+            .collection(UserDatabaseANdColection.collection);
+          Usercollection.findOne({
+            user_id: user_id,
+          }).then((user) => {
+            console.log(user);
+            if (user === null) {
+              reject("Not Such user in db");
+            } else {
+              try {
+                const client = user as user;
+                resolve(client);
+              } catch (err) {
+                reject(err);
+              }
+            }
+          });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
+  });
+}
+
+/**
+ * DB_collection - get mongo collection document
+ * @param conn MongoClient
+ * @param collection  string name of collectiomn
+ * @returns
+ */
+function DB_collection(conn: MongoClient): Collection<Document> {
+  const collection_db = conn
+    .db(UserDatabaseANdColection.db)
+    .collection(UserDatabaseANdColection.db);
+  return collection_db;
+}
+export { logIn, FindUser, Register, chargeOrGive, FindUserByUser_id };

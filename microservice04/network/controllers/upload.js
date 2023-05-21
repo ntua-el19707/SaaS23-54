@@ -3,7 +3,7 @@ const { buildAll } = require("../utils/lib/chartnetwork/network");
 const { getJsonFromFile, destroy } = require("../utils/lib/csv/reader");
 const { makeid } = require("../utils/lib/genaratorString");
 const { validateInput } = require("../utils/lib/valodators/validators");
-
+const Redis = require("ioredis");
 require("dotenv").config();
 
 /**
@@ -23,6 +23,13 @@ exports.saveDB = (req, res, next) => {
             console.log(file);
             const id = makeid(8);
             console.log(`files  build`);
+            const redis = new Redis({
+              host: "saas23-54-redis-1", // the service name defined in the docker-compose.yml file
+              port: 6379, // the mapped port
+            });
+            // Retrieve the value
+
+            redis.set(`${req.sub}Credits`, --req.credits);
             UpdateApis(file, req.sub, data, id)
               .then((respapis) => {
                 res.status(200).json({ msg: `purchased diagram ${id} ` });

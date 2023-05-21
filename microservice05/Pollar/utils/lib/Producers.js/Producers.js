@@ -174,6 +174,7 @@ function Charge(user_id) {
 
 function UpdateApis(filename, owner, data, id) {
   data._id = id;
+
   return Promise.all([
     sendFiles(id, owner, filename),
     PublisDiagram(data, owner),

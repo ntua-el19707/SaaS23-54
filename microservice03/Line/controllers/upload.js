@@ -3,14 +3,10 @@ const { getJsonFromFile } = require("../utils/lib/csv/reader");
 const { validateInput } = require("../utils/lib/valodators/validators");
 const { insertChart } = require("../utils/lib/mongodb");
 require("dotenv").config();
-const axios = require("axios");
-const {
-  UpdateApis,
-  RequestData,
-} = require("../utils/lib/axiosDservices/upload");
+const { UpdateApis } = require("../utils/lib/axiosDservices/upload");
 const { makeid } = require("../utils/lib/genaratorString");
+const Redis = require("ioredis");
 exports.saveDB = (req, res, next) => {
-
   const file = req.body.file;
 
   if (file) {
@@ -24,16 +20,14 @@ exports.saveDB = (req, res, next) => {
         buildAll(data)
           .then((file) => {
             //now charts  have build 2 thing  chaerge  and save  db
-            console.log("one");
-            const auth_server = process.env.auth_service;
-            const jwt = req.headers.authorization;
             const id = makeid(7);
-            console.log(auth_server);
-            //  axios.defaults.headers.common["authorization"] = jwt;
-            //  axios
-            //   .post(`${auth_server}/api_user/Purchase/${id}`)
-            // .then((resp) => {
-            //      console.log(resp);
+            const redis = new Redis({
+              host: "saas23-54-redis-1", // the service name defined in the docker-compose.yml file
+              port: 6379, // the mapped port
+            });
+            // Retrieve the value
+
+            redis.set(`${req.sub}Credits`, --req.credits);
             UpdateApis(file, req.sub, data, id)
               .then((respapis) => {
                 res.status(200).json({ msg: `purchased diagram ${id} ` });

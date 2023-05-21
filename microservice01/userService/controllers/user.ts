@@ -2,12 +2,8 @@ import { Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/interfaces/AuthRequest";
 import { FindUser, logIn, Register } from "../utils/mongo";
 import { user } from "../utils/interfaces/user";
-import { issueJWT, verifyJWT } from "../utils/Gennarator.JWT";
-import {
-  ExpiredTokken,
-  JwtWrongFormat,
-  VerrificationError,
-} from "../utils/error";
+import { issueJWT } from "../utils/Gennarator.JWT";
+import Redis from "ioredis";
 
 const Login = (req: AuthRequest, res: Response) => {
   const user: string | undefined = req.sub;
@@ -19,8 +15,14 @@ const Login = (req: AuthRequest, res: Response) => {
           res.status(200).json({ msg: "User is not Register" });
         } else {
           console.log("about  to verify user");
-          const jwt = issueJWT(u);
 
+          const jwt = issueJWT(u);
+          const redis = new Redis({
+            host: "saas23-54-redis-1", // the service name defined in the docker-compose.yml file
+            port: 6379, // the mapped port
+          });
+          console.log(`${u.user_id}Credits`);
+          redis.set(`${u.user_id}Credits`, u.credits);
           res.status(200).json({ user: jwt });
         }
       })
@@ -46,6 +48,7 @@ const FindUserController = (
       } else {
         try {
           const client = u as user;
+
           res.status(200).json({ user: client });
         } catch (err) {
           res.status(400).json({ err });
@@ -66,7 +69,8 @@ const register = (req: AuthRequest, res: Response, next: NextFunction) => {
           .then((u) => {
             try {
               const client = u as user;
-              res.status(200).json({ user: client });
+              const jwt = issueJWT(client);
+              res.status(200).json({ user: jwt });
             } catch (err) {
               res.status(400).json({ err });
             }

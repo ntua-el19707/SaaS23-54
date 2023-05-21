@@ -75,5 +75,9 @@ services:
     - 3015:3015
     depends_on:
     - rabbitmq
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
 
   

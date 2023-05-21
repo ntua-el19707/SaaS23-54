@@ -118,6 +118,7 @@ function PurchaceChart(chart_id, user_id) {
 }
 function PublisDiagram(chart, ownerShip) {
   return new Promise(async (resolve, reject) => {
+    chart.series = chart.series.data;
     const message = {
       chart,
       ownerShip,
