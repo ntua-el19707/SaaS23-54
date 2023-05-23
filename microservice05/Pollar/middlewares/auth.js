@@ -9,7 +9,7 @@ exports.auth = (req, res, next) => {
   axios.defaults.headers.common["authorization"] = jwt;
   console.log(jwt);
   axios
-    .get(`${auth_server}/api_user/services/getUser`)
+    .get(`${auth_server}/api_user/services/Diagrams/getUser`)
     .then((response) => {
       const user = response.data.user;
       console.log(user);
@@ -35,7 +35,7 @@ exports.auth = (req, res, next) => {
             next();
           } else {
             res.status(200).json({
-              msg: "You have not enough credits to purchase a fiagram",
+              msg: "You have not enough credits to purchase a diagram",
             });
           }
         }

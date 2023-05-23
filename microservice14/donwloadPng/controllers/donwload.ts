@@ -51,7 +51,7 @@ export const downloadpngController = (
     );
     console.log(filepath);
     console.log(checkFileExists(filepath));
-    res.sendFile(filepath, function (err) {});
+    res.download(filepath, function (err) {});
   } else {
     res.status(400).json({ err: "not fileid" });
   }

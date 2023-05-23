@@ -1,5 +1,6 @@
 export interface Diagram {
-    title: string,
-    imgpath: string
-    disc: string
+  title: string | undefined;
+  disc: string;
+  options: any;
+  redirect: string;
 }

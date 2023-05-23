@@ -1,27 +1,25 @@
-<div class="container">
-    <div class="overflow-x-scroll Cards">
-        <div style="display: flex;padding: 0;" *ngFor="let d of getDiagrams()">
-            <button mat-button style="height: fit-content;">
-                <mat-card class="Card">
-                    <mat-card-header>
-                        <mat-card-title>{{d.title}}</mat-card-title>
-                        <mat-card-subtitle>{{d.disc}}</mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <!--   <img mat-card-image src="/assets/images/graph.jpg" alt="Phot of grapf"> -->
-                        <highcharts-chart [Highcharts]="highcharts" [options]="chartOptions"
-                            style="width: 100%; height: 400px; display: block;">
-                        </highcharts-chart>
-                    </mat-card-content>
-
-                </mat-card>
+<div style="margin-left: 5%; margin-right: 5%; width: 90%; margin-top: 5%;">
+    <h1 class="text-green-500">Select the Type of chart you wish to create</h1>
+    <div class="overflow-x-scroll Cards w-full">
+        <div style="display: flex; padding: 0;" *ngFor="let d of getDiagrams()">
+            <mat-card class="Card" style="height: 600px; width: 360px; margin-left: 1em;">
+                <mat-card-header style="height: 5%;">
+                    <mat-card-title class="whitespace-normal">{{ d.title }}</mat-card-title>
+                    <mat-card-subtitle>{{ d.disc }}</mat-card-subtitle>
 
 
-            </button>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-card-actions>
+                        <button mat-button style="color: green;font-size: large;" (click)="navigate(d)">Build
+                            Diagram</button>
+                    </mat-card-actions>
+                    <!-- <img mat-card-image src="/assets/images/graph.jpg" alt="Photo of graph"> -->
+                    <highcharts-chart [Highcharts]="highcharts" [options]="d.options"
+                        style="width: 100%; height: 400px; display: block;"></highcharts-chart>
+                </mat-card-content>
 
-
+            </mat-card>
         </div>
-
-
     </div>
 </div>

@@ -6,16 +6,24 @@ import { Packet } from "../interfaces/packet";
   providedIn: "root",
 })
 export class PurchaseService {
-  private api: string = "/api_purchase";
+  private api: string = "/api_user";
   constructor(private http: HttpClient) {}
   /**
    * offers - get the offers
    */
   offers() {
-    return this.http.get(`${this.api}/offers`);
+    return this.http.get(`/api_user/services/Purchase`);
   }
 
-  PostOffer(plan: Packet) {
-    return this.http.post(`/api_purchase/offers`, { plan });
+  PostOffer(
+    plan: Packet,
+    creditCard: {
+      creditCardNumber: number;
+      expM: number;
+      expY: number;
+      cvv: number;
+    }
+  ) {
+    return this.http.post(`/api_user/services/Purchase`, { plan, creditCard });
   }
 }

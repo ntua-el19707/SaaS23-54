@@ -1,4 +1,11 @@
+<div class="header">
+
+    <mat-card *ngIf="getLoading()" style="width: fit-content;height: fit-content;display:flex">
+        <mat-spinner [diameter]="20" [strokeWidth]="2"></mat-spinner> &nbsp;<span>Loading your diagrams</span>
+    </mat-card>
+</div>
 <div class="cont">
+
     <section class="w-1/2">
         <div class="mat-elevation-z8">
             <table mat-table [dataSource]="getdataSource()">
@@ -27,24 +34,42 @@
                     <td mat-cell *matCellDef="let element">
                         <div class="cont">
                             <section class="w-1/2">
-                                <button style="text-decoration: underline;color: blue ; font-style: italic;"
-                                    (click)="DownloadHtml(element.Download)">html</button>
+                                <div *ngIf="element.Download.happenhtml ; then spinner ;else htmlLink"></div>
+
+                                <ng-template #htmlLink>
+                                    <button style="text-decoration: underline;color: blue ; font-style: italic;"
+                                        (click)="DownloadHtml(element)">html</button>
+                                </ng-template>
+
                             </section>
+                            &nbsp;
                             <section class="w-1/2">
-                                <button style="text-decoration: underline;color: blue ; font-style: italic;"
-                                    (click)="DownloadPng(element.Download)">png</button>
+
+                                <div *ngIf="element.Download.happenpng ; then spinner ;else pngLink"></div>
+
+                                <ng-template #pngLink>
+                                    <button style=" text-decoration: underline;color: blue ; font-style: italic;"
+                                        (click)="DownloadPng(element)">png</button>
+                                </ng-template>
                             </section>
 
 
                         </div>
                         <div class="cont">
                             <section class="w-1/2">
-                                <button style="text-decoration: underline;color: blue ; font-style: italic;"
-                                    (click)="DownloadSvg(element.Download)">svg</button>
+                                <div *ngIf="element.Download.happensvg ; then spinner ;else svgLink"></div>
+
+                                <ng-template #svgLink>
+                                    <button style="text-decoration: underline;color: blue ; font-style: italic;"
+                                        (click)="DownloadSvg(element)">svg</button></ng-template>
                             </section>
+                            &nbsp;
                             <section class="w-1/2">
-                                <button style="text-decoration: underline;color: blue ; font-style: italic;"
-                                    (click)="DownloadPdf(element.Download)">pdf</button>
+                                <div *ngIf="element.Download.happenpdf ; then spinner ;else pdfLink"></div>
+
+                                <ng-template #pdfLink>
+                                    <button style="text-decoration: underline;color: blue ; font-style: italic;"
+                                        (click)="DownloadPdf(element)">pdf</button></ng-template>
                             </section>
 
 
@@ -57,7 +82,11 @@
                 <ng-container matColumnDef="Preview">
                     <th mat-header-cell *matHeaderCellDef> Preview </th>
                     <td mat-cell *matCellDef="let element">
-                        <button (click)="ViewChart(element.Preview)"><mat-icon> bar_chart</mat-icon></button>
+                        <div *ngIf="!getFetchDiagram(element);then chart ;else spinner"></div>
+                        <ng-template #chart>
+                            <button (click)="ViewChart(element.Preview)"><mat-icon> bar_chart</mat-icon></button>
+                        </ng-template>
+
 
 
                     </td>
@@ -66,8 +95,10 @@
                 <tr mat-row *matRowDef="let row; columns: getDisplayColumns();"></tr>
             </table>
 
-            <mat-paginator [pageSizeOptions]="[5, 10]" showFirstLastButtons aria-label="Select page of chart elements">
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                aria-label="Select page of periodic elements">
             </mat-paginator>
+
         </div>
 
     </section>
@@ -85,3 +116,8 @@
         </div>
     </section>
 </div>
+<ng-template #spinner>
+    <div style="padding-left: 0.2em;">
+        <mat-spinner [diameter]="20" [strokeWidth]="2"></mat-spinner>
+    </div>
+</ng-template>

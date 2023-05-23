@@ -9,7 +9,7 @@ exports.auth = (req, res, next) => {
   axios.defaults.headers.common["authorization"] = jwt;
   console.log(jwt);
   axios
-    .get(`${auth_server}/api_user/services/getUser`)
+    .get(`${auth_server}/api_user/services/Diagrams/getUser`)
     .then((response) => {
       const user = response.data.user;
       console.log(user);

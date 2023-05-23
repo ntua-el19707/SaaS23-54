@@ -2,6 +2,21 @@ import { Component, OnInit } from "@angular/core";
 import { Diagram } from "../interfaces/diagram";
 import { NgOptimizedImage } from "@angular/common";
 import * as Highcharts from "highcharts";
+import HighchartsMore from "highcharts/highcharts-more";
+import HC_sankey from "highcharts/modules/sankey";
+import HC_depwheel from "highcharts/modules/dependency-wheel";
+HighchartsMore(Highcharts);
+HC_sankey(Highcharts);
+HC_depwheel(Highcharts);
+import {
+  DependencyWheelDiagram,
+  LineAnotations,
+  LineDiagram,
+  NetworkDiagram,
+  PollarDiagram,
+  collumn,
+} from "src/assets/DemosTS/diafram";
+import { Router } from "@angular/router";
 Highcharts.setOptions({
   exporting: {
     enabled: false,
@@ -16,81 +31,31 @@ export class DiagramsListComponent implements OnInit {
   private Diagrams: Diagram[] = [];
   highcharts = Highcharts;
 
-  chartOptions: Highcharts.Options = {
-    title: {
-      text: "U.S Solar Employment Growth by Job Category, 2010-2020",
-      align: "left",
-    },
+  constructor(private router: Router) {}
 
-    subtitle: {
-      text: 'Source: <a href="https://irecusa.org/programs/solar-jobs-census/" target="_blank">IREC</a>',
-      align: "left",
-    },
-
-    yAxis: {
-      title: {
-        text: "Number of Employees",
-      },
-    },
-
-    xAxis: {
-      accessibility: {
-        rangeDescription: "Range: 2010 to 2020",
-      },
-    },
-
-    plotOptions: {
-      series: {
-        label: {
-          connectorAllowed: false,
-        },
-        pointStart: 2010,
-      },
-    },
-
-    series: [
-      {
-        name: "Tokyo",
-        data: [
-          [24916, 1],
-          37941,
-          29742,
-          29851,
-          32490,
-          30282,
-          38121,
-          36885,
-          33726,
-          34243,
-          31050,
-        ],
-        type: "line",
-      },
-    ],
-
-    responsive: {
-      rules: [
+  ngOnInit(): void {
+    const diagrams = [
+      LineDiagram,
+      PollarDiagram,
+      NetworkDiagram,
+      collumn,
+      LineAnotations,
+      DependencyWheelDiagram,
+    ];
+    diagrams.forEach((d) => {
+      const title = d.name;
+      this.Diagrams = [
+        ...this.Diagrams,
         {
-          condition: {
-            maxWidth: 500,
-          },
-          chartOptions: {},
+          title: title,
+          disc: d.path,
+          options: d.chart,
+          redirect: d.path,
         },
-      ],
-    },
-  };
-
-  constructor() {
-    for (let i = 0; i < 10; i++) {
-      this.Diagrams.push({
-        title: "a",
-        imgpath: "",
-        disc: "This is description",
-      });
-    }
+      ];
+    });
+    console.log(this.Diagrams);
   }
-
-  ngOnInit(): void {}
   /**
    * function - getDiagrams
    * @return Diagram []
@@ -98,5 +63,9 @@ export class DiagramsListComponent implements OnInit {
    */
   getDiagrams(): Diagram[] {
     return this.Diagrams;
+  }
+  navigate(d: Diagram) {
+    console.log(d);
+    this.router.navigate(["/ChartBuild", d.redirect]);
   }
 }

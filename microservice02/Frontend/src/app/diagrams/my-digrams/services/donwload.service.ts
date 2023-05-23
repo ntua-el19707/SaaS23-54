@@ -18,6 +18,7 @@ export class DonwloadService {
   public DownLoadPng(id: string) {
     console.log(id);
     let url = `${this.urlPng}/getPng/${id}`;
+
     return this.http.get(
       url,
 

@@ -27,9 +27,12 @@ export class UploadService {
     console.log("confirm");
     // Set the headers including the 'Connection' header
 
-    return this.http.post(`/api_user/services/${this.service}/confirm`, {
-      file: file,
-    });
+    return this.http.post(
+      `/api_user/services/Diagrams/${this.service}/confirm`,
+      {
+        file: file,
+      }
+    );
   }
   setApi(api: string): void {
     this.api = `${api}`;

@@ -5,14 +5,14 @@ import { Observable } from "rxjs";
   providedIn: "root",
 })
 export class GetDiagramsService {
-  private url: string = "/api_Mydiagrams";
+  private url: string = "/api_user/services/MyDiagrams";
   constructor(private http: HttpClient) {}
   /**
    * getMyDiagrams() - return all of user purchased charts
    * @returns Observable<any>
    */
   public getMyDiagrams(): Observable<any> {
-    let url: string = `${this.url}`;
+    let url: string = `${this.url}/`;
     return this.http.get(url); //get http request
   }
   /**

@@ -12,7 +12,14 @@ import { clients } from "../utils/interfaces/user";
 const PurchasePlan = (req: AuthRequest, res: Response) => {
   const user: string | undefined = req.sub;
   console.log(user);
-  if (user) {
+  const creditCard: {
+    creditCardNumber: number;
+    expM: number;
+    expY: number;
+    cvv: number;
+  } = req.body.creditCard;
+
+  if (user && creditCard) {
     if (req.body.plan) {
       const plan: packet = trickPacket(req.body.plan);
       Purchase(user, plan, null)
@@ -39,6 +46,7 @@ function trickPacket(packet: any): packet {
 const PurchaseChart = (req: AuthRequest, res: Response, next: NextFunction) => {
   const chart = req.params.id;
   const user: string | undefined = req.sub;
+
   if (user) {
     purchasedChartFunction(chart, user)
       .then((rsp) => {

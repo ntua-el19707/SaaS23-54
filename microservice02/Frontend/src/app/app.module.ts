@@ -30,6 +30,7 @@ import { DiagramOppsComponent } from "./diagrams/diagram-opps/diagram-opps.compo
 import { MatDialogModule } from "@angular/material/dialog";
 import { MyDigramsComponent } from "./diagrams/my-digrams/my-digrams.component";
 import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import {
   HTTP_INTERCEPTORS,
   HttpClient,
@@ -38,6 +39,7 @@ import {
 import { PreviewComponent } from "./diagrams/preview/preview.component";
 import { LoginComponent } from "./login/login.component";
 import { HttpIInterceptor } from "./http-i.interceptor";
+import { PurchasePageComponent } from "./diagrams/purchase-page/purchase-page.component";
 
 @NgModule({
   declarations: [
@@ -52,6 +54,7 @@ import { HttpIInterceptor } from "./http-i.interceptor";
     MyDigramsComponent,
     PreviewComponent,
     LoginComponent,
+    PurchasePageComponent,
   ],
 
   imports: [
@@ -73,6 +76,7 @@ import { HttpIInterceptor } from "./http-i.interceptor";
     HttpClientModule,
     SocialLoginModule,
     GoogleSigninButtonModule,
+    MatProgressSpinnerModule,
   ],
   providers: [
     {

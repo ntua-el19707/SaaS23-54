@@ -10,6 +10,7 @@ import { MyinfoComponent } from "./user/myinfo/myinfo.component";
 import { WelcomeComponent } from "./user/welcome/welcome.component";
 import { LoginComponent } from "./login/login.component";
 import { BuyCreditsComponent } from "./user/buy-credits/buy-credits.component";
+import { PurchasePageComponent } from "./diagrams/purchase-page/purchase-page.component";
 
 const routes: Routes = [
   { path: "", component: DiagramsListComponent },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: "a", component: MyDigramsComponent },
   { path: "login", component: LoginComponent },
   { path: "buy", component: BuyCreditsComponent },
+  { path: "b", component: PurchasePageComponent },
 ];
 
 @NgModule({

@@ -7,11 +7,22 @@ import {
   OnDestroy,
   Renderer2,
 } from "@angular/core";
+import { Location } from "@angular/common";
+
 import { Diagram } from "../interfaces/diagram";
 import * as Highcharts from "highcharts";
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { DiagramOppsComponent } from "../diagram-opps/diagram-opps.component";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
+import {
+  DependencyWheelDiagram,
+  LineAnotations,
+  LineDiagram,
+  NetworkDiagram,
+  PollarDiagram,
+  collumn,
+} from "src/assets/DemosTS/diafram";
+
 @Component({
   selector: "diagramBuilder",
   templateUrl: "./diagram-builder.component.html",
@@ -22,76 +33,35 @@ export class DiagramBuilderComponent implements OnInit {
   private type: any = "";
   private Diagrams: Diagram[] = [];
   highcharts = Highcharts;
-
-  chartOptions: Highcharts.Options = {
-    title: {
-      text: "U.S Solar Employment Growth by Job Category, 2010-2020",
-      align: "left",
-    },
-
-    subtitle: {
-      text: 'Source: <a href="https://irecusa.org/programs/solar-jobs-census/" target="_blank">IREC</a>',
-      align: "left",
-    },
-
-    yAxis: {
-      title: {
-        text: "Number of Employees",
-      },
-    },
-
-    xAxis: {
-      accessibility: {
-        rangeDescription: "Range: 2010 to 2020",
-      },
-    },
-
-    plotOptions: {
-      series: {
-        label: {
-          connectorAllowed: false,
-        },
-        pointStart: 2010,
-      },
-    },
-
-    series: [
-      {
-        name: "Tokyo",
-        data: [
-          24916, 37941, 29742, 29851, 32490, 30282, 38121, 36885, 33726, 34243,
-          31050,
-        ],
-        type: "line",
-      },
-    ],
-
-    responsive: {
-      rules: [
-        {
-          condition: {
-            maxWidth: 500,
-          },
-          chartOptions: {},
-        },
-      ],
-    },
-  };
-  //TODO later fix digrams to private
-  /**
-   * constructor
-   *
-   */
-  constructor(private dialog: MatDialog, private route: ActivatedRoute) {
-    for (let i = 0; i < 10; i++) {
-      this.Diagrams.push({
-        title: "a",
-        imgpath: "",
-        disc: "This is description",
-      });
-    }
-  }
+  private chartOptions: any = {};
+  private showHighChart = false;
+  constructor(
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private router: Router,
+    private location: Location
+  ) {}
   ngOnInit(): void {
+    const diagrams = [
+      LineDiagram,
+      PollarDiagram,
+      NetworkDiagram,
+      collumn,
+      LineAnotations,
+      DependencyWheelDiagram,
+    ];
+    diagrams.forEach((d) => {
+      const title = d.name;
+      this.Diagrams = [
+        ...this.Diagrams,
+        {
+          title: title,
+          disc: d.path,
+          options: d.chart,
+          redirect: d.path,
+        },
+      ];
+    });
     const valid_Types: string[] = [
       "Line",
       "Pollar",
@@ -136,23 +106,43 @@ export class DiagramBuilderComponent implements OnInit {
     switch (this.type) {
       case "Lines":
         api = "api_Line";
+        this.chartOptions = LineDiagram.chart;
         break;
       case "Pollar":
         api = "api_Pollar";
+        this.chartOptions = PollarDiagram.chart;
         break;
       case "network":
         api = "api_network";
+        this.chartOptions = NetworkDiagram.chart;
         break;
       case "collumns":
         api = "api_column";
+        this.chartOptions = collumn.chart;
         break;
       case "LineAnotations":
         api = "api_LinewithAnnotations";
+        this.chartOptions = LineAnotations.chart;
         break;
       case "DependencyWheel":
         api = "api_DependancyWheel";
+        this.chartOptions = DependencyWheelDiagram.chart;
         break;
     }
+    this.showHighChart = true;
     return api;
+  }
+  showHighChar() {
+    return this.showHighChart;
+  }
+  getChartOptions() {
+    return this.chartOptions;
+  }
+  navigate(d: Diagram) {
+    this.chartOptions = d.options;
+    console.log(this.chartOptions);
+    this.router.navigate([`/ChartBuild/${d.redirect}`]).then(() => {
+      window.location.reload();
+    });
   }
 }

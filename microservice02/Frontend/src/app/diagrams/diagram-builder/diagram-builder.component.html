@@ -13,19 +13,22 @@
             <mat-drawer-container autosize>
                 <mat-drawer #drawer mode="side" class="col-2">
                     <h4 style="text-align: center;">Please select the type of digram</h4>
-                    <button type="button" mat-button class="col-1 overflow-y-scroll" *ngFor="let d of getDiagrams()">
-                        <highcharts-chart [Highcharts]="highcharts" [options]="chartOptions"
-                            style="width: 100%; display: block;height:300px">
-                        </highcharts-chart>
-                    </button>
-
+                    <div *ngFor="let d of getDiagrams()">
+                        <button mat-button class="col-1 overflow-y-scroll" (click)="navigate(d)">
+                            <highcharts-chart [Highcharts]="highcharts" [options]="d.options"
+                                style="width: 100%; display: block;height:300px">
+                            </highcharts-chart>
+                        </button>
+                    </div>
                 </mat-drawer>
                 <!-- 
             Selected HighChart
-           -->
-                <highcharts-chart [Highcharts]="highcharts" [options]="chartOptions"
-                    style="width: 100%; height:500px; display: block;">
-                </highcharts-chart>
+            -->
+                <div *ngIf="showHighChar()">
+                    <highcharts-chart [Highcharts]="highcharts" [options]="getChartOptions()"
+                        style="width: 100%; height:fit-content; display: block;">
+                    </highcharts-chart>
+                </div>
                 <div>
                     <button type="button" mat-button (click)="drawer.toggle()"> Toggle sidenav
                     </button>

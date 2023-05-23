@@ -9,7 +9,7 @@ import { CreditCardformDialog } from "../credit-cardform/credit-cardform.dialog"
   styleUrls: ["./credits-card.component.css"],
 })
 export class CreditsCardComponent {
-  @Input() packet: Packet = { name: "", credits: 0 }; // packet
+  @Input() packet: Packet = { name: "", credits: 0, price: "" }; // packet
   @Output() buttonClick: EventEmitter<any> = new EventEmitter();
   constructor(private dialog: MatDialog) {}
   /**

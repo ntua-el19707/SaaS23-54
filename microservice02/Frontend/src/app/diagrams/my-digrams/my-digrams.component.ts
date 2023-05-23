@@ -6,7 +6,7 @@ import {
   Renderer2,
   ChangeDetectorRef,
 } from "@angular/core";
-import { MatPaginator } from "@angular/material/paginator";
+import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 import { DonwloadService } from "./services/donwload.service";
 import { saveAs } from "file-saver";
@@ -48,9 +48,12 @@ export class MyDigramsComponent implements OnInit {
   private data: ChartElements[] = [];
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
+  private loadDiagrams: boolean = false;
+  private fetchingDiagram: boolean = false;
   constructor(
     private download: DonwloadService,
     private getDiagrams: GetDiagramsService,
+
     private renderer: Renderer2,
     private host: ElementRef,
     private changeDetector: ChangeDetectorRef
@@ -71,13 +74,21 @@ export class MyDigramsComponent implements OnInit {
             name: d.name,
             CreatedAt: d.createAT,
             Type: d.Type,
-            Download: { _id: d._id, name: d.name },
+            Download: {
+              _id: d._id,
+              name: d.name,
+              happenhtml: false,
+              happenpdf: false,
+              happenpng: false,
+              happensvg: false,
+            },
             Preview: d._id,
           });
         });
-
+        this.loadDiagrams = true;
         console.log(this.data);
         this.dataSource = new MatTableDataSource<ChartElements>(this.data);
+        this.dataSource.paginator = this.paginator;
       }
     );
   }
@@ -103,56 +114,95 @@ export class MyDigramsComponent implements OnInit {
    * @params id
    *
    */
-  DownloadPng(Download: download) {
-    console.log(Download);
-    this.download.DownLoadPng(Download._id).subscribe(
-      (r) => {
-        saveAs(r, `line-${Download.name}.png`);
-      },
-      (err) => {
-        console.log(err);
-      },
-      () => {}
-    );
+  DownloadPng(ele: ChartElements) {
+    if (!ele.Download.happenpng) {
+      const indx = this.data.indexOf(ele);
+      if (indx !== -1) {
+        this.data[indx].Download.happenpng = true;
+        this.download.DownLoadPng(ele.Download._id).subscribe(
+          (r) => {
+            console.log(r);
+            saveAs(r, `${ele.Type}-${ele.Download.name}.png`);
+            this.data[indx].Download.happenpng = false;
+          },
+          (err) => {
+            console.log(err);
+            this.data[indx].Download.happenpng = false;
+          },
+          () => {}
+        );
+      }
+    }
   }
   /**DownloadHtml - download  png of chart id
    * @params id
    *
    */
-  DownloadHtml(Download: download) {
-    this.download.DownLoadHtml(Download._id).subscribe(
-      (r) => {
-        saveAs(r, `line-${Download.name}.html`);
-      },
-      (err) => {},
-      () => {}
-    );
+  DownloadHtml(el: ChartElements) {
+    if (!el.Download.happenhtml) {
+      const indx = this.data.indexOf(el);
+      if (indx !== -1) {
+        this.data[indx].Download.happenhtml = true;
+        this.download.DownLoadHtml(el.Download._id).subscribe(
+          (r) => {
+            saveAs(r, `${el.Type}-${el.Download.name}.html`);
+            this.data[indx].Download.happenhtml = false;
+          },
+          (err) => {
+            this.data[indx].Download.happenhtml = false;
+          },
+          () => {}
+        );
+      }
+    }
   }
   /**DownloadSvg - download  png of chart id
    * @params id
    *
    */
-  DownloadSvg(Download: download) {
-    this.download.DownLoadSvg(Download._id).subscribe(
-      (r) => {
-        saveAs(r, `line-${Download.name}.svg`);
-      },
-      (err) => {},
-      () => {}
-    );
+  DownloadSvg(el: ChartElements) {
+    if (!el.Download.happensvg) {
+      const indx = this.data.indexOf(el);
+      if (indx !== -1) {
+        this.data[indx].Download.happensvg = true;
+        this.download.DownLoadSvg(el.Download._id).subscribe(
+          (r) => {
+            console.log(r);
+            try {
+              saveAs(r, `${el.Type}-${el.Download.name}.svg`);
+            } catch (err) {}
+          },
+          (err) => {},
+          () => {
+            this.data[indx].Download.happensvg = false;
+          }
+        );
+      }
+    }
   }
   /**DownloadPdf - download  png of chart id
    * @params id
    *
    */
-  DownloadPdf(Download: download) {
-    this.download.DownLoadPdf(Download._id).subscribe(
-      (r) => {
-        saveAs(r, `line-${Download.name}.pdf`);
-      },
-      (err) => {},
-      () => {}
-    );
+  DownloadPdf(el: ChartElements) {
+    if (!el.Download.happenpdf) {
+      const indx = this.data.indexOf(el);
+      if (indx !== -1) {
+        this.data[indx].Download.happenpdf = true;
+        this.download.DownLoadPdf(el.Download._id).subscribe(
+          (r) => {
+            saveAs(r, `${el.Type}-${el.Download.name}.pdf`);
+          },
+          (err) => {},
+          () => {
+            this.data[indx].Download.happenpdf = false;
+          }
+        );
+      }
+    }
+  }
+  getLoading(): boolean {
+    return !this.loadDiagrams;
   }
   /**getSelectedChart
    * @returns selectedChart
@@ -166,6 +216,7 @@ export class MyDigramsComponent implements OnInit {
   GetHigcharts() {
     return this.highcharts;
   }
+  private preview = "";
   /**ViewChart */
   ViewChart(Preview: string) {
     // this.hide = true;
@@ -173,24 +224,34 @@ export class MyDigramsComponent implements OnInit {
     // this.host.nativeElement,
     //  this.ChartPreview.nativeElement
     //  );
-    this.hide = true;
-    this.getDiagrams.getADiagrams(Preview).subscribe(
-      (r) => {
-        this.selectedChart = r.chart;
+    if (!this.fetchingDiagram) {
+      this.hide = true;
+      this.fetchingDiagram = true;
+      this.preview = Preview;
+      this.getDiagrams.getADiagrams(Preview).subscribe(
+        (r) => {
+          this.selectedChart = r.chart;
 
-        this.hide = false;
-      },
-      (err) => {
-        console.log(err);
-      },
-      () => {}
-    );
+          this.hide = false;
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          this.fetchingDiagram = false;
+        }
+      );
+    }
     // setInterval(() => {
     // this.hide = false; //element want 10ms  to be destoyed  so wait 100ms
     // }, 100);
     // this.renderer.createElement(ViewChild("this.ChartPreview"));
   }
+  getFetchDiagram(el: ChartElements) {
+    return this.fetchingDiagram && this.preview === el.Preview;
+  }
 }
+
 interface ChartElements {
   name: string;
   Type: string;
@@ -201,4 +262,8 @@ interface ChartElements {
 interface download {
   _id: string;
   name: string;
+  happenpng: boolean;
+  happenhtml: boolean;
+  happensvg: boolean;
+  happenpdf: boolean;
 }

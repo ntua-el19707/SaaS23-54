@@ -1,20 +1,21 @@
 .container {
-    margin-left: 10%;
-    margin-right: 10%;
-    padding-top: 25px;
-    width: 80%;
+margin: 5% 5% 5% 5%;
+    padding-top: 5%;
+    width: 100%;
 
 }
 
 .Cards {
     display: flex;
-    padding: 2.5em;
+
+
 
 
 }
 
 .Card {
-    width: 250px;
+    width: 100%;
+
 }
 
 img {

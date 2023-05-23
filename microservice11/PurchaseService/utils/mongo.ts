@@ -177,10 +177,10 @@ function InsertPurchasedPacket(packet: purchasedPacket, user: clients) {
 function getAvailplePackets(): packet[] {
   //TODO later add price
   const AvailabPackage: packet[] = [
-    { name: "Basic", credits: 1 },
-    { name: "Standard", credits: 3 },
-    { name: "Premium", credits: 10 },
-    { name: "Enterprise", credits: 100 },
+    { name: "Basic", credits: 1, price: "$0.5" },
+    { name: "Standard", credits: 3, price: "$1" },
+    { name: "Premium", credits: 10, price: "$3" },
+    { name: "Enterprise", credits: 100, price: "$25" },
   ];
   return AvailabPackage;
 }
