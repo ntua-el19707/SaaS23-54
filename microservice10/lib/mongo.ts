@@ -21,7 +21,8 @@ const options: any = {
 const LineCollection: string = "Lines";
 const NetworkCollection: string = "Netwotk";
 const PollarCollection: string = "Pollar";
-
+const ColumnCollection: string = "Collumn";
+const DependancyWheelCollection: string = "Dependancy_Wheel ";
 /**
  *
  * @param owner string  id 'id  random genarated  by mongo //* Not  email '
@@ -46,6 +47,14 @@ export function findMyDiagrams(owner: string): Promise<diagrams[]> {
             conn,
             PollarCollection
           );
+          const CollumnCollection: Collection<Document> = DB_collection(
+            conn,
+            ColumnCollection
+          );
+          const dependecycollection: Collection<Document> = DB_collection(
+            conn,
+            DependancyWheelCollection
+          );
 
           const lineCharts = lineCollection
             .find({
@@ -64,7 +73,21 @@ export function findMyDiagrams(owner: string): Promise<diagrams[]> {
               ownerShip: owner,
             })
             .toArray();
-          Promise.all([lineCharts, networkCharts, pollarCharts])
+          const CollumnCharts = CollumnCollection.find({
+            ownerShip: owner,
+          }).toArray();
+          const dependencyCharts = dependecycollection
+            .find({
+              ownerShip: owner,
+            })
+            .toArray();
+          Promise.all([
+            lineCharts,
+            networkCharts,
+            pollarCharts,
+            CollumnCharts,
+            dependencyCharts,
+          ])
             .then((chartsArray) => {
               let charts: diagrams[] = [];
               chartsArray.forEach((charray: any) => {
@@ -173,6 +196,46 @@ export function insertLineChart(
 
           lineCollection
             .insertOne(chartR)
+            .then((registerChart: InsertOneResult<Document>) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  resolve(registerChart);
+                });
+            })
+            .catch((err) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  reject(err);
+                });
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
+  });
+}
+export function insertCollunChart(
+  chart: ChartRecord
+): Promise<InsertOneResult<Document>> {
+  return new Promise((resolve, reject) => {
+    const chartR: ChartRecord = chart;
+    const mongoConnection = StartConection();
+    if (typeof mongoConnection === "boolean") {
+      reject("Not able to create  a connetion");
+    } else {
+      connection(mongoConnection)
+        .then(() => {
+          const CollumnCollection: Collection<Document> = DB_collection(
+            mongoConnection,
+            ColumnCollection
+          );
+
+          CollumnCollection.insertOne(chartR)
             .then((registerChart: InsertOneResult<Document>) => {
               closeconection(mongoConnection)
                 .then(() => {})
@@ -391,6 +454,46 @@ export function findPollar(id: string): Promise<ChartRecord> {
     }
   });
 }
+
+export function findCollumn(id: string): Promise<ChartRecord> {
+  return new Promise((resolve, reject) => {
+    const mongoConnection = StartConection();
+    if (typeof mongoConnection === "boolean") {
+      reject("Not able to create a connetion");
+    } else {
+      connection(mongoConnection)
+        .then(() => {
+          const collcollection: Collection<Document> = DB_collection(
+            mongoConnection,
+            ColumnCollection
+          );
+
+          collcollection
+            .findOne({ "chart._id": id })
+            .then((data: any) => {
+              const chart = data as ChartRecord;
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  resolve(chart);
+                });
+            })
+            .catch((err) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  reject(err);
+                });
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
+  });
+}
 function findType(id: string) {
   let type: string = "";
   const size: number = id.length;
@@ -411,8 +514,89 @@ function findType(id: string) {
       type = "DependancyWheel";
 
       break;
+    case 11:
+      type = "Collumn";
+      break;
     default:
       break;
   }
   return type;
+}
+export function insertDependancyChart(
+  chartR: ChartRecord
+): Promise<InsertOneResult<Document>> {
+  return new Promise((resolve, reject) => {
+    const mongoConnection = StartConection();
+    if (typeof mongoConnection === "boolean") {
+      reject("Not able to create a connetion");
+    } else {
+      connection(mongoConnection)
+        .then(() => {
+          const DependancyWheeCollection: Collection<Document> = DB_collection(
+            mongoConnection,
+            DependancyWheelCollection
+          );
+
+          DependancyWheeCollection.insertOne(chartR)
+            .then((registerChart: InsertOneResult<Document>) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  resolve(registerChart);
+                });
+            })
+            .catch((err) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  reject(err);
+                });
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
+  });
+}
+
+export function findDependancyChart(id: string): Promise<ChartRecord> {
+  return new Promise((resolve, reject) => {
+    const mongoConnection = StartConection();
+    if (typeof mongoConnection === "boolean") {
+      reject("Not able to create a connetion");
+    } else {
+      connection(mongoConnection)
+        .then(() => {
+          const Dependencycollection: Collection<Document> = DB_collection(
+            mongoConnection,
+            DependancyWheelCollection
+          );
+
+          Dependencycollection.findOne({ "chart._id": id })
+            .then((data: any) => {
+              const chart = data as ChartRecord;
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  resolve(chart);
+                });
+            })
+            .catch((err) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  reject(err);
+                });
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
+  });
 }

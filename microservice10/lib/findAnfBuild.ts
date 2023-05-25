@@ -1,12 +1,21 @@
 import {
   ChartRecord,
+  CollumnChart,
   NetworkChart,
   PollarChart,
   PollarSeries,
+  dependencyWheelBuild,
+  dependencyWheelChart,
   label,
   linesChart,
 } from "./interfaces/sechema";
-import { findLine, findNetwork, findPollar } from "./mongo";
+import {
+  findCollumn,
+  findDependancyChart,
+  findLine,
+  findNetwork,
+  findPollar,
+} from "./mongo";
 
 function findAndBuildLine(id: string): Promise<linesChart> {
   return new Promise((resolve, reject) => {
@@ -173,9 +182,66 @@ function findAndBuildPollar(id: string): Promise<PollarBuild> {
       });
   });
 }
+function findAndBuildCollumn(id: string): Promise<CollumnChart> {
+  return new Promise((resolve, reject) => {
+    console.log(`looking  For ${id}`);
+    findCollumn(id)
+      .then((chart: ChartRecord) => {
+        console.log(chart);
+        const PollarOptions = chart.chart as CollumnChart;
+
+        resolve(PollarOptions);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+function findAndBuildDependency(id: string): Promise<dependencyWheelBuild> {
+  return new Promise((resolve, reject) => {
+    console.log(`looking  For ${id}`);
+    findDependancyChart(id)
+      .then((chart: ChartRecord) => {
+        console.log(chart);
+        const DepentencyOptions = chart.chart as dependencyWheelChart;
+        let dependencyWheel: dependencyWheelBuild = {
+          accessibility: {
+            point: {
+              valueDescriptionFormat:
+                "{index}. From {point.from} to {point.to}: {point.weight}.",
+            },
+          },
+          title: DepentencyOptions.title,
+          series: [
+            {
+              data: DepentencyOptions.series.data,
+              keys: DepentencyOptions.series.keys,
+              type: "dependencywheel",
+              name: "Dependency wheel series",
+              dataLabels: {
+                color: "#333",
+                style: {
+                  textOutline: "none",
+                },
+                textPath: {
+                  enabled: true,
+                },
+                distance: 10,
+              },
+              size: "95%",
+            },
+          ],
+        };
+        resolve(dependencyWheel);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
 export function FindPreview(
   id: string
-): Promise<linesChart | NetworkBuild | PollarBuild> {
+): Promise<linesChart | NetworkBuild | PollarBuild | dependencyWheelBuild> {
   return new Promise((resolve, reject) => {
     const size = id.length;
     switch (size) {
@@ -208,7 +274,22 @@ export function FindPreview(
           });
         break;
       case 10:
-        reject("not implemented");
+        findAndBuildDependency(id)
+          .then((chart: dependencyWheelBuild) => {
+            resolve(chart);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+        break;
+      case 11:
+        findAndBuildCollumn(id)
+          .then((chart: CollumnChart) => {
+            resolve(chart);
+          })
+          .catch((err) => {
+            reject(err);
+          });
         break;
       default:
         reject("not such diagram type");
