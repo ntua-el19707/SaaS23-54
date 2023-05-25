@@ -1,9 +1,41 @@
-<asl-google-signin-button type='icon' size='medium'></asl-google-signin-button>
-<div *ngIf="loggedIn">
-    <img src="{{ user.photoUrl }}" referrerpolicy="no-referrer">
-    <div>
-        <h4>{{ user.name }}</h4>
-        <p>{{ user.email }}</p>
+<div class="custom-flex-container" *ngIf=" getLoggingShow()">
+
+    <div *ngIf="getLoggingProcess(); then logging; else signIn">
     </div>
-    <button (click)="show()">see</button>
+    <ng-template #logging>
+        <!-- Add your logging template content here -->
+        <div class="custom-card">
+            <form>
+                <section>
+                    <h1>Log in</h1>
+                </section>
+                <div>
+                    <mat-spinner diameter="60" style="margin: 0 auto;"></mat-spinner>
+                    {{getdefaultMSG()}}
+
+                </div>
+            </form>
+        </div>
+    </ng-template>
+    <ng-template #signIn>
+        <div class="custom-card">
+            <form>
+                <section>
+                    <h1>Log in</h1>
+                </section>
+                <section style="display: flex">
+                    <h4>Log In with:
+                    </h4> &nbsp;
+                    <asl-google-signin-button #googleBtn style="margin-top: -5px;"></asl-google-signin-button>
+
+                </section>
+            </form>
+        </div>
+    </ng-template>
+</div>
+<div *ngIf="getRegisterShow()">
+
+    <app-welcome [user]="getUser()" (buttonRegisterClick)="register()"></app-welcome>
+
+
 </div>

@@ -35,6 +35,8 @@ export class DiagramBuilderComponent implements OnInit {
   highcharts = Highcharts;
   private chartOptions: any = {};
   private showHighChart = false;
+  private step: boolean = false; //this will be double  binded
+  private Diagram: { chart: any; type: string } = { chart: {}, type: "" };
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
@@ -144,5 +146,17 @@ export class DiagramBuilderComponent implements OnInit {
     this.router.navigate([`/ChartBuild/${d.redirect}`]).then(() => {
       window.location.reload();
     });
+  }
+  getStep() {
+    //false  building proccess ; true purchased process ;
+    return this.step;
+  }
+  handlePurchase(event: any) {
+    console.log(event);
+    this.Diagram = event.res.rsp;
+    this.step = true;
+  }
+  getDiagram(): { chart: any; type: string } {
+    return this.Diagram;
   }
 }

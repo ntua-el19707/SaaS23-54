@@ -1,83 +1,89 @@
 <link href='https://unpkg.com/css.gg@2.0.0/icons/css/software-download.css' rel='stylesheet'>
 <div class="overflow-y-scroll" style="height: 95%;">
-    <div class="middle">
-        <h1 class="text" style=" color:green">Lets create a Chart! </h1>
-        <p class="text" style="color: grey;">Please follow the next steps</p>
-    </div>
-    <div class="cont">
-        <mat-card class="col-1">
-            <mat-card-header>
+    <div *ngIf="!getStep();then buildProcess ; else PurchasedView "></div>
+    <ng-template #buildProcess>
+        <div class="middle">
+            <h1 class="text" style=" color:green">Lets create a Chart! </h1>
+            <p class="text" style="color: grey;">Please follow the next steps</p>
+        </div>
+        <div class="cont">
+            <mat-card class="col-1">
+                <mat-card-header>
 
-                <mat-card-subtitle>Selected Chart</mat-card-subtitle>
-            </mat-card-header>
-            <mat-drawer-container autosize>
-                <mat-drawer #drawer mode="side" class="col-2">
-                    <h4 style="text-align: center;">Please select the type of digram</h4>
-                    <div *ngFor="let d of getDiagrams()">
-                        <button mat-button class="col-1 overflow-y-scroll" (click)="navigate(d)">
-                            <highcharts-chart [Highcharts]="highcharts" [options]="d.options"
-                                style="width: 100%; display: block;height:300px">
-                            </highcharts-chart>
-                        </button>
-                    </div>
-                </mat-drawer>
-                <!-- 
+                    <mat-card-subtitle>Selected Chart</mat-card-subtitle>
+                </mat-card-header>
+                <mat-drawer-container autosize>
+                    <mat-drawer #drawer mode="side" class="col-2">
+                        <h4 style="text-align: center;">Please select the type of digram</h4>
+                        <div *ngFor="let d of getDiagrams()">
+                            <button mat-button class="col-1 overflow-y-scroll" (click)="navigate(d)">
+                                <highcharts-chart [Highcharts]="highcharts" [options]="d.options"
+                                    style="width: 100%; display: block;height:300px">
+                                </highcharts-chart>
+                            </button>
+                        </div>
+                    </mat-drawer>
+                    <!-- 
             Selected HighChart
             -->
-                <div *ngIf="showHighChar()">
-                    <highcharts-chart [Highcharts]="highcharts" [options]="getChartOptions()"
-                        style="width: 100%; height:fit-content; display: block;">
-                    </highcharts-chart>
-                </div>
-                <div>
-                    <button type="button" mat-button (click)="drawer.toggle()"> Toggle sidenav
+                    <div *ngIf="showHighChar()">
+                        <highcharts-chart [Highcharts]="highcharts" [options]="getChartOptions()"
+                            style="width: 100%; height:fit-content; display: block;">
+                        </highcharts-chart>
+                    </div>
+                    <div>
+                        <button type="button" mat-button (click)="drawer.toggle()"> Toggle sidenav
+                        </button>
+                    </div>
+
+                </mat-drawer-container>
+            </mat-card>
+            <br>
+            <mat-card class="col-1">
+                <mat-card-header>
+
+                    <mat-card-subtitle>Demos for Chart</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+
+                        <mat-tab label="HigchChart">
+                            <!--Higch Chart from as exampe  -->
+                        </mat-tab>
+
+                        <mat-tab label="Csv">
+                            <!--What would Like  in excel-->
+                        </mat-tab>
+
+                    </mat-tab-group>
+
+                </mat-card-content>
+                <mat-card-actions>
+                    <div style="display: flex;text-align: center;">
+                        <!--Split the width col-2-->
+                        <section class="col-2">
+                            <button mat-button><mat-icon>navigate_before</mat-icon></button>
+                        </section>
+                        <section class="col-2">
+                            <button mat-button><mat-icon>navigate_next</mat-icon></button>
+                        </section>
+                    </div>
+                    <button mat-button>
+                        <article class="flex flex-row" style="text-align: center;">
+                            <i class="gg-software-download" style="align-self: center;"></i> &nbsp; demo.csv
+                        </article>
                     </button>
-                </div>
 
-            </mat-drawer-container>
-        </mat-card>
-        <br>
-        <mat-card class="col-1">
-            <mat-card-header>
-
-                <mat-card-subtitle>Demos for Chart</mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-content>
-                <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
-
-                    <mat-tab label="HigchChart">
-                        <!--Higch Chart from as exampe  -->
-                    </mat-tab>
-
-                    <mat-tab label="Csv">
-                        <!--What would Like  in excel-->
-                    </mat-tab>
-
-                </mat-tab-group>
-
-            </mat-card-content>
-            <mat-card-actions>
-                <div style="display: flex;text-align: center;">
-                    <!--Split the width col-2-->
-                    <section class="col-2">
-                        <button mat-button><mat-icon>navigate_before</mat-icon></button>
-                    </section>
-                    <section class="col-2">
-                        <button mat-button><mat-icon>navigate_next</mat-icon></button>
-                    </section>
-                </div>
-                <button mat-button>
-                    <article class="flex flex-row" style="text-align: center;">
-                        <i class="gg-software-download" style="align-self: center;"></i> &nbsp; demo.csv
-                    </article>
-                </button>
-
-            </mat-card-actions>
-        </mat-card>
+                </mat-card-actions>
+            </mat-card>
 
 
-    </div>
-    <drag [api]="getApi()"></drag>
-    <!-- later delete this-->
-    <button mat-button (click)="call_error_dialog('your upload failed')">invoke</button>
+        </div>
+        <drag [api]="getApi()" (buttonClick)="handlePurchase($event)"></drag>
+        <!-- later delete this-->
+        <button mat-button (click)="call_error_dialog('your upload failed')">invoke</button>
+    </ng-template>
+    <ng-template #PurchasedView>
+        <app-purchase-page [diagram]="getDiagram()"></app-purchase-page>
+    </ng-template>
 </div>

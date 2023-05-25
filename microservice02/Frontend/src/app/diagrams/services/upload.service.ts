@@ -56,12 +56,14 @@ export class UploadService {
         break;
       case "api_column":
         this.type_param = "collumn";
+        this.service = `CollumnService`;
         break;
       case "api_LinewithAnnotations":
         this.type_param = "line_anotation";
         break;
       case "api_DependancyWheel":
         this.type_param = "dependency_wheel";
+        this.service = "DepentancyWheelService";
         break;
     }
   }

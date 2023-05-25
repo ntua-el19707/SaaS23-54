@@ -40,6 +40,8 @@ import { PreviewComponent } from "./diagrams/preview/preview.component";
 import { LoginComponent } from "./login/login.component";
 import { HttpIInterceptor } from "./http-i.interceptor";
 import { PurchasePageComponent } from "./diagrams/purchase-page/purchase-page.component";
+import { WelcomeComponent } from "./welcome/welcome.component";
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +57,8 @@ import { PurchasePageComponent } from "./diagrams/purchase-page/purchase-page.co
     PreviewComponent,
     LoginComponent,
     PurchasePageComponent,
+    WelcomeComponent,
+    AboutComponent,
   ],
 
   imports: [

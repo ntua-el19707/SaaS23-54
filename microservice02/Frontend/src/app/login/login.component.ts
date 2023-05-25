@@ -3,7 +3,14 @@ import {
   SocialAuthService,
   SocialUser,
 } from "@abacritt/angularx-social-login";
-import { Component, NgZone } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  NgZone,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { LoginService } from "./login.service";
 import { PurchaseService } from "../diagrams/services/purchase.service";
 
@@ -12,8 +19,15 @@ import { PurchaseService } from "../diagrams/services/purchase.service";
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.css"],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, AfterViewInit {
   public isSignedIn: boolean = false;
+  private loginProcess: boolean = false;
+  private Register: boolean = false;
+  private Login: boolean = true;
+  private defaultMSG: string = "Logging ...";
+  private token: string = "";
+  @ViewChild("logiingtag")
+  logiingtag!: ElementRef;
   user!: SocialUser;
   loggedIn: boolean = false;
   constructor(
@@ -22,21 +36,33 @@ export class LoginComponent {
     private loginSe: LoginService,
     private buy: PurchaseService
   ) {}
-
-  public ngOnInit() {
+  getUser() {
+    return { username: this.user.email };
+  }
+  ngOnInit() {
     this.authService.authState.subscribe((user) => {
       this.user = user;
       this.loggedIn = user != null;
       if (this.loggedIn) {
         //set cookie
         const token = this.user.idToken;
+        this.token = token;
         localStorage.setItem("token", token); // set token in local storage
+        this.loginProcess = true;
         this.loginSe.login().subscribe(
-          (r) => {
+          (r: any) => {
+            console.log(this.user);
             console.log(r);
-            let t = r as { user: { token: string } };
-            console.log(t);
-            localStorage.setItem("token", t.user.token);
+            if (r?.["msg"] === "User is not Register") {
+              this.Login = false;
+              this.Register = true;
+              console.log(user);
+            } else {
+              let t = r as { user: { token: string } };
+              console.log(t);
+              this.loginProcess = false;
+              localStorage.setItem("token", t.user.token);
+            }
           },
           (err) => {
             console.log(err);
@@ -46,8 +72,42 @@ export class LoginComponent {
       }
     });
   }
+  ngAfterViewInit(): void {}
 
   show() {
     console.log(this.user);
+  }
+  getLoggingProcess(): boolean {
+    return this.loginProcess;
+  }
+  getRegisterShow(): boolean {
+    return this.Register;
+  }
+  getLoggingShow(): boolean {
+    return this.Login;
+  }
+  onGoogleSignIn(): void {
+    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+  }
+  getdefaultMSG(): string {
+    return this.defaultMSG;
+  }
+  register() {
+    this.loginProcess = true;
+    this.Login = true;
+    this.Register = false;
+    this.defaultMSG = "Register ...";
+
+    localStorage.setItem("token", this.token); // set token in local storage
+    this.loginSe.register().subscribe(
+      (r) => {
+        let t = r as { user: { token: string } };
+        console.log(t);
+        this.loginProcess = false;
+        localStorage.setItem("token", t.user.token);
+      },
+      (err) => {},
+      () => {}
+    );
   }
 }

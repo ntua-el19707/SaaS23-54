@@ -1,15 +1,15 @@
 <div class="cont">
-    <h1 style="color:green">You have purchased a {{getType()}} diagram</h1>
-    <section style="height: 600px ; width:80%">
+    <h1 style="color:green">You have purchased a {{diagram.type}} diagram</h1>
+    <section style="height: fit-content ; width:80%">
         <div style="width:100%;height: 100%;padding-top: 0;" #ChartPreview>
             <mat-card style="width:100%;height: 100%;">
 
-                <!-- <mat-card-content>
-                    <highcharts-chart [Highcharts]="GetHigcharts()" [options]="selectedChart "
+                <mat-card-content>
+                    <highcharts-chart [Highcharts]="GetHigcharts()" [options]="diagram.chart "
                         style="width: 100%; height: fit-content; display: block;">
                     </highcharts-chart>
                 </mat-card-content>
-            -->
+
             </mat-card>
         </div>
     </section>

@@ -5,6 +5,8 @@ import {
   OnInit,
   ViewChild,
   Input,
+  Output,
+  EventEmitter,
 } from "@angular/core";
 import { UploadService } from "../services/upload.service";
 import { HttpEventType } from "@angular/common/http";
@@ -24,6 +26,8 @@ export class DragComponent implements OnInit, AfterViewInit {
   private fileName: string = "";
   private uploadin: boolean = false;
   @Input() api: string = "";
+  @Output() buttonClick: EventEmitter<any> = new EventEmitter();
+
   @ViewChild("bar")
   barEl!: ElementRef;
   @ViewChild("upheader")
@@ -75,8 +79,10 @@ export class DragComponent implements OnInit, AfterViewInit {
     this.upploadService.confirm(this.fileName).subscribe(
       (r) => {
         console.log(r);
+        this.buttonClick.emit(r);
       },
       (err) => {
+        console.log("failed");
         console.log(err);
       },
       () => {

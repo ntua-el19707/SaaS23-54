@@ -4,10 +4,10 @@
     <mat-card>
         <mat-card-header>
             <mat-card-title>
-                <article class="flex flex-row">
-                    <i class="gg-hello" style="color:green"></i> &nbsp; Welcome &nbsp;<span
-                        style="color:blue">{{getUsername()}}
-                    </span> &nbsp; to our Services
+                <article class="flex flex-row ">
+                    <i class="gg-hello" style="color:green"></i>
+                    <p> &nbsp; Welcome &nbsp;<span style="color:blue" class="whitespace-normal">{{getUsername()}}
+                        </span> &nbsp; to our Services</p>
                 </article>
             </mat-card-title>
 
@@ -24,7 +24,7 @@
 
 
         <mat-card-actions>
-            <button mat-button class="col-2" style="color:green">Continue</button>
+            <button mat-button class="col-2" style="color:green" (click)="register()">Continue</button>
 
             <button mat-button class="col-2" style="color:red">Cancel</button>
         </mat-card-actions>
