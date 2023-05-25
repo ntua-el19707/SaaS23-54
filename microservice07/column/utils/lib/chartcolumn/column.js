@@ -13,6 +13,7 @@ function buildAll(options) {
   return new Promise(async (resolve, reject) => {
     try {
       const chartOptions = buildColumnOptions(options);
+      console.log(chartOptions);
 
       const html = getHtml(chartOptions); //now  i have ready the html
       //* From  Html  i will produce  the  remaining 3
@@ -55,7 +56,7 @@ function buildAll(options) {
           .then(async () => {
             await browser.close();
 
-            resolve({file:file_id,chart:chartOptions});
+            resolve({ file: file_id });
           })
           .catch(async (err) => {
             await browser.close();
