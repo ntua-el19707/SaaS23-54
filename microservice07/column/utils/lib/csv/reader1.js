@@ -7,16 +7,16 @@ const csv = require('csv-parser');
  function  getJsonFromFile(file){
   const csvFilePath = 'column.csv';
   const jsonObject = {
-    Title: ('',''),
-    Subtitle: ('',''),
-    XAxis: '',
-    categories: [],
-    YAxis: '',
+    title: ('',''),
+    subtitle: ('',''),
+    xAxis: [],
+    yAxis: {},
     series: []
   };
    
   let currentSeries = null;
   let yValues = [];
+  let cValues = [];
    
   fs.createReadStream(csvFilePath)
     .pipe(csv({ headers: false }))
@@ -25,17 +25,19 @@ const csv = require('csv-parser');
       const text = row[1];
       const align = row[2];
    
-      if (key === "Title") {
-        jsonObject.Title = {text,align};
-      } else if (key === "Subtitle") {
-        jsonObject.Subtitle = {text,align};
-      } else if (key === "XAxis") {
-        jsonObject["XAxis"] = text;
-      } else if (key === "categories") {
-        jsonObject.categories = JSON.parse(text);
-      } else if (key === "YAxis") {
-        jsonObject["YAxis"] = text;
-      } else if (key === "name") {
+      if (key === "title") {
+        jsonObject.title = {text,align};
+      } else if (key === "subtitle") {
+        jsonObject.subtitle = {text,align};
+      } else if (key === "xAxis") {
+        jsonObject.xAxis = {
+        categories : JSON.parse(text)}
+      }
+       else if (key === "yAxis") {
+        jsonObject.yAxis = {
+          title: {text: text}  
+          
+      }} else if (key === "name") {
         if (currentSeries) {
           jsonObject.series.push({
             name: currentSeries,
