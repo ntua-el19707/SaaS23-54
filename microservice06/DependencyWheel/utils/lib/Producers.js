@@ -1,6 +1,5 @@
 const amqp = require("amqplib");
 const fs = require("fs");
-const { resolve } = require("path");
 function sendFile(filePath, filInfo, queueName) {
   return new Promise(async (resolve, reject) => {
     const RABBITMQ_URL = process.env.RABBITMQ_URL;
@@ -34,10 +33,10 @@ function sendFile(filePath, filInfo, queueName) {
 }
 function sendFiles(chart_id, owner, fileName) {
   // Get the channel names from environment variables
-  const htmlChannel = process.env.HTMLCHANNEL;
-  const svgChannel = process.env.SVGCHANNEL;
-  const pdfChannel = process.env.PDFCHANNEL;
-  const pngChannel = process.env.PNGCHANNEL;
+  const htmlChannel = process.env.HTMLQUEUE;
+  const svgChannel = process.env.SVGQUEUE;
+  const pdfChannel = process.env.PDFQUEUE;
+  const pngChannel = process.env.PNGQUEUE;
 
   // Define the file paths for each file type
   const HtmlPath = `utils/Files/html/${fileName}.html`;
@@ -104,9 +103,6 @@ function PurchaceChart(chart_id, user_id) {
         const payload = Buffer.from(JSON.stringify(message));
         channel.sendToQueue(PURCHASE_CHANNEL, payload);
         console.log("send");
-        // Close the channel and connection
-        //await channel.close();
-        // /await connection.close();
         resolve();
       } catch (err) {
         console.log(err);
@@ -174,4 +170,13 @@ function Charge(user_id) {
     }
   });
 }
-module.exports = { sendFiles, PublisDiagram, Charge };
+function UpdateApis(filename, owner, data, id) {
+  data._id = id;
+  return Promise.all([
+    sendFiles(id, owner, filename),
+    PublisDiagram(data, owner),
+    Charge(owner),
+  ]);
+}
+
+module.exports = { UpdateApis };

@@ -15,7 +15,7 @@ function buildAll(options) {
       const chartOptions = buildDependancyWheelOptions(options);
 
       const html = getHtml(chartOptions); //now  i have ready the html
-      console.log(JSON.stringify(chartOptions))
+      console.log(JSON.stringify(chartOptions));
       //* From  Html  i will produce  the  remaining 3
       //& all the charts  will be save with same name so let create it
 
@@ -38,12 +38,20 @@ function buildAll(options) {
       fs.writeFileSync(html_path, getHtml(chartOptions));
 
       //now  we are gone  lunch puppeteer
-      const browser = await puppeteer.launch();
+
+      //now  we are gone  lunch puppeteer
+      const browser = await puppeteer.launch({
+        executablePath: "/usr/bin/google-chrome",
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
       const page = await browser.newPage();
 
       await page.setContent(html);
       await page.emulateMediaType("screen");
-      await page.setViewport({ width: 600, height: 400 });
+      await page.setViewport({ width: 600, height: 600, deviceScaleFactor: 1 });
+      await page.evaluate(() => {
+        document.body.style.height = "max-content";
+      });
       setTimeout(() => {
         Promise.all([
           buildPdf(page, pdf_path),
@@ -53,7 +61,7 @@ function buildAll(options) {
           .then(async () => {
             await browser.close();
 
-            resolve(file_id);
+            resolve({ file: file_id, chart: chartOptions });
           })
           .catch(async (err) => {
             await browser.close();

@@ -1,14 +1,9 @@
 const { buildAll } = require("../utils/lib/chartLine/pngLine");
 const { getJsonFromFile } = require("../utils/lib/csv/reader");
 const { validateInput } = require("../utils/lib/valodators/validators");
-const { insertChart } = require("../utils/lib/mongodb");
 require("dotenv").config();
-const axios = require("axios");
-const {
-  UpdateApis,
-  RequestData,
-} = require("../utils/lib/axiosDservices/upload");
 const { makeid } = require("../utils/lib/genaratorString");
+const { UpdateApis } = require("../utils/lib/Producers");
 exports.saveDB = (req, res, next) => {
   const file = req.body.file;
 
@@ -19,39 +14,32 @@ exports.saveDB = (req, res, next) => {
       const data = getJsonFromFile(file);
       console.log(data);
       if (validateInput(data)) {
-        const owner = req.sub;
         buildAll(data)
           .then((file) => {
-            //now charts  have build 2 thing  chaerge  and save  db
-            console.log("one");
-            const auth_server = process.env.auth_service;
-            const jwt = req.headers.authorization;
-            const id = makeid(7);
-            console.log(auth_server);
-            //  axios.defaults.headers.common["authorization"] = jwt;
-            //  axios
-            //   .post(`${auth_server}/api_user/Purchase/${id}`)
-            // .then((resp) => {
-            //      console.log(resp);
-           // UpdateApis(file, req.sub, data, id)
-            // .then((respapis) => {
-                res.status(200).json({ msg: `purchased diagram ${id} ` });
-            //  })
-             // .catch((err) => {
-               // console.log("err");
-              //  console.log(err);
-             //   res.status(400).json({ err });
-            //  });
-          })
-          // .catch((err) => {
-          //   console.log(err);
-          //TODO delete it failed purchase
-          //  res.status(400).json({ err });
-          // });
-          //  / res.status(200).json({ rsp });
+            console.log(file);
+            const id = makeid(10); //dependencywheel
+            console.log(`files  bu`);
 
+            // Retrieve the value
+            console.log("chart id");
+            //     redis.set(`${req.sub}Credits`, --req.credits);
+            console.log("charge ram");
+            UpdateApis(file.file, req.sub, data, id)
+              .then((respapis) => {
+                res.status(200).json({
+                  rsp: {
+                    chart: file.chart,
+                    type: "Network",
+                  },
+                });
+              })
+              .catch((err) => {
+                console.log("err");
+                console.log(err);
+                res.status(400).json({ err });
+              });
+          })
           .catch((err) => {
-            console.log(err);
             res.status(400).json(err);
           });
       } else {
