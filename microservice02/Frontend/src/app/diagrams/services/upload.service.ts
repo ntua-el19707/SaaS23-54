@@ -60,6 +60,7 @@ export class UploadService {
         break;
       case "api_LinewithAnnotations":
         this.type_param = "line_anotation";
+        this.service = "LineAnnotationService";
         break;
       case "api_DependancyWheel":
         this.type_param = "dependency_wheel";
