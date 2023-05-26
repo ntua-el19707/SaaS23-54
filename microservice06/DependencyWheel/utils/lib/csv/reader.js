@@ -73,6 +73,9 @@ function readFields(line, data) {
 
 
 function readSeries(lines, index) {
+  //skip name line
+  index++;
+  let name = lines[index++].split("\r")[0].split(",");
   //skip key line
   index++;
   let fields = lines[index++].split("\r")[0].split(",");
@@ -95,6 +98,7 @@ function readSeries(lines, index) {
   console.log(dataArray)
 
   const series = {
+    name: name,
     keys: fields,
     data: dataArray
   };
