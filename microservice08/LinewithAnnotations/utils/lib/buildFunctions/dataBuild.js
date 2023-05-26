@@ -38,15 +38,7 @@ function buildLineAnnotationsOptions(data) {
       labels: data.annotations.labels,
     };
   
-    if (data.title) {
-      options.title = {};
-      if (data.title.text) {
-        options.title.text = data.title.text;
-      }
-      if (data.title.align) {
-        options.title.align = data.title.align;
-      }
-    }
+    options.title = data.title;
   
     options.xAxis = data.xAxis;
 
