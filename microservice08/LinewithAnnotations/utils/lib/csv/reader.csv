@@ -1,6 +1,20 @@
 Title,,,,
 text,align,,,
 Dependancy Wheel,left,,,
+xAxis,,,,
+format,,,,
+km,,,,
+title,,,,
+Distance,,,,
+rangeDescription
+0,11,,,
+yAxis,,,,
+format,,,,
+m,,,,
+title,,,,
+null,,,,
+rangeDescription
+0,1000,,,
 annotations,,,,
 labels,,,,
 0,0,27,255,Portugal
