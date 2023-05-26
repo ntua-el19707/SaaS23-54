@@ -222,6 +222,7 @@ function readxAxis(lines, index) {
     ++index;
     ++index;
     let xAxis_title = spliter(lines, index);
+    if (xAxis_title[0] === "null") xAxis_title[0] = null;
     ++index;
     ++index;
     let xAxis_range = spliter(lines, index);
