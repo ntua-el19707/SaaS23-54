@@ -6,16 +6,16 @@ const puppeteer = require("puppeteer");
 // Alternatively, this is how to load Highcharts Stock. The Maps and Gantt
 // packages are similar.
 
-const { buildDependancyWheelOptions } = require("../buildFunctions/dataBuild");
+const { buildLineAnnotationsOptions } = require("../buildFunctions/dataBuild");
 const { makeid } = require("../genaratorString");
 
 function buildAll(options) {
   return new Promise(async (resolve, reject) => {
     try {
-      const chartOptions = buildDependancyWheelOptions(options);
+      const chartOptions = buildLineAnnotationsOptions(options);
 
       const html = getHtml(chartOptions); //now  i have ready the html
-      console.log(JSON.stringify(chartOptions))
+      console.log(JSON.stringify(chartOptions));
       //* From  Html  i will produce  the  remaining 3
       //& all the charts  will be save with same name so let create it
 
@@ -38,12 +38,19 @@ function buildAll(options) {
       fs.writeFileSync(html_path, getHtml(chartOptions));
 
       //now  we are gone  lunch puppeteer
-      const browser = await puppeteer.launch();
+      //now  we are gone  lunch puppeteer
+      const browser = await puppeteer.launch({
+        executablePath: "/usr/bin/google-chrome",
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
       const page = await browser.newPage();
 
       await page.setContent(html);
       await page.emulateMediaType("screen");
-      await page.setViewport({ width: 600, height: 400 });
+      await page.setViewport({ width: 600, height: 600, deviceScaleFactor: 1 });
+      await page.evaluate(() => {
+        document.body.style.height = "max-content";
+      });
       setTimeout(() => {
         Promise.all([
           buildPdf(page, pdf_path),
@@ -53,13 +60,13 @@ function buildAll(options) {
           .then(async () => {
             await browser.close();
 
-            resolve(file_id);
+            resolve({ file: file_id, chart: chartOptions });
           })
           .catch(async (err) => {
             await browser.close();
             reject(err);
           });
-      }, 1000);
+      }, 2000);
 
       //now  the chart  is  ready  to be exported to the  other types
     } catch (err) {
@@ -77,11 +84,10 @@ function getHtml(chartOptions) {
 
 <head>
     <meta charset="utf-8">
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/sankey.js"></script>
-    <script src="https://code.highcharts.com/modules/dependency-wheel.js"></script>
-    
-    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/annotations.js"></script>
+
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <style>
         .highcharts-figure,
         .highcharts-data-table table {

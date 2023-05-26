@@ -9,7 +9,7 @@ dotenv.config();
 
 async function consumeFile() {
   const RABBITMQ_URL = process.env.RABBITMQ_URL;
-  const queueName = process.env.LINECHANNEL;
+  const queueName = process.env.LINEANNOTATIONQUEUE;
 
   if (RABBITMQ_URL && queueName) {
     try {

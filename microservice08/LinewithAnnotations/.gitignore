@@ -1,0 +1,6 @@
+node_modules
+utils/Files/html/*.html
+utils/Files/svg/*.svg
+utils/Files/pdf/*.pdf
+utils/Files/png/*.png
+utils/Files/CSV/*.csv
