@@ -43,12 +43,11 @@ exports.saveDB = (req, res, next) => {
                 redis.set(`${req.sub}Credits`, --req.credits);
                 let data2 = data;
                 console.log(collumnData);
-                UpdateApis(file.file, req.sub, data, id)
+                UpdateApis(file.file, req.sub, data, id, series)
                   .then((respapis) => {
                     let rsp = {
                       chart: {
                         chart: collumnData.chart,
-                        series: series,
                       },
                       type: "Collumn",
                     };
@@ -64,7 +63,9 @@ exports.saveDB = (req, res, next) => {
                     if (collumnData.chart.subtitle) {
                       rsp.chart.subtitle = collumnData.chart.subtitle;
                     }
-                    res.status(200).json({ rsp });
+                    res
+                      .status(200)
+                      .json({ rsp: { chart: collumnData, type: "Collumn" } });
                   })
                   .catch((err) => {
                     console.log("err");

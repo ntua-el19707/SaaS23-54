@@ -118,7 +118,6 @@ function PurchaceChart(chart_id, user_id) {
 }
 function PublisDiagram(chart, ownerShip) {
   return new Promise(async (resolve, reject) => {
-    chart.series = chart.series.data;
     const message = {
       chart,
       ownerShip,
@@ -173,11 +172,12 @@ function Charge(user_id) {
   });
 }
 
-function UpdateApis(filename, owner, data, id) {
+function UpdateApis(filename, owner, data, id, series) {
   data._id = id;
+  data.series = series;
   return Promise.all([
     sendFiles(id, owner, filename),
-    PublisDiagram(data, owner),
+    PublisDiagram(data, owner, series),
     Charge(owner),
   ]);
 }
