@@ -5,6 +5,7 @@ const { makeid } = require("../utils/lib/genaratorString");
 const { UpdateApis } = require("../utils/lib/Producers.js/Producers");
 require("dotenv").config();
 const Redis = require("ioredis");
+const { buildPollarOptions } = require("../utils/lib/buildFunctions/dataBuild");
 exports.saveDB = (req, res, next) => {
   const file = req.body.file;
   if (file) {
@@ -26,7 +27,12 @@ exports.saveDB = (req, res, next) => {
             redis.set(`${req.sub}Credits`, --req.credits);
             UpdateApis(file, req.sub, data, id)
               .then((respapis) => {
-                res.status(200).json({ msg: `purchased diagram ${id} ` });
+                res.status(200).json({
+                  rsp: {
+                    chart: buildPollarOptions(data),
+                    type: "Pollar",
+                  },
+                });
               })
               .catch((err) => {
                 console.log("err");
