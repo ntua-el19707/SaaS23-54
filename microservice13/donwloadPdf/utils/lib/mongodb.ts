@@ -69,6 +69,14 @@ function findCollection(id: string): string | null {
       collection = "chartDependancyWheel";
 
       break;
+    case 11:
+      collection = "chartCollumn";
+
+      break;
+    case 12:
+      collection = "chartLineAnnotation";
+
+      break;
     default:
       break;
   }
