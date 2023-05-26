@@ -1,4 +1,7 @@
 const { UpdateApis } = require("../utils/lib/Producers.js/Producers");
+const {
+  buildnetworkOptions,
+} = require("../utils/lib/buildFunctions/dataBuild");
 const { buildAll } = require("../utils/lib/chartnetwork/network");
 const { getJsonFromFile, destroy } = require("../utils/lib/csv/reader");
 const { makeid } = require("../utils/lib/genaratorString");
@@ -30,9 +33,14 @@ exports.saveDB = (req, res, next) => {
             // Retrieve the value
 
             redis.set(`${req.sub}Credits`, --req.credits);
-            UpdateApis(file, req.sub, data, id)
+            UpdateApis(file.file, req.sub, data, id)
               .then((respapis) => {
-                res.status(200).json({ msg: `purchased diagram ${id} ` });
+                res.status(200).json({
+                  rsp: {
+                    chart: file.chart,
+                    type: "Network",
+                  },
+                });
               })
               .catch((err) => {
                 console.log("err");

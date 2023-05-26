@@ -59,7 +59,7 @@ function buildAll(options) {
           .then(async () => {
             await browser.close();
             console.log("ok");
-            resolve(file_id);
+            resolve({ file: file_id, chart: chartOptions });
           })
           .catch(async (err) => {
             await browser.close();
