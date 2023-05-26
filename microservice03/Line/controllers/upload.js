@@ -1,12 +1,12 @@
 const { buildAll } = require("../utils/lib/chartLine/pngLine");
 const { getJsonFromFile, destroy } = require("../utils/lib/csv/reader");
 const { validateInput } = require("../utils/lib/valodators/validators");
-const { insertChart } = require("../utils/lib/mongodb");
+
 require("dotenv").config();
 const { UpdateApis } = require("../utils/lib/axiosDservices/upload");
 const { makeid } = require("../utils/lib/genaratorString");
 const Redis = require("ioredis");
-const { buildLineOptions } = require("../utils/lib/buildFunctions/dataBuild");
+
 exports.saveDB = (req, res, next) => {
   const file = req.body.file;
 
