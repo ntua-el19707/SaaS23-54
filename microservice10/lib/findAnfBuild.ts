@@ -1,6 +1,8 @@
 import {
   ChartRecord,
   CollumnChart,
+  LineAnnotations,
+  LineAnnotationsBuild,
   NetworkChart,
   PollarChart,
   PollarSeries,
@@ -10,6 +12,7 @@ import {
   linesChart,
 } from "./interfaces/sechema";
 import {
+  findChartLineAnnotion,
   findCollumn,
   findDependancyChart,
   findLine,
@@ -188,9 +191,9 @@ function findAndBuildCollumn(id: string): Promise<CollumnChart> {
     findCollumn(id)
       .then((chart: ChartRecord) => {
         console.log(chart);
-        const PollarOptions = chart.chart as CollumnChart;
+        const collumn = chart.chart as CollumnChart;
 
-        resolve(PollarOptions);
+        resolve(collumn);
       })
       .catch((err) => {
         reject(err);
@@ -239,9 +242,92 @@ function findAndBuildDependency(id: string): Promise<dependencyWheelBuild> {
       });
   });
 }
+
+function findAndBuildAnnotation(id: string): Promise<LineAnnotationsBuild> {
+  return new Promise((resolve, reject) => {
+    console.log(`looking  For ${id}`);
+    findChartLineAnnotion(id)
+      .then((chart: ChartRecord) => {
+        console.log(chart);
+        const options = chart.chart as LineAnnotations;
+        let chartAnnotations: LineAnnotationsBuild = {
+          chart: {
+            type: "area",
+            zoomType: "x",
+            panning: true,
+            panKey: "shift",
+            scrollablePlotArea: {
+              minWidth: 600,
+            },
+          },
+          title: options.title,
+          series: [
+            {
+              data: options.series[0].data,
+              //lineColor: Highcharts.getOptions().colors[1],
+              //color: Highcharts.getOptions().colors[2],
+              fillOpacity: 0.5,
+              name: "Elevation",
+              marker: {
+                enabled: false,
+              },
+              threshold: null,
+            },
+          ],
+          annotations: {
+            draggable: "",
+            labelOptions: {
+              backgroundColor: "rgba(255,255,255,0.5)",
+              verticalAlign: "top",
+              y: 15,
+            },
+            labels: options.annotations.labels,
+          },
+          xAxis: {
+            labels: {
+              format: "{value} km",
+            },
+            minRange: 5,
+            title: {
+              text: "Distance",
+            },
+          },
+
+          yAxis: {
+            startOnTick: true,
+            endOnTick: false,
+            maxPadding: 0.35,
+            title: {
+              text: "",
+            },
+            labels: {
+              format: "{value} m",
+            },
+          },
+          legend: {
+            enabled: false,
+          },
+        };
+        if (options.subtitle) {
+          chartAnnotations.subtitle = options.subtitle;
+        }
+        resolve(chartAnnotations);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
 export function FindPreview(
   id: string
-): Promise<linesChart | NetworkBuild | PollarBuild | dependencyWheelBuild> {
+): Promise<
+  | linesChart
+  | LineAnnotationsBuild
+  | NetworkBuild
+  | PollarBuild
+  | dependencyWheelBuild
+  | CollumnChart
+> {
   return new Promise((resolve, reject) => {
     const size = id.length;
     switch (size) {
@@ -285,6 +371,15 @@ export function FindPreview(
       case 11:
         findAndBuildCollumn(id)
           .then((chart: CollumnChart) => {
+            resolve(chart);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+        break;
+      case 12:
+        findAndBuildAnnotation(id)
+          .then((chart: LineAnnotationsBuild) => {
             resolve(chart);
           })
           .catch((err) => {

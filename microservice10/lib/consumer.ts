@@ -10,6 +10,8 @@ import {
   linesChart,
 } from "./interfaces/sechema";
 import {
+  insertChartLineAnnotion,
+  insertCollunChart,
   insertDependancyChart,
   insertLineChart,
   insertNetworkChart,
@@ -194,9 +196,10 @@ async function consumeChartCollumn() {
             ownerShip: info.ownerShip,
             createAT: info.create,
           };
+          console.log(chart);
 
           // Insert the line chart into the database
-          insertLineChart(chart)
+          insertCollunChart(chart)
             .then(() => {})
             .catch((err) => {})
             .finally(() => {
@@ -255,6 +258,55 @@ async function consumeChartDependancy() {
     }
   }
 }
+// Consume messages for lineannotation
+async function consumeLineAnnotation() {
+  const RABBITMQ_URL: string | undefined = process.env.RABBITMQ_URL;
+  const queueName: string | undefined = process.env.LINEANNOTATIONQUEUE;
+
+  if (RABBITMQ_URL && queueName) {
+    try {
+      // Connect to RabbitMQ
+      const connection = await amqp.connect(RABBITMQ_URL);
+      const channel = await connection.createChannel();
+
+      // Assert the queue
+      await channel.assertQueue(queueName);
+
+      console.log(`Waiting for file messages... ${queueName}`);
+
+      // Consume messages from the queue
+      channel.consume(queueName, async (msg) => {
+        if (msg) {
+          // Parse the message content
+          const info = JSON.parse(msg.content.toString()) as {
+            chart: NetworkChart;
+            ownerShip: string;
+            create: string;
+          };
+
+          // Create a chart record object
+          const chart: ChartRecord = {
+            chart: info.chart,
+            ownerShip: info.ownerShip,
+            createAT: info.create,
+          };
+
+          console.log(chart);
+          // Insert the network chart into the database
+          insertChartLineAnnotion(chart)
+            .then(() => {})
+            .catch((err) => {})
+            .finally(() => {
+              channel.ack(msg);
+            });
+        }
+      });
+    } catch (err) {
+      console.error("Error consuming file:", err);
+    }
+  }
+}
+
 /**
  * consumers - run the consumers
  */
@@ -264,6 +316,7 @@ function Consumers() {
   consumeChartPollar();
   consumeChartCollumn();
   consumeChartDependancy();
+  consumeLineAnnotation();
 }
 
 export { Consumers };

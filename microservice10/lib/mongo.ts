@@ -1,16 +1,5 @@
-import {
-  Collection,
-  MongoClient,
-  ObjectId,
-  Document,
-  InsertOneResult,
-} from "mongodb";
-import {
-  ChartRecord,
-  NetworkChart,
-  PollarChart,
-  linesChart,
-} from "./interfaces/sechema";
+import { Collection, MongoClient, Document, InsertOneResult } from "mongodb";
+import { ChartRecord } from "./interfaces/sechema";
 import { diagrams } from "./interfaces/responcesFunctions";
 
 const DB: string = "PurchasedCharts";
@@ -23,6 +12,7 @@ const NetworkCollection: string = "Netwotk";
 const PollarCollection: string = "Pollar";
 const ColumnCollection: string = "Collumn";
 const DependancyWheelCollection: string = "Dependancy_Wheel ";
+const lineannotioncol: string = "Line_Annotations";
 /**
  *
  * @param owner string  id 'id  random genarated  by mongo //* Not  email '
@@ -55,7 +45,10 @@ export function findMyDiagrams(owner: string): Promise<diagrams[]> {
             conn,
             DependancyWheelCollection
           );
-
+          const annotationscollection: Collection<Document> = DB_collection(
+            conn,
+            lineannotioncol
+          );
           const lineCharts = lineCollection
             .find({
               ownerShip: owner,
@@ -81,18 +74,27 @@ export function findMyDiagrams(owner: string): Promise<diagrams[]> {
               ownerShip: owner,
             })
             .toArray();
+          const annotationsCharts = annotationscollection
+            .find({
+              ownerShip: owner,
+            })
+            .toArray();
           Promise.all([
             lineCharts,
             networkCharts,
             pollarCharts,
             CollumnCharts,
             dependencyCharts,
+            annotationsCharts,
           ])
             .then((chartsArray) => {
+              console.log(chartsArray);
+
               let charts: diagrams[] = [];
               chartsArray.forEach((charray: any) => {
                 let list = charray as ChartRecord[];
                 list.forEach((item) => {
+                  console.log(`typr: ${findType(item.chart._id)}`);
                   charts.push({
                     _id: item.chart._id,
                     name: item.chart.title.text,
@@ -494,6 +496,45 @@ export function findCollumn(id: string): Promise<ChartRecord> {
     }
   });
 }
+export function insertCollumnChart(
+  chartR: ChartRecord
+): Promise<InsertOneResult<Document>> {
+  return new Promise((resolve, reject) => {
+    const mongoConnection = StartConection();
+    if (typeof mongoConnection === "boolean") {
+      reject("Not able to create a connetion");
+    } else {
+      connection(mongoConnection)
+        .then(() => {
+          const Collumnollection: Collection<Document> = DB_collection(
+            mongoConnection,
+            ColumnCollection
+          );
+
+          Collumnollection.insertOne(chartR)
+            .then((registerChart: InsertOneResult<Document>) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  resolve(registerChart);
+                });
+            })
+            .catch((err) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  reject(err);
+                });
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
+  });
+}
 function findType(id: string) {
   let type: string = "";
   const size: number = id.length;
@@ -516,6 +557,9 @@ function findType(id: string) {
       break;
     case 11:
       type = "Collumn";
+      break;
+    case 12:
+      type = "Line anottations";
       break;
     default:
       break;
@@ -576,6 +620,85 @@ export function findDependancyChart(id: string): Promise<ChartRecord> {
           );
 
           Dependencycollection.findOne({ "chart._id": id })
+            .then((data: any) => {
+              const chart = data as ChartRecord;
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  resolve(chart);
+                });
+            })
+            .catch((err) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  reject(err);
+                });
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
+  });
+}
+
+export function insertChartLineAnnotion(
+  chartR: ChartRecord
+): Promise<InsertOneResult<Document>> {
+  return new Promise((resolve, reject) => {
+    const mongoConnection = StartConection();
+    if (typeof mongoConnection === "boolean") {
+      reject("Not able to create a connetion");
+    } else {
+      connection(mongoConnection)
+        .then(() => {
+          const collection: Collection<Document> = DB_collection(
+            mongoConnection,
+            lineannotioncol
+          );
+          collection
+            .insertOne(chartR)
+            .then((registerChart: InsertOneResult<Document>) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  resolve(registerChart);
+                });
+            })
+            .catch((err) => {
+              closeconection(mongoConnection)
+                .then(() => {})
+                .catch((err) => {})
+                .finally(() => {
+                  reject(err);
+                });
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }
+  });
+}
+
+export function findChartLineAnnotion(id: string): Promise<ChartRecord> {
+  return new Promise((resolve, reject) => {
+    const mongoConnection = StartConection();
+    if (typeof mongoConnection === "boolean") {
+      reject("Not able to create a connetion");
+    } else {
+      connection(mongoConnection)
+        .then(() => {
+          const collection: Collection<Document> = DB_collection(
+            mongoConnection,
+            lineannotioncol
+          );
+          collection
+            .findOne({ "chart._id": id })
             .then((data: any) => {
               const chart = data as ChartRecord;
               closeconection(mongoConnection)
