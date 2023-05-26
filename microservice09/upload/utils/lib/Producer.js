@@ -80,13 +80,13 @@ function getChannel(type) {
       channel = process.env.POLLARQUEUE;
       break;
     case "dependency_wheel":
-      channel = process.env.DEPENDENCYWHEELCHANNEL;
+      channel = process.env.DEPENDANCYQUEUE;
       break;
     case "line_anotation":
-      channel = process.env.LINEANNOTATIONCHANNEL;
+      channel = process.env.LINEANNOTATIONQUEUE;
       break;
     case "collumn":
-      channel = process.env.COLLUMNCHANNEL;
+      channel = process.env.COLLUMNQUEU;
       break;
     default:
       channel = null;
