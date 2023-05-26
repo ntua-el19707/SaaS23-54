@@ -1,11 +1,12 @@
 const { buildAll } = require("../utils/lib/chartLine/pngLine");
-const { getJsonFromFile } = require("../utils/lib/csv/reader");
+const { getJsonFromFile, destroy } = require("../utils/lib/csv/reader");
 const { validateInput } = require("../utils/lib/valodators/validators");
 const { insertChart } = require("../utils/lib/mongodb");
 require("dotenv").config();
 const { UpdateApis } = require("../utils/lib/axiosDservices/upload");
 const { makeid } = require("../utils/lib/genaratorString");
 const Redis = require("ioredis");
+const { buildLineOptions } = require("../utils/lib/buildFunctions/dataBuild");
 exports.saveDB = (req, res, next) => {
   const file = req.body.file;
 
@@ -28,9 +29,15 @@ exports.saveDB = (req, res, next) => {
             // Retrieve the value
 
             redis.set(`${req.sub}Credits`, --req.credits);
-            UpdateApis(file, req.sub, data, id)
+            UpdateApis(file.file, req.sub, data, id)
               .then((respapis) => {
-                res.status(200).json({ msg: `purchased diagram ${id} ` });
+                console.log(file);
+                res.status(200).json({
+                  rsp: {
+                    chart: file.chart,
+                    type: "Line",
+                  },
+                });
               })
               .catch((err) => {
                 console.log("err");
