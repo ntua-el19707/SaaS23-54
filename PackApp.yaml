@@ -23,6 +23,19 @@ services:
       - 3001:3001
     depends_on:
       - rabbitmq
+  collumn:
+    image: collumnservice
+    ports: 
+      - 3006:3006
+    depends_on:
+      - rabbitmq
+  depedencywheel:
+    image:  depedencywheel
+    ports: 
+      - 3004:3004
+    depends_on:
+      - rabbitmq
+
   line:
     image: lineservice
     ports: 
@@ -79,5 +92,11 @@ services:
     image: redis
     ports:
       - 6379:6379
+  lineannotations:
+    image: lineannotationsservice
+    ports: 
+      - 3005:3005
+    depends_on:
+      - rabbitmq
 
   

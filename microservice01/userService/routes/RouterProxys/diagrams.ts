@@ -20,9 +20,7 @@ DiagramRouterServices.route("/getUser").get(
 );
 DiagramRouterServices.post(
   "/LineService/confirm",
-  (req: AuthRequest, res: Response, next: NextFunction) => {
-    next();
-  },
+
   (req: AuthRequest, res, next) => {
     // Define the request configuration
 
@@ -43,12 +41,13 @@ DiagramRouterServices.post(
         .then((response) => {
           // Do something with the response if needed
           console.log(response.data);
-          next();
+          console.log("forward rsp");
+          res.json({ res: response.data });
         })
         .catch((error) => {
           // Handle any errors if necessary
           console.log(error);
-          next(error);
+          res.status(400).json({ err: error });
         });
     } else {
       res
@@ -117,5 +116,110 @@ DiagramRouterServices.post(
     }
   }
 );
+DiagramRouterServices.post(
+  "/CollumnService/confirm",
+  (req: AuthRequest, res: Response, next: NextFunction) => {
+    // Define the request configuration
+    const CollumnService: string | undefined = process.env.COLLUMNSERVICE;
+    if (CollumnService) {
+      let config: AxiosRequestConfig = {
+        method: req.method,
+        url: `${CollumnService}/confirm`,
+        headers: req.headers,
+        data: req.body,
 
+        responseType: "json",
+        responseEncoding: "utf8",
+      };
+
+      // Send the request using axios
+      axios(config)
+        .then((response) => {
+          // Do something with the response if needed
+          console.log(response.data);
+          res.json({ res: response.data });
+        })
+        .catch((error) => {
+          // Handle any errors if necessary
+          res.status(400).json({ err: error });
+        });
+    }
+  }
+);
+DiagramRouterServices.post(
+  "/DepentancyWheelService/confirm",
+
+  (req: AuthRequest, res, next) => {
+    // Define the request configuration
+
+    const Service: string | undefined = process.env.DEPENDANCYSERVICE;
+    if (Service) {
+      let config: AxiosRequestConfig = {
+        method: req.method,
+        url: `${Service}/confirm`,
+        headers: req.headers,
+        data: req.body,
+
+        responseType: "json",
+        responseEncoding: "utf8",
+      };
+
+      // Send the request using axios
+      axios(config)
+        .then((response) => {
+          // Do something with the response if needed
+          console.log(response.data);
+          console.log("forward rsp");
+          res.json({ res: response.data });
+        })
+        .catch((error) => {
+          // Handle any errors if necessary
+          console.log(error);
+          res.status(400).json({ err: error });
+        });
+    } else {
+      res.status(400).json({
+        errmsg: "dependecy wheel SERVICE does  not exist in env file",
+      });
+    }
+  }
+);
+DiagramRouterServices.post(
+  "/LineAnnotationService/confirm",
+
+  (req: AuthRequest, res, next) => {
+    // Define the request configuration
+
+    const Service: string | undefined = process.env.LINEANNOTATIONSERVICE;
+    if (Service) {
+      let config: AxiosRequestConfig = {
+        method: req.method,
+        url: `${Service}/confirm`,
+        headers: req.headers,
+        data: req.body,
+
+        responseType: "json",
+        responseEncoding: "utf8",
+      };
+
+      // Send the request using axios
+      axios(config)
+        .then((response) => {
+          // Do something with the response if needed
+          console.log(response.data);
+          console.log("forward rsp");
+          res.json({ res: response.data });
+        })
+        .catch((error) => {
+          // Handle any errors if necessary
+          console.log(error);
+          res.status(400).json({ err: error });
+        });
+    } else {
+      res.status(400).json({
+        errmsg: "line annotattion SERVICE does  not exist in env file",
+      });
+    }
+  }
+);
 export { DiagramRouterServices };
