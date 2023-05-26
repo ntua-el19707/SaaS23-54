@@ -18,9 +18,9 @@ function readCsv(FileName) {
     );
     */
   // const path = `../../Files/CSV/${FileName}`;
-  //   const path = `./${FileName}`;
+    const path = `./${FileName}`;
 
-  const path = `utils/Files/CSV/${FileName}`;
+  //const path = `utils/Files/CSV/${FileName}`;
 
   const data = readFileSync(path, { encoding: "utf8", flag: "r" });
 
@@ -60,6 +60,8 @@ function csvJSON(csv) {
     json.xAxis = {};
     json.yAxis = {};
 
+    json.title = {};
+
     while (index < size) {
       let field = spliter(lines, index)[0];
       console.log(field);
@@ -77,17 +79,18 @@ function csvJSON(csv) {
         console.log(lines[index + 1]);
         console.log("aris");
         const data = readFields(lines, index + 1);
-
-        json[field] = data.json;
+        json.title = data;
         index += 2;
       } else if (field === "xAxis") {
         console.log(lines[index + 1]);
         const data = readxAxis(lines, index + 1);
-        json.xAxis = data;
+        index = data.index;
+        json.xAxis = data.json;
       } else if (field === "yAxis") {
         console.log(lines[index + 1]);
         const data = readyAxis(lines, index + 1);
-        json.yAxis = data;
+        json.yAxis = data.json;
+        index = data.index;
       }
       ++index;
     }
@@ -97,6 +100,7 @@ function csvJSON(csv) {
     //console.log(JSON.stringify(json));
     console.log(json.xAxis);
     console.log(json.yAxis);
+    console.log(json.title)
 
     return json;
   } catch (err) {
@@ -155,17 +159,17 @@ function readSeries(lines, index) {
  * @returns json object
  */
 function readFields(lines, index) {
-  let fields = spliter(lines, index);
-  let dataL = spliter(lines, index + 1);
-  let json = {};
+    
+    index++
+    let data = spliter(lines, index);
+    title_text = data[0];
+    title_alignment = data[1];
 
-  const size = fields.length;
-  for (let i = 0; i < size; i++) {
-    if (fields[i] !== "") {
-      json[fields[i]] = dataL[i];
+    json = {
+        text: title_text,
+        align: title_alignment
     }
-  }
-  return { json, fields };
+    return json;
 }
 
 function readAnnotations(lines, index) {
@@ -239,7 +243,7 @@ function readxAxis(lines, index) {
       },
     };
 
-    return json;
+    return { json, index };
   } catch (err) {
     throw err;
   }
@@ -283,7 +287,7 @@ function readyAxis(lines, index) {
       },
     };
 
-    return json;
+    return { json, index };
   } catch (err) {
     throw err;
   }
@@ -299,5 +303,8 @@ function destroyCSV(filename) {
     return false;
   }
 }
+
+let filename = "reader.csv"
+getJsonFromFile(filename)
 
 module.exports = { getJsonFromFile, destroyCSV };
