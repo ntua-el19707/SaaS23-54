@@ -13,9 +13,10 @@ exports.saveDB = (req, res, next) => {
 
     try {
       const data = getJsonFromFile(file);
+      const data2 = data;
       console.log(data);
       if (validateInput(data)) {
-        buildAll(data)
+        buildAll(data2)
           .then((file) => {
             console.log(file);
             const id = makeid(10); //dependencywheel
@@ -31,12 +32,13 @@ exports.saveDB = (req, res, next) => {
             console.log("chart id");
             //     redis.set(`${req.sub}Credits`, --req.credits);
             console.log("charge ram");
+            console.log(data);
             UpdateApis(file.file, req.sub, data, id)
               .then((respapis) => {
                 res.status(200).json({
                   rsp: {
                     chart: file.chart,
-                    type: "Network",
+                    type: "Dependancy Wheel",
                   },
                 });
               })
