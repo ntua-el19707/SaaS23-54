@@ -79,9 +79,8 @@
 
 
         </div>
-        <drag [api]="getApi()" (buttonClick)="handlePurchase($event)"></drag>
-        <!-- later delete this-->
-        <button mat-button (click)="call_error_dialog('your upload failed')">invoke</button>
+        <drag [api]="getApi()" (buttonClick)="handlePurchase($event)" (errorOccurs)="call_error_dialog($event)"></drag>
+
     </ng-template>
     <ng-template #PurchasedView>
         <app-purchase-page [diagram]="getDiagram()"></app-purchase-page>

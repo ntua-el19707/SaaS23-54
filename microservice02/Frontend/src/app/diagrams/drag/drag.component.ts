@@ -27,17 +27,36 @@ export class DragComponent implements OnInit, AfterViewInit {
   private uploadin: boolean = false;
   @Input() api: string = "";
   @Output() buttonClick: EventEmitter<any> = new EventEmitter();
-
+  @Output() errorOccurs: EventEmitter<any> = new EventEmitter();
+  @ViewChild("cancelButton")
+  cancelBTN!: ElementRef;
+  @ViewChild("uploadinText")
+  uploadText!: ElementRef;
+  @ViewChild("uploadButton")
+  uploadBTN!: ElementRef;
   @ViewChild("bar")
   barEl!: ElementRef;
   @ViewChild("upheader")
   upheadertEl!: ElementRef;
+  private showSpinner: boolean = false;
   constructor(private upploadService: UploadService) {}
   ngOnInit() {
     this.upploadService.setApi(this.api);
   }
   ngAfterViewInit(): void {
     //  this.setBar();
+    this.uploadBTN.nativeElement.disabled = true;
+    this.uploadBTN.nativeElement.classList.add(
+      "bg-gray-400",
+      "cursor-not-allowed",
+      "opacity-50"
+    );
+    this.cancelBTN.nativeElement.disabled = true;
+    this.cancelBTN.nativeElement.classList.add(
+      "bg-gray-400",
+      "cursor-not-allowed",
+      "opacity-50"
+    );
   }
   private setBar() {
     let el: ElementRef = this.barEl;
@@ -64,10 +83,27 @@ export class DragComponent implements OnInit, AfterViewInit {
           let body: any = r.body;
           this.fileName = body["filename"];
           this.upheadertEl.nativeElement.textContent = `file ${filename} succefully uploaded`;
+          this.uploadBTN.nativeElement.disabled = false;
+
+          this.uploadBTN.nativeElement.classList.remove(
+            "bg-gray-400",
+            "cursor-not-allowed",
+            "opacity-50"
+          );
+          this.cancelBTN.nativeElement.disabled = false;
+
+          this.cancelBTN.nativeElement.classList.remove(
+            "bg-gray-400",
+            "cursor-not-allowed",
+            "opacity-50"
+          );
         }
       },
       (err) => {
         this.uploadin = false;
+        this.upheadertEl.nativeElement.textContent =
+          "Please upload the csv file";
+        this.errorOccurs.emit("failed  to upload file");
         console.log(err);
       },
       () => {}
@@ -76,6 +112,8 @@ export class DragComponent implements OnInit, AfterViewInit {
     // Set files form control
   }
   uploadTodb() {
+    this.showSpinner = true;
+    this.uploadText.nativeElement.innerText = "building diagram";
     this.upploadService.confirm(this.fileName).subscribe(
       (r) => {
         console.log(r);
@@ -83,6 +121,7 @@ export class DragComponent implements OnInit, AfterViewInit {
       },
       (err) => {
         console.log("failed");
+        this.errorOccurs.emit("invalid Format");
         console.log(err);
       },
       () => {
@@ -96,6 +135,13 @@ export class DragComponent implements OnInit, AfterViewInit {
   remove() {
     this.uploadin = false;
     this.upheadertEl.nativeElement.textContent = `Please upload the csv file`;
+  }
+  getshowSpinner() {
+    return this.showSpinner;
+  }
+  cancel() {
+    this.uploadin = false;
+    //remo file from uploadlist
   }
   // Clean Url
   sanitize(url: string) {}

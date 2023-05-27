@@ -21,12 +21,17 @@
 
     <div class="flex flex-row">
 
-        <button (click)="uploadTodb()" type="button" class="inline-block rounded-full  bg-success px-6 bg-purple-600
+        <button (click)="uploadTodb()" #uploadButton type="button" class="inline-block rounded-full  bg-success px-6 bg-purple-600
             pt-2.5 pb-2  text-xs font-medium uppercase leading-normal text-white"
             style="width:50%;text-align: center;">
-            Upload File and Create
+            <div style="display: flex;">
+                <mat-spinner *ngIf="getshowSpinner()" diameter="20"></mat-spinner>
+                &nbsp;
+                <div #uploadinText>Upload File and Create</div>
+
+            </div>
         </button>
-        <button type="button" class="inline-block rounded-full bg-danger px-6 bg-white
+        <button #cancelButton (click)=" cancel()" type="button" class="inline-block rounded-full bg-danger px-6 bg-white
             pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-purple-600
 " style="width:50%">
             Cancel

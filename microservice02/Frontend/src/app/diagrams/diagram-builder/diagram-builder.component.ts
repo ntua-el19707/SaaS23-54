@@ -90,7 +90,9 @@ export class DiagramBuilderComponent implements OnInit {
    * funcion call_error_dialog() "call error dialog"
    *  @param err_msg string
    */
-  call_error_dialog(err_msg: string): void {
+  call_error_dialog(event: any): void {
+    const err_msg = event;
+    console.log(event);
     //set configurations  for mat dialog
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
