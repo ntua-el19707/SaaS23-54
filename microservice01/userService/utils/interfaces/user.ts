@@ -4,6 +4,7 @@ export interface user {
   user_id: string;
   userName: string;
   credits: number;
+  total: number;
   LastLogin: string[];
   role: string;
 }

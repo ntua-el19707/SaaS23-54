@@ -10,10 +10,12 @@ import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 import { DonwloadService } from "./services/donwload.service";
 import { saveAs } from "file-saver";
-import { diagramFromMongoLight } from "../interfaces/digramid";
+
 import { GetDiagramsService } from "./services/get-diagrams.service";
 import HighchartsMore from "highcharts/highcharts-more";
 import * as Highcharts from "highcharts";
+import { diagramFromMongoLight } from "src/app/diagrams-m/interfaces/digramid";
+
 HighchartsMore(Highcharts);
 Highcharts.setOptions({
   exporting: {

@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/interfaces/AuthRequest";
-import { FindUser, logIn, Register } from "../utils/mongo";
+import { FindUser, FindUserByUser_id, logIn, Register } from "../utils/mongo";
 import { user } from "../utils/interfaces/user";
 import { issueJWT } from "../utils/Gennarator.JWT";
 import Redis from "ioredis";
@@ -47,14 +47,27 @@ const FindUserController = (
   const user: string | undefined = req.sub;
 
   if (user) {
-    FindUser(user).then((u) => {
+    FindUserByUser_id(user).then((u) => {
       if (u === null) {
         res.status(200).json({ msg: "User nor register in our services" });
       } else {
         try {
           const client = u as user;
+          let LastLogin = u.LastLogin[0];
+          if (!LastLogin) {
+            LastLogin = "";
+          }
+          if (u.LastLogin.length > 1) {
+            LastLogin = u.LastLogin[u.LastLogin.length - 1];
+          }
+          const user = {
+            userName: u.userName,
+            credits: u.credits,
+            LastLogin: LastLogin,
+            total: u.total,
+          };
 
-          res.status(200).json({ user: client });
+          res.status(200).json({ user });
         } catch (err) {
           res.status(400).json({ err });
         }

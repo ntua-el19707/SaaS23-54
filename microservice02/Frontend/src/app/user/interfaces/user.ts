@@ -1,6 +1,6 @@
 export interface User {
-    username: string;
-    total?: number,
-    credits?: number,
-    lastLogin?: Date
+  username: string;
+  total?: number;
+  credits?: number;
+  lastLogin?: string;
 }

@@ -163,6 +163,7 @@ function InserteUser(userName: string): Promise<any> {
             LastLogin: [LastLogin],
             role: "client",
             credits: 3,
+            total: 0,
           };
 
           userCollection
@@ -280,7 +281,11 @@ function Register(userName: string) {
  * @params user_id
  * @returns Promise
  */
-function chargeOrGive(user_id: string, credits: number): Promise<void> {
+function chargeOrGive(
+  user_id: string,
+  credits: number,
+  totalInc: number
+): Promise<void> {
   return new Promise((resolve, reject) => {
     const connectionClient = StartConection();
     if (typeof connectionClient === "boolean") {
@@ -292,7 +297,9 @@ function chargeOrGive(user_id: string, credits: number): Promise<void> {
           const filter = { user_id };
           // Update operation
           const decreaseBy = credits;
-          const update = { $inc: { credits: decreaseBy } };
+
+          const update = { $inc: { credits: decreaseBy, total: totalInc } };
+
           const collection: Collection<Document> = connectionClient
             .db(UserDatabaseANdColection.db)
             .collection(UserDatabaseANdColection.collection);

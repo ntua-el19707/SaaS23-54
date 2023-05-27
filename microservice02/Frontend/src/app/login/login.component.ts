@@ -12,7 +12,6 @@ import {
   ViewChild,
 } from "@angular/core";
 import { LoginService } from "./login.service";
-import { PurchaseService } from "../diagrams/services/purchase.service";
 
 @Component({
   selector: "app-login",
@@ -31,10 +30,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
   user!: SocialUser;
   loggedIn: boolean = false;
   constructor(
-    private ngZone: NgZone,
     private authService: SocialAuthService,
-    private loginSe: LoginService,
-    private buy: PurchaseService
+    private loginSe: LoginService
   ) {}
   getUser() {
     return { username: this.user.email };

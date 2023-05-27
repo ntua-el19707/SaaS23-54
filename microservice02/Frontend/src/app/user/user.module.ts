@@ -10,6 +10,8 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { CreditCardformDialog } from "./credit-cardform/credit-cardform.dialog";
 
 import { ReactiveFormsModule } from "@angular/forms";
+import { UserRoutingModule } from "./user-routing.module";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 //TODO: later create a componet for buying credits.
 
@@ -29,6 +31,8 @@ import { ReactiveFormsModule } from "@angular/forms";
     MatGridListModule,
     MatFormFieldModule,
     ReactiveFormsModule,
+    UserRoutingModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class UserModule {}

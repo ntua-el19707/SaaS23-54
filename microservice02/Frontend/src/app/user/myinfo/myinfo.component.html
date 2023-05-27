@@ -1,5 +1,10 @@
 <div class="container">
-    <mat-card>
+    <mat-card *ngIf="getLoading()" style="width: fit-content;height: fit-content;display:flex">
+        <mat-spinner [diameter]="20" [strokeWidth]="2"></mat-spinner> &nbsp;<span>Loading your information</span>
+    </mat-card>
+
+
+    <mat-card *ngIf="!getLoading()">
         <mat-card-header>
             <mat-card-title>Hello <span style="color:blue">{{getUser().username}}</span> </mat-card-title>
 
@@ -36,9 +41,9 @@
         </section>
 
         <mat-card-actions>
-            <button mat-button class="col-3">My charts</button>
-            <button mat-button class="col-3">New chart</button>
-            <button mat-button class="col-3">Buy credits</button>
+            <button mat-button class="col-3" (click)="MyDiagrams()"> My charts</button>
+            <button mat-button class="col-3" (click)="newChart()">New chart</button>
+            <button mat-button class="col-3" (click)="buyCredits()">Buy credits</button>
         </mat-card-actions>
 
     </mat-card>

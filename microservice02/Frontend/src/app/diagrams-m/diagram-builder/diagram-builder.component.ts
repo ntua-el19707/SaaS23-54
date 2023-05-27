@@ -40,8 +40,7 @@ export class DiagramBuilderComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router,
-    private location: Location
+    private router: Router
   ) {}
   ngOnInit(): void {
     const diagrams = [

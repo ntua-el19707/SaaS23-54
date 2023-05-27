@@ -30,7 +30,7 @@ async function consumeCharge() {
           };
 
           console.log(chargeto);
-          chargeOrGive(chargeto.user_id, -1)
+          chargeOrGive(chargeto.user_id, -1, 1)
             .then(() => {})
             .catch((err) => {
               console.log(err);
@@ -72,7 +72,7 @@ async function consumePacket() {
           };
           console.log(purchaseto);
           if (purchaseto.credits > 0) {
-            chargeOrGive(purchaseto.user_id, purchaseto.credits)
+            chargeOrGive(purchaseto.user_id, purchaseto.credits, 0)
               .then(() => {})
               .catch((err) => {
                 console.log(err);
