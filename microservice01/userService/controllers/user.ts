@@ -10,7 +10,7 @@ const Login = (req: AuthRequest, res: Response) => {
   console.log(user);
   if (user) {
     logIn(user)
-      .then((u) => {
+      .then(async (u) => {
         if (u === null) {
           res.status(200).json({ msg: "User is not Register" });
         } else {
@@ -23,7 +23,12 @@ const Login = (req: AuthRequest, res: Response) => {
           });
           console.log(`${u.user_id}Credits`);
           redis.set(`${u.user_id}Credits`, u.credits);
-          res.status(200).json({ user: jwt });
+          const expiration = jwt.exp; //jwt.exp;
+
+          await redis.expire(`${u.user_id}Credits`, expiration);
+          res
+            .status(200)
+            .json({ user: { token: jwt.token, expires: jwt.expires } });
         }
       })
       .catch((err) => {
@@ -70,7 +75,9 @@ const register = (req: AuthRequest, res: Response, next: NextFunction) => {
             try {
               const client = u as user;
               const jwt = issueJWT(client);
-              res.status(200).json({ user: jwt });
+              res
+                .status(200)
+                .json({ user: { token: jwt.token, expires: jwt.expires } });
             } catch (err) {
               res.status(400).json({ err });
             }

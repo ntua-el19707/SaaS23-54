@@ -19,6 +19,7 @@ const PRIV_KEY = readFileSync(pathToKey, "utf8");
 function issueJWT(user: user): {
   expires: string;
   token: string;
+  exp: number;
 } {
   const _id = user.user_id; //id in our DBS
 
@@ -38,6 +39,7 @@ function issueJWT(user: user): {
   return {
     token: "Bearer " + signedToken,
     expires: expiresIn,
+    exp: payload.exp,
   };
 }
 /**
@@ -45,7 +47,7 @@ function issueJWT(user: user): {
  * @param token string
  * @returns user_id if token is valid
  */
-function verifyJWT(token: string): string {
+function verifyJWT(token: string): { user_id: string; exp: number } {
   try {
     const tokenParts = token.split(" ");
 
@@ -65,7 +67,7 @@ function verifyJWT(token: string): string {
 
         if (jwtPayload.iat < jwtPayload.exp) {
           // Token is valid, continue processing
-          return jwtPayload.sub;
+          return { user_id: jwtPayload.sub, exp: jwtPayload.exp };
         } else {
           throw new ExpiredTokken("");
         }
