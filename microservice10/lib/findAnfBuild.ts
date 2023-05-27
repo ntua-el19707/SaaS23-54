@@ -220,7 +220,7 @@ function findAndBuildDependency(id: string): Promise<dependencyWheelBuild> {
               data: DepentencyOptions.series.data,
               keys: DepentencyOptions.series.keys,
               type: "dependencywheel",
-              name: "Dependency wheel series",
+              name: DepentencyOptions.series.name,
               dataLabels: {
                 color: "#333",
                 style: {
@@ -261,19 +261,7 @@ function findAndBuildAnnotation(id: string): Promise<LineAnnotationsBuild> {
             },
           },
           title: options.title,
-          series: [
-            {
-              data: options.series[0].data,
-              //lineColor: Highcharts.getOptions().colors[1],
-              //color: Highcharts.getOptions().colors[2],
-              fillOpacity: 0.5,
-              name: "Elevation",
-              marker: {
-                enabled: false,
-              },
-              threshold: null,
-            },
-          ],
+          series: [],
           annotations: {
             draggable: "",
             labelOptions: {
@@ -284,12 +272,9 @@ function findAndBuildAnnotation(id: string): Promise<LineAnnotationsBuild> {
             labels: options.annotations.labels,
           },
           xAxis: {
-            labels: {
-              format: "{value} km",
-            },
             minRange: 5,
             title: {
-              text: "Distance",
+              text: options.xAxis.title.text,
             },
           },
 
@@ -298,19 +283,44 @@ function findAndBuildAnnotation(id: string): Promise<LineAnnotationsBuild> {
             endOnTick: false,
             maxPadding: 0.35,
             title: {
-              text: "",
-            },
-            labels: {
-              format: "{value} m",
+              text: options.yAxis.title.text,
             },
           },
           legend: {
             enabled: false,
           },
         };
+        options.series.forEach((s) => {
+          console.log(s);
+          chartAnnotations.series.push({
+            data: s.data,
+            name: s.name,
+            fillOpacity: 0.5,
+            marker: { enabled: false },
+            threshold: null,
+          });
+        });
         if (options.subtitle) {
           chartAnnotations.subtitle = options.subtitle;
         }
+        if (options.xAxis.minRange) {
+          chartAnnotations.xAxis.minRange = options.xAxis.minRange;
+        }
+        if (options.xAxis.labels) {
+          if (options.xAxis.labels.format) {
+            chartAnnotations.xAxis.labels = {
+              format: options.xAxis.labels.format,
+            };
+          }
+        }
+        if (options.yAxis.labels) {
+          if (options.yAxis.labels.format) {
+            chartAnnotations.yAxis.labels = {
+              format: options.yAxis.labels.format,
+            };
+          }
+        }
+
         resolve(chartAnnotations);
       })
       .catch((err) => {

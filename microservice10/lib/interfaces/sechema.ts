@@ -12,7 +12,7 @@ export interface PollarSeries {
   data: number[];
 }
 export interface dependencyWheelChart {
-  series: { keys: string[]; data: [string, string, number][] };
+  series: { keys: string[]; data: [string, string, number][]; name: string };
 
   title: label;
   subtitle?: string;
@@ -98,6 +98,26 @@ export interface ChartRecord {
 export interface LineAnnotations {
   title: label;
   subtitle?: label;
+  xAxis: {
+    labels?: {
+      format: string;
+    };
+    minRange?: number;
+    title: {
+      text: string;
+    };
+  };
+  yAxis: {
+    startOnTick: boolean;
+    endOnTick: boolean;
+    maxPadding: number;
+    title: {
+      text: string;
+    };
+    labels?: {
+      format: string;
+    };
+  };
   annotations: {
     labels: {
       point: {
@@ -111,6 +131,7 @@ export interface LineAnnotations {
   };
   series: {
     data: [number, number][];
+    name: string;
   }[];
   _id: string;
 }
@@ -154,7 +175,7 @@ export interface LineAnnotationsBuild {
     }[];
   };
   xAxis: {
-    labels: {
+    labels?: {
       format: string;
     };
     minRange: number;
@@ -169,7 +190,7 @@ export interface LineAnnotationsBuild {
     title: {
       text: string;
     };
-    labels: {
+    labels?: {
       format: string;
     };
   };

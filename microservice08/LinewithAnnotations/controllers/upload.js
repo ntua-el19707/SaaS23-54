@@ -13,7 +13,7 @@ exports.saveDB = (req, res, next) => {
     console.log(file);
 
     try {
-      const data = getJsonFromFile(file);
+      let data = getJsonFromFile(file);
       destroyCSV(file);
 
       console.log(data);
@@ -21,9 +21,11 @@ exports.saveDB = (req, res, next) => {
         //validateInput(data)) {
         const owner = req.sub;
         const data2 = data;
+
         buildAll(data2)
           .then((file) => {
             //now charts  have build 2 thing  chaerge  and save  db
+
             const id = makeid(12);
             UpdateApis(file.file, owner, data, id)
               .then(() => {
