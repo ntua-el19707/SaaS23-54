@@ -18,9 +18,9 @@ function readCsv(FileName) {
     );
     */
   // const path = `../../Files/CSV/${FileName}`;
-    const path = `./${FileName}`;
+  //  const path = `./${FileName}`;
 
-  //const path = `utils/Files/CSV/${FileName}`;
+  const path = `utils/Files/CSV/${FileName}`;
 
   const data = readFileSync(path, { encoding: "utf8", flag: "r" });
 
