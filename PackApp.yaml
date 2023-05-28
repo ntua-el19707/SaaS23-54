@@ -70,24 +70,32 @@ services:
     - 3012:3012
     depends_on:
     - rabbitmq
+    volumes:
+    - svgFiles:/app/utils/Files/svg
   donwloadPdf:
     image: donwloadpdf 
     ports: 
     - 3013:3013
     depends_on:
     - rabbitmq
+    volumes:
+    - pdfFiles:/app/utils/Files/pdf
   donwloadPng:
     image: donwloadpng
     ports: 
     - 3014:3014
     depends_on:
     - rabbitmq
+    volumes:
+    - pngFiles:/app/utils/Files/png
   donwloadHtml:
     image: donwloadhtml 
     ports: 
     - 3015:3015
     depends_on:
     - rabbitmq
+    volumes:
+    - htmlFiles:/app/utils/Files/html
   redis:
     image: redis
     ports:
@@ -98,5 +106,31 @@ services:
       - 3005:3005
     depends_on:
       - rabbitmq
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+
+    volumes:
+      - mongodb_data:/data/db
+
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_PORT=27017
+  
+
+volumes:
+  mongodb_data:
+  svgFiles:
+  pdfFiles:
+  pngFiles:
+  htmlFiles:
 
   
