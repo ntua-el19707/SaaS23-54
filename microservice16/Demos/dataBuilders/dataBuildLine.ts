@@ -12,7 +12,8 @@ function csvJSON(csv: string): any {
     while (index < size) {
         const field: string = lines[index].split("/r")[0].split(",")[0];
         let data: any = "";
-        field.replaceAll(/\s/g, "");
+        field.split(/\s/).join("")
+
 
         if (valid_3.includes(field)) {
             data = readFields(lines[index + 1], lines[index + 2]);
@@ -27,9 +28,9 @@ function csvJSON(csv: string): any {
             data = readFields(lines[index + 1], lines[index + 2]);
             index += 3;
             data.json.forEach(([key, value]: [string, string]) => {
-                if (titleSchema.includes(key)) {
-                    json[field].title[key] = value;
-                }
+                //titleschema?
+                json[field].title[key] = value;
+                
                 if (key === "format") {
                     json[field].format = value;
                 }
@@ -264,7 +265,7 @@ function buildSeries(series: any): any {
         } else {
             let data: any[] = [];
             for (let i = 0; i < s.datay.length; i++) {
-                data.push([s.datax[i]], s.datay[y]);
+                data.push([s.datax[i]], s.datay[i]);
             }
 
             return_seires = [

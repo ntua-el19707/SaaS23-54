@@ -1,4 +1,30 @@
-//Build json file for Dependancy Wheel Options using csv
+/**
+ * module reader.js
+ * @author  el18716
+ *
+ */
+
+const { readFileSync, unlinkSync } = require("fs");
+const pathM = require("path");
+const { stringify } = require("querystring");
+
+
+/**
+ * function readCsv
+ * @param FileName String
+ * @returns file context
+ */
+function readCsv(FileName) {
+  const path =`utils/Files/CSV/${FileName}` ;
+  //const path =`./${FileName}` ;
+
+  const data = readFileSync(path, { encoding: "utf8", flag: "r" });
+  //console.log(data)
+  return data;
+
+}
+
+const valid_2 = ["title"];
 
 function csvJSON(csv) {
   let json = {}; 
@@ -13,7 +39,7 @@ function csvJSON(csv) {
     const field = lines[index].split("/r")[0].split(",")[0];
 
     let data = "";
-    if(field === "title"){
+    if(valid_2.includes(field)){
       data = readFields(lines[index + 1], lines[index + 2]);
       index += 3;
       json[field] = data.json;
@@ -28,8 +54,7 @@ function csvJSON(csv) {
       break;
     }
   }
-  //json.series = series;
-  console.log(json.series.keys);
+  console.log((stringify(json)));   
   return json;
 }
 
@@ -47,7 +72,67 @@ function readFields(line, data) {
 }
 
 
-//Build Dependancy Wheel Options using json
+function readSeries(lines, index) {
+  //skip name line
+  index++;
+  let name = lines[index++].split("\r")[0].split(",");
+  //skip key line
+  index++;
+  let fields = lines[index++].split("\r")[0].split(",");
+  //skip data line
+  index++
+  const size = lines.length;
+  let json = {};
+  let dataArray = [];
+
+  while (index < size) {
+
+    let data0 = lines[index++].split("\r")[0].split(",");
+    if(data0[0]===""){
+      break;
+    }
+    data0[2] = parseFloat(data0[2]);
+    dataArray.push(data0);
+    index++;
+  }
+  console.log(dataArray)
+
+  const series = {
+    name: name,
+    keys: fields,
+    data: dataArray
+  };
+  return series;
+}
+
+
+
+
+
+function getJsonFromFile(file) {
+  let data = readCsv(file);
+  return csvJSON(data);
+}
+/**
+ * destroy - function  delete a file 
+ * @params FileName string
+ */
+function destroy(FileName) {
+  const path = `utils/Files/CSV/${FileName}`;
+  try {
+    unlinkSync(path);
+    console.log("delete " + path);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+/*
+let filename = "reader.csv"
+getJsonFromFile(filename)
+*/
+
 
 
 function buildDependancyWheelOptions(data) {
@@ -71,7 +156,7 @@ function buildDependancyWheelOptions(data) {
     keys: data.series.keys,
     data: data.series.data,
     type: 'dependencywheel',
-    name: 'Dependency wheel series',
+    name: data.series.name,
     dataLabels: {
       color: '#333',
       style: {
@@ -93,4 +178,4 @@ function buildDependancyWheelOptions(data) {
   return options;
 }
 
-module.exports = { csvJSON, buildDependancyWheelOptions };
+module.exports = { getJsonFromFile, destroy };

@@ -1,11 +1,44 @@
 //import { readFileSync, unlinkSync } from "fs";
 //import * as pathM from "path";
 
+interface SeriesData {
+    data: number[][];
+    fillOpacity?: number;
+    name: string;
+    marker?: {
+        enabled?: boolean;
+    };
+    threshold?: null;
+}
 interface JSONData {
-    series: {
-        //data may not be neceessary
-        data: number[][];
-    }[];
+    series: SeriesData[];
+    xAxis: {
+        labels: {
+            format: string;
+        };
+        minRange: number;
+        title: {
+            text: string;
+        };
+        accessibility: {
+            rangeDescription: string;
+        };
+    };
+    yAxis: {
+        startOnTick: boolean;
+        endOnTick: boolean;
+        maxPadding?: number;
+        labels: {
+            format: string;
+        };
+        minRange: number;
+        title: {
+            text: string;
+        };
+        accessibility: {
+            rangeDescription: string;
+        };
+    };
     annotations: {
         labels: {
             point: {
@@ -31,7 +64,8 @@ function spliter(lines: string[], index: number): string[] {
     });
     let rsp: string[] = [];
     fields.forEach((e) => {
-        rsp.push(e.split(/\s/).join(""));    });
+        rsp.push(e.split(/\s/).join(""));
+    });
 
     return rsp;
 }
@@ -40,8 +74,38 @@ function csvJSON(csv: string): JSONData {
     const valid = ["annotations", "title"];
     let json: JSONData = {
         series: [],
-        annotations: { labels: [] },
+        xAxis: {
+            labels: {
+                format: "",
+            },
+            minRange: 0,
+            title: {
+                text: "",
+            },
+            accessibility: {
+                rangeDescription: "",
+            },
+        },
+        yAxis: {
+            startOnTick: true,
+            endOnTick: false,
+            maxPadding: 0.35,
+            labels: {
+                format: "",
+            },
+            minRange: 0,
+            title: {
+                text: "",
+            },
+            accessibility: {
+                rangeDescription: "",
+            },
+        },
+        annotations: {
+            labels: [],
+        },
     };
+
     let lines = csv.split("\n");
     let index = 0;
     let size = lines.length;
@@ -50,7 +114,16 @@ function csvJSON(csv: string): JSONData {
         let field = spliter(lines, index)[0];
         if (field === "series") {
             let data = readSeries(lines, index + 1);
-            json.series.push({ data: data.rsp });
+            json.series.push(
+                {
+                    data: data.rsp,
+                    name: data.name,
+                    fillOpacity: 0.5,
+                    marker: {
+                        enabled: false
+                    },
+                    threshold: null
+                });
             index = data.index;
         } else if (field === "annotations") {
             const data = readAnnotations(lines, index + 1);
@@ -60,6 +133,16 @@ function csvJSON(csv: string): JSONData {
             const data = readFields(lines, index + 1);
             json[field] = data.json;
             index += 2;
+        } else if (field === "xAxis") {
+            console.log(lines[index + 1]);
+            const data = readxAxis(lines, index + 1);
+            index = data.index;
+            json.xAxis = data.json;
+        } else if (field === "yAxis") {
+            console.log(lines[index + 1]);
+            const data = readyAxis(lines, index + 1);
+            json.yAxis = data.json;
+            index = data.index;
         }
         ++index;
     }
@@ -68,42 +151,49 @@ function csvJSON(csv: string): JSONData {
 }
 
 function readSeries(lines: string[], index: number) {
-    const size = lines.length;
-    ++index;
+    try {
+        const size = lines.length;
+        let data = spliter(lines, index);
+        let name: string = data[0];
+        //skip elevation_line
+        ++index;
 
-    let elevation_data: number[][] = [];
+        let elevation_data: number[][] = [];
 
-    while (index < size) {
-        let data: any = spliter(lines, index);
+        while (index < size) {
+            let data: any = spliter(lines, index);
 
-        if (data[0] === "end") {
-            break;
+            if (data[0] === "series") {
+                index--;
+                break;
+            }
+
+            data[0] = parseFloat(data[0]);
+            data[1] = parseFloat(data[1]);
+
+            elevation_data.push(data);
+            ++index;
         }
 
-        data[0] = parseFloat(data[0]);
-        data[1] = parseFloat(data[1]);
+        let rsp: number[][] = elevation_data;
 
-        elevation_data.push(data);
-        ++index;
+        return { rsp, index, name };
+    } catch (err) {
+        throw err;
     }
-
-    let rsp: number[][] = elevation_data;
-
-    return { rsp, index };
 }
 
 function readFields(lines: string[], index: number) {
-    let fields = spliter(lines, index);
-    let dataL = spliter(lines, index + 1);
-    let json: { [key: string]: string } = {};
+    index++
+    let data = spliter(lines, index);
+    let title_text: string = data[0];
+    let title_alignment: string = data[1];
 
-    const size = fields.length;
-    for (let i = 0; i < size; i++) {
-        if (fields[i] !== "") {
-            json[fields[i]] = dataL[i];
-        }
+    let json: any = {
+        text: title_text,
+        align: title_alignment
     }
-    return { json, fields };
+    return json;
 }
 
 function readAnnotations(lines: string[], index: number) {
@@ -147,6 +237,84 @@ function readAnnotations(lines: string[], index: number) {
     return { rsp, index };
 }
 
+function readxAxis(lines: string[], index: number): { json: JSONData['xAxis'], index: number } {
+    try {
+        const size = lines.length;
+        ++index;
+        let xAxis_format = spliter(lines, index);
+        ++index;
+        ++index;
+        let xAxis_title = spliter(lines, index);
+        if (xAxis_title[0] === "null") xAxis_title[0] = null;
+        ++index;
+        ++index;
+        let xAxis_range = spliter(lines, index);
+        let json: JSONData['xAxis'] = {
+            labels: {
+                format: "{value} " + xAxis_format[0],
+            },
+            minRange: 5,
+            title: {
+                text: xAxis_title[0],
+            },
+            accessibility: {
+                rangeDescription:
+                    "Range: " +
+                    xAxis_range[0] +
+                    " to " +
+                    xAxis_range[1] +
+                    xAxis_format[0],
+            },
+        };
+
+        return { json, index };
+    } catch (err) {
+        throw err;
+    }
+}
+
+
+function readyAxis(lines: string[], index: number): { json: JSONData['yAxis'], index: number } {
+    try {
+        const size = lines.length;
+        ++index;
+        let yAxis_format = spliter(lines, index);
+        ++index;
+        ++index;
+        let yAxis_title = spliter(lines, index);
+        if (yAxis_title[0] === "null") yAxis_title[0] = null;
+        ++index;
+        ++index;
+        let yAxis_range = spliter(lines, index);
+        let json: JSONData['yAxis'] = {
+            startOnTick: true,
+            endOnTick: false,
+            maxPadding: 0.35,
+            title: {
+                text: yAxis_title[0],
+            },
+            labels: {
+                format: "{value} " + yAxis_format[0],
+            },
+            minRange: 5,
+            accessibility: {
+                rangeDescription:
+                    "Range: " +
+                    yAxis_range[0] +
+                    " to " +
+                    yAxis_range[1] +
+                    yAxis_format[0],
+            },
+        };
+
+        return { json, index };
+    } catch (err) {
+        throw err;
+    }
+}
+
+
+
 function buildLinewithAnnotationsOptions(data: JSONData) {
     let options: any = {
         chart: {
@@ -160,17 +328,7 @@ function buildLinewithAnnotationsOptions(data: JSONData) {
         },
     };
 
-    options.series = [
-        {
-            data: data.series[0].data,
-            fillOpacity: 0.5,
-            name: "Elevation",
-            marker: {
-                enabled: false,
-            },
-            threshold: null,
-        },
-    ];
+    options.series = data.series;
 
     options.annotations = {
         draggable: "",
@@ -182,37 +340,11 @@ function buildLinewithAnnotationsOptions(data: JSONData) {
         labels: data.annotations.labels,
     };
 
-    if (data.title) {
-        options.title = {};
-        if (data.title.text) {
-            options.title.text = data.title.text;
-        }
-        if (data.title.align) {
-            options.title.align = data.title.align;
-        }
-    }
+    options.title = data.title;
 
-    options.xAxis = {
-        labels: {
-            format: "{value} km",
-        },
-        minRange: 5,
-        title: {
-            text: "Distance",
-        },
-    };
+    options.xAxis = data.xAxis;
 
-    options.yAxis = {
-        startOnTick: true,
-        endOnTick: false,
-        maxPadding: 0.35,
-        title: {
-            text: null,
-        },
-        labels: {
-            format: "{value} m",
-        },
-    };
+    options.yAxis = data.yAxis;
 
     options.legend = {
         enabled: false,
