@@ -81,7 +81,9 @@ const getLinewithAnnotations = (req: Request, res: Response) => {
             let demoArray: demoObject[] = [];
             filenames.forEach((filename) => {
                 const filePath = path.join(__dirname, "../utils/Files/csv/", filename);
+                console.log(filePath);
                 const data = readFileSync(filePath, { encoding: "utf8", flag: "r" });
+                console.log(data)
                 let json = csvJSONLinewithAnnotations(data);
                 let jsonChart = buildLinewithAnnotationsOptions(json);
                 let demo: demoObject = {
