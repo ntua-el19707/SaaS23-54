@@ -8,14 +8,14 @@ const MasterRouter = Router();
 
 //Download Services
 
-/*
+
 MasterRouter.route("/downloadDependancyWheel/:filename").get(downloadController);
 MasterRouter.route("/downloadPolar/:filename").get(downloadController);
 MasterRouter.route("/downloadLinewithAnnotations/:filename").get(downloadController);
 MasterRouter.route("/downloadNetwork/:filename").get(downloadController);
 MasterRouter.route("/downloadLine/:filename").get(downloadController);
 MasterRouter.route("/downloadColumn/:filename").get(downloadController);
-*/
+
 //Get Services
 
 MasterRouter.route("/getDependancyWheel").get(getDependancyWheel);

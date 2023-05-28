@@ -30,11 +30,11 @@ function csvJSON(csv: string): any {
 function spliter(lines: string[], index: number): string[] {
     let fields = lines[index].split("\r")[0].split(",");
     fields = fields.filter(function (e) {
-        return e.replaceAll(/(\r\n|\n|\r)/gm, "");
+        return e.split(/(\r\n|\n|\r)/gm).join("");
     });
     let rsp: string[] = [];
     fields.forEach((e) => {
-        rsp.push(e.replaceAll(/\s/g, ""));
+        rsp.push(e.split(/\s/).join(""));
     });
 
     return rsp;

@@ -39,6 +39,9 @@ function readFields(line: string, data: string): { json: any; fields: string[] }
 }
 
 function readSeries(lines: string[], index: number): { keys: string[]; data: any[] } {
+    //skip name line
+    index++;
+    let name = lines[index++].split("\r")[0].split(",");
     //skip key line
     index++;
     let fields = lines[index++].split("\r")[0].split(",");
@@ -50,7 +53,8 @@ function readSeries(lines: string[], index: number): { keys: string[]; data: any
 
     while (index < size) {
         //let data0 = lines[index++].split("\r")[0].split(",");
-        let data0: any = lines[index++].split("\r")[0].split(",");        if (data0[0] === "") {
+        let data0: any = lines[index++].split("\r")[0].split(",");        
+        if (data0[0] === "") {
             break;
         }
         data0[2] = parseFloat(data0[2]);
@@ -60,6 +64,7 @@ function readSeries(lines: string[], index: number): { keys: string[]; data: any
     //console.log(dataArray)
 
     const series = {
+        name: name,
         keys: fields,
         data: dataArray,
     };
@@ -86,8 +91,8 @@ function buildDependancyWheelOptions(data: any): any {
         {
             keys: data.series.keys,
             data: data.series.data,
+            name: data.series.name,
             type: 'dependencywheel',
-            name: 'Dependency wheel series',
             dataLabels: {
                 color: '#333',
                 style: {

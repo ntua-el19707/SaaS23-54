@@ -91,7 +91,7 @@ async function closeConnection(client: MongoClient): Promise<boolean> {
 }
 
 //
-async function insertDemo(collectionName: string): Promise<void> {
+async function insertDemo(collectionName: string, filename: string): Promise<void> {
   const client = StartConnection();
   if (typeof client === "boolean") {
     throw new Error("No URL for DB");
@@ -101,7 +101,8 @@ async function insertDemo(collectionName: string): Promise<void> {
     await connection(client);
     const db = client.db("DemoCharts");
     const collection = db.collection(collectionName);
-    await collection.insertOne({ filename: "demo_LinewithAnnotations_1.csv" });
+    //use filename given
+    await collection.insertOne({ filename });
     console.log("Data inserted successfully");
   } catch (err) {
     console.error("Error inserting data:", err);
@@ -157,12 +158,13 @@ function findDemos(collectionName: string) {
   });
 }
 /*
-insertDemo("LinewithAnnotations")
+insertDemo("LinewithAnnotations", "file2")
   .then(() => {
     console.log("Data inserted successfully");
   })
   .catch((error) => {
     console.error("Error inserting data:", error);
   });
-*/
+  */
+
 export { StartConnection, connection, closeConnection, findDemos };

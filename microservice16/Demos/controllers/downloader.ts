@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { DownloadRequest } from "../utils/lib/request";
-import path from "path";
+import * as path from "path";
 
 const downloadController = (
     req: DownloadRequest,
