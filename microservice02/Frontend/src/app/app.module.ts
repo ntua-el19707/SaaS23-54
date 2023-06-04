@@ -17,8 +17,6 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatListModule } from "@angular/material/list";
 import { MatCardModule } from "@angular/material/card";
 
-import { UserModule } from "./user/user.module";
-
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import {
   HTTP_INTERCEPTORS,
@@ -31,9 +29,8 @@ import { HttpIInterceptor } from "./http-i.interceptor";
 
 import { WelcomeComponent } from "./welcome/welcome.component";
 import { AboutComponent } from "./about/about.component";
-import { MyDiagramsModule } from "./my-diagrams/my-diagrams.module";
-
-import { DiagramsMModule } from "./diagrams-m/diagrams-m.module";
+import { Page404Component } from './page404/page404.component';
+import { ServicedownComponent } from './servicedown/servicedown.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +41,8 @@ import { DiagramsMModule } from "./diagrams-m/diagrams-m.module";
 
     WelcomeComponent,
     AboutComponent,
+    Page404Component,
+    ServicedownComponent,
   ],
 
   imports: [
@@ -57,14 +56,10 @@ import { DiagramsMModule } from "./diagrams-m/diagrams-m.module";
     MatListModule,
     MatCardModule,
 
-    UserModule,
-
     HttpClientModule,
     SocialLoginModule,
     GoogleSigninButtonModule,
     MatProgressSpinnerModule,
-    MyDiagramsModule,
-    DiagramsMModule,
   ],
   providers: [
     {

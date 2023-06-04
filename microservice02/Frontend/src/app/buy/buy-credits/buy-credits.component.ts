@@ -20,19 +20,15 @@ export class BuyCreditsComponent implements OnInit, AfterViewInit {
 
   @ViewChild("box")
   box!: ElementRef;
-  private collumns = 1;
+  private collumns: number = 1;
   constructor(private purchase: PurchaseService, private dialog: MatDialog) {}
   ngAfterViewInit(): void {
-    this.resize(); //resize  box according to openning
+    setTimeout(() => {
+      this.resize(); //resize  box according to openning
+      //ena  alaksei  apotoma kai faklei angulat oti alazei to colummns  polla gliora san errot kathisterisi 10ms  gia na fei to error
+    }, 10);
   }
   ngOnInit(): void {
-    // this.purchase.PostOffer({ credits: 3, name: "Standard" }).subscribe(
-    //    (r) => {
-    //      console.log("ok");
-    //    },
-    //    (err) => {},
-    //    () => {}
-    //   );
     this.purchase.offers().subscribe(
       (r: any) => {
         if (r.plans) this.packets = r.plans;

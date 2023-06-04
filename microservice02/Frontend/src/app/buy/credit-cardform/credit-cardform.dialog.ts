@@ -107,6 +107,9 @@ export class CreditCardformDialog implements OnInit {
       );
     }
   }
+  happennig(): boolean {
+    return this.happening;
+  }
 
   onCancel() {
     this.dialogRef.close(false);

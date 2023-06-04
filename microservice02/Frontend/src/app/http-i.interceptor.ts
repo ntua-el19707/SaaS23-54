@@ -16,11 +16,13 @@ export class HttpIInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     const idtoken = localStorage.getItem("token");
+    console.log(idtoken);
 
     if (idtoken) {
       const authReq = request.clone({
         headers: request.headers.set("Authorization", idtoken),
       });
+      console.log(idtoken);
       return next.handle(authReq);
     }
     return next.handle(request);

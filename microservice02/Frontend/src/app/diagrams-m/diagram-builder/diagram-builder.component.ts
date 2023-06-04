@@ -144,7 +144,7 @@ export class DiagramBuilderComponent implements OnInit {
   navigate(d: Diagram) {
     this.chartOptions = d.options;
     console.log(this.chartOptions);
-    this.router.navigate([`/ChartBuild/${d.redirect}`]).then(() => {
+    this.router.navigate([`/diagrams/ChartBuild/${d.redirect}`]).then(() => {
       window.location.reload();
     });
   }

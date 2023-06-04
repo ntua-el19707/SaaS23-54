@@ -95,7 +95,7 @@ export class MyinfoComponent implements AfterViewInit, OnInit {
     return this.loading;
   }
   newChart() {
-    this.router.navigate(["/"]); //Home page whiil diplay the categories oh
+    this.router.navigate(["/diagrams"]); //Home page whiil diplay the categories oh
   }
   buyCredits() {
     this.router.navigate(["/buy"]);

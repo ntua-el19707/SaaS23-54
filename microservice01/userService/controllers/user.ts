@@ -22,13 +22,23 @@ const Login = (req: AuthRequest, res: Response) => {
             port: 6379, // the mapped port
           });
           console.log(`${u.user_id}Credits`);
-          redis.set(`${u.user_id}Credits`, u.credits);
-          const expiration = jwt.exp; //jwt.exp;
-
-          await redis.expire(`${u.user_id}Credits`, expiration);
-          res
-            .status(200)
-            .json({ user: { token: jwt.token, expires: jwt.expires } });
+          const expiration = jwt.exp - Date.now() / 1000;
+          setKeyWithExpiration(
+            `${u.user_id}Credits`,
+            u.credits,
+            expiration,
+            redis
+          )
+            .then(() => {
+              console.log("here");
+              res
+                .status(200)
+                .json({ user: { token: jwt.token, expires: jwt.expires } });
+            })
+            .catch((err) => {
+              console.log(err);
+              res.status(400).json({ err });
+            });
         }
       })
       .catch((err) => {
@@ -106,5 +116,13 @@ const register = (req: AuthRequest, res: Response, next: NextFunction) => {
     res.status(401).json({ err: "Access Deinied" }); //authetication has not work right if req.sub not created
   }
 };
-
+async function setKeyWithExpiration(
+  key: string,
+  value: number,
+  seconds: number,
+  redis: Redis
+) {
+  await redis.set(key, value);
+  await redis.expire(key, Math.ceil(seconds));
+}
 export { Login, register, FindUserController };

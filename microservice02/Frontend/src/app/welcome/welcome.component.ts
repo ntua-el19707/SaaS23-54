@@ -23,4 +23,7 @@ export class WelcomeComponent {
   register(): void {
     this.buttonRegisterClick.emit();
   }
+  cancel(): void {
+    window.location.reload();
+  }
 }

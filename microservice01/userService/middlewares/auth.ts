@@ -14,6 +14,7 @@ const customauthCredits = (
   next: NextFunction
 ) => {
   const token = req.headers.authorization;
+  console.log(token);
   if (token) {
     try {
       const user = verifyJWT(token);
@@ -107,11 +108,16 @@ function RamTokkens(user_id: string, exp: number): Promise<void> {
           host: "saas23-54-redis-1", // the service name defined in the docker-compose.yml file
           port: 6379, // the mapped port
         });
-        redis.set(`${user_id}Credits`, tokkens);
+
         const expiration = exp - Math.floor(Date.now() / 1000); // Calculate remaining seconds until token expiration
 
-        await redis.expire(`${user_id}Credits`, expiration);
-        resolve();
+        setKeyWithExpiration(`${user_id}Credits`, tokkens, expiration, redis)
+          .then(() => {
+            resolve();
+          })
+          .catch((err) => {
+            reject(err);
+          });
       })
       .catch((err) => {
         reject(err);
@@ -119,3 +125,12 @@ function RamTokkens(user_id: string, exp: number): Promise<void> {
   });
 }
 export { customauthCredits, customauthNocredits };
+async function setKeyWithExpiration(
+  key: string,
+  value: number,
+  seconds: number,
+  redis: Redis
+) {
+  await redis.set(key, value);
+  await redis.expire(key, Math.ceil(seconds));
+}

@@ -17,7 +17,7 @@ export class PurchaseService {
 
   PostOffer(
     plan: Packet,
-    creditCard: {
+    creditCard: { 
       creditCardNumber: number;
       expM: number;
       expY: number;

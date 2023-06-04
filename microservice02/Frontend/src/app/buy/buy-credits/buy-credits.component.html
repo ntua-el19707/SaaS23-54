@@ -1,5 +1,6 @@
 <div #box>
-    <h1 style="text-align: center;">Select a packege</h1>
+    <br>
+    <h1 style="text-align: center;">Select a package</h1>
     <mat-grid-list cols={{getCollums()}} (window:resize)="resize()" rowHeight="1.5:1">
         <mat-grid-tile *ngFor="let p of  getpackets()">
             <creditcardPacket [packet]="p" style="width: 100%;" (buttonClick)="purchaseController(p)">

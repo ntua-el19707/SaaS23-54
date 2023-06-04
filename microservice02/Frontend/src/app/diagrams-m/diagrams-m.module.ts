@@ -21,12 +21,13 @@ import { PurchasePageComponent } from "./purchase-page/purchase-page.component";
 
 @NgModule({
   declarations: [
+    DiagramsListComponent,
     DragComponent,
     DragDirective,
     DiagramBuilderComponent,
-    DiagramsListComponent,
     DiagramOppsComponent,
     PreviewComponent,
+
     PurchasePageComponent,
   ],
   imports: [

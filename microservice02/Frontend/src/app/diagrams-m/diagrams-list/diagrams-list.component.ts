@@ -66,6 +66,6 @@ export class DiagramsListComponent implements OnInit {
   }
   navigate(d: Diagram) {
     console.log(d);
-    this.router.navigate(["/ChartBuild", d.redirect]);
+    this.router.navigate(["/diagrams/ChartBuild", d.redirect]);
   }
 }
