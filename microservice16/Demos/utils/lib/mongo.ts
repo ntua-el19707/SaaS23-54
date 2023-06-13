@@ -171,7 +171,7 @@ function insertDB(num: number, file: string): Promise<void> {
   switch (num) {
     case 1:
       db = LineDemo.collection;
-
+      break;
     case 2:
       db = NetworkDemo.collection;
       break;
@@ -190,7 +190,7 @@ function insertDB(num: number, file: string): Promise<void> {
     default:
       throw new Error("this  is  not avlid choice");
   }
-  return insertDemo(LinewithAnnotationsDemo.collection, file);
+  return insertDemo(db, file);
 }
 
 export { StartConnection, connection, closeConnection, findDemos, insertDB };

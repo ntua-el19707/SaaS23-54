@@ -142,6 +142,7 @@ const getNetwork = (req: Request, res: Response) => {
 };
 
 const getLine = (req: Request, res: Response) => {
+  console.log(req);
   findDemos("LineDemo")
     .then((filenameArray) => {
       const filenames = filenameArray as string[];
@@ -158,10 +159,10 @@ const getLine = (req: Request, res: Response) => {
         };
         demoArray.push(demo);
       });
-      return demoArray;
+      res.status(200).json({ demoArray });
     })
     .catch((error) => {
-      console.log("Error:", error);
+      res.status(400).json({ error });
     });
 };
 

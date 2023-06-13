@@ -11,6 +11,11 @@
         "secure": false,
         "logLevel":"debug"
      
+    },    "/api_Demos/*":{
+        "target": "http://localhost:3016/",
+        "secure": false,
+        "logLevel":"debug"
+     
     }
    ,   "/api_user/*":{
         "target": "http://localhost:3010/",

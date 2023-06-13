@@ -22,6 +22,7 @@ import {
   PollarDiagram,
   collumn,
 } from "src/assets/DemosTS/diafram";
+import { DemoServiceService } from "../services/demo-service.service";
 
 @Component({
   selector: "diagramBuilder",
@@ -40,7 +41,8 @@ export class DiagramBuilderComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private demoService: DemoServiceService
   ) {}
   ngOnInit(): void {
     const diagrams = [
@@ -64,7 +66,7 @@ export class DiagramBuilderComponent implements OnInit {
       ];
     });
     const valid_Types: string[] = [
-      "Line",
+      "Lines",
       "Pollar",
       "network",
       "collumns",
@@ -75,6 +77,17 @@ export class DiagramBuilderComponent implements OnInit {
     if (!valid_Types.includes(this.type)) {
       //wrong url
       console.log("Wrong url");
+    } else {
+      this.demoService.findEndpoint(this.getApi());
+      this.demoService.getDemos().subscribe(
+        (r) => {
+          console.log(r);
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {}
+      );
     }
   }
   /**

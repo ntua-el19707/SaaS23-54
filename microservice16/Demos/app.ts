@@ -4,7 +4,6 @@ import * as bodyParser from "body-parser";
 
 import { MasterRouter } from "./routes/master";
 
-
 const app = express();
 app.use(bodyParser.json());
 app.use(

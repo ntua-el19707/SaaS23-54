@@ -10,6 +10,7 @@ import {
 } from "../controllers/demoBuild";
 
 import { downloadController } from "../controllers/downloader";
+import { master } from "../controllers/insertDemos";
 
 const MasterRouter = Router();
 
@@ -36,7 +37,8 @@ MasterRouter.route("/getLine").get(getLine);
 MasterRouter.route("/getColumn").get(getNetwork);
 
 // MasterRoute -
-MasterRouter.route("/Master").post(
-  (req: Request, res: Response, next: NextFunction) => {}
-);
+MasterRouter.post("/Master", master);
+MasterRouter.get("/Master", (req, res) => {
+  res.send("ok");
+});
 export { MasterRouter };
