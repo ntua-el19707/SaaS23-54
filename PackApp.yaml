@@ -125,12 +125,19 @@ services:
       - ME_CONFIG_MONGODB_SERVER=mongodb
       - ME_CONFIG_MONGODB_PORT=27017
   
-
+  demo:
+    image: demoservice
+    ports:
+      - 3016:3016 
+    volumes:
+    - csvFiles:/app/utils/Files/csv
+    
 volumes:
   mongodb_data:
   svgFiles:
   pdfFiles:
   pngFiles:
   htmlFiles:
+  csvFiles:
 
   
