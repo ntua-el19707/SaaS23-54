@@ -4,8 +4,6 @@ import { MongoClient, InsertOneResult, Document, ObjectId } from "mongodb";
 import { config } from "dotenv";
 config();
 
-
-
 const options: any = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
@@ -47,7 +45,6 @@ const ColumnDemo: DB = {
  * StartConection() - starts a Mongo conrction if fails return false
  * @returns
  */
-
 
 function StartConnection(): MongoClient | boolean {
   if (process.env.mongo_url) {
@@ -91,7 +88,10 @@ async function closeConnection(client: MongoClient): Promise<boolean> {
 }
 
 //
-async function insertDemo(collectionName: string, filename: string): Promise<void> {
+async function insertDemo(
+  collectionName: string,
+  filename: string
+): Promise<void> {
   const client = StartConnection();
   if (typeof client === "boolean") {
     throw new Error("No URL for DB");
@@ -166,5 +166,31 @@ insertDemo("LinewithAnnotations", "file2")
     console.error("Error inserting data:", error);
   });
   */
+function insertDB(num: number, file: string): Promise<void> {
+  let db: string = "";
+  switch (num) {
+    case 1:
+      db = LineDemo.collection;
 
-export { StartConnection, connection, closeConnection, findDemos };
+    case 2:
+      db = NetworkDemo.collection;
+      break;
+    case 3:
+      db = PolarDemo.collection;
+      break;
+    case 4:
+      db = DependancyWheelDemo.collection;
+      break;
+    case 5:
+      db = ColumnDemo.collection;
+      break;
+    case 6:
+      db = LinewithAnnotationsDemo.collection;
+      break;
+    default:
+      throw new Error("this  is  not avlid choice");
+  }
+  return insertDemo(LinewithAnnotationsDemo.collection, file);
+}
+
+export { StartConnection, connection, closeConnection, findDemos, insertDB };

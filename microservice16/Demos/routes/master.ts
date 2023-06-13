@@ -1,6 +1,13 @@
-import { Router } from "express";
+import { NextFunction, Router } from "express";
 
-import {getDependancyWheel, getPolar, getLinewithAnnotations, getNetwork, getLine, getColumn} from "../controllers/demoBuild";
+import {
+  getDependancyWheel,
+  getPolar,
+  getLinewithAnnotations,
+  getNetwork,
+  getLine,
+  getColumn,
+} from "../controllers/demoBuild";
 
 import { downloadController } from "../controllers/downloader";
 
@@ -8,10 +15,13 @@ const MasterRouter = Router();
 
 //Download Services
 
-
-MasterRouter.route("/downloadDependancyWheel/:filename").get(downloadController);
+MasterRouter.route("/downloadDependancyWheel/:filename").get(
+  downloadController
+);
 MasterRouter.route("/downloadPolar/:filename").get(downloadController);
-MasterRouter.route("/downloadLinewithAnnotations/:filename").get(downloadController);
+MasterRouter.route("/downloadLinewithAnnotations/:filename").get(
+  downloadController
+);
 MasterRouter.route("/downloadNetwork/:filename").get(downloadController);
 MasterRouter.route("/downloadLine/:filename").get(downloadController);
 MasterRouter.route("/downloadColumn/:filename").get(downloadController);
@@ -25,7 +35,8 @@ MasterRouter.route("/getNetwork").get(getNetwork);
 MasterRouter.route("/getLine").get(getLine);
 MasterRouter.route("/getColumn").get(getNetwork);
 
-
-//MasterRouter.route("/get").get(FindAvailablePacks).post(PurchasePlan);
-
+// MasterRoute -
+MasterRouter.route("/Master").post(
+  (req: Request, res: Response, next: NextFunction) => {}
+);
 export { MasterRouter };
