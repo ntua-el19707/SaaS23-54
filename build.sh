@@ -48,6 +48,7 @@ case "$1" in
     docker build -t donwloadhtml ./microservice15/donwloadHtml
     ;;
   *)
+   docker build -t echarts ./microservice02/Frontend
  docker  build -t authservice ./microservice01/userService
 docker  build -t lineservice ./microservice03/Line
 docker  build -t networkservice  ./microservice04/network
@@ -62,7 +63,7 @@ docker  build -t donwloadsvg ./microservice12/donwloadSVG
 docker  build -t donwloadpdf ./microservice13/donwloadPdf
 docker  build -t donwloadpng ./microservice14/donwloadPng
 docker  build -t donwloadhtml  ./microservice15/donwloadHtml
-
+docker  build -t demoservice  ./microservice16/Demos
     ;;
 esac
 
