@@ -5,6 +5,7 @@ case "$1" in
     docker build -t authservice ./microservice01/userService
     ;;
   2)
+  docker build -t echarts ./microservice02/Frontend
     echo 'Here will be the frontend build'
     ;;
   3)

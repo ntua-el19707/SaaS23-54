@@ -11,110 +11,143 @@ services:
       - RABBITMQ_DEFAULT_USER=v
       - RABBITMQ_DEFAULT_PASS=123456
     command: sh -c "rabbitmq-plugins enable rabbitmq_management && rabbitmq-server"
+
   auth:
     image: authservice
-    ports: 
+    ports:
       - 3010:3010
     depends_on:
       - rabbitmq
+    mem_limit: 200M
+
   pollar:
     image: pollarservice
-    ports: 
+    ports:
       - 3001:3001
     depends_on:
       - rabbitmq
+    mem_limit: 200M
+
   collumn:
     image: collumnservice
-    ports: 
+    ports:
       - 3006:3006
     depends_on:
       - rabbitmq
+    mem_limit: 200M
+
   depedencywheel:
-    image:  depedencywheel
-    ports: 
+    image: depedencywheel
+    ports:
       - 3004:3004
     depends_on:
       - rabbitmq
+    mem_limit: 200M
 
   line:
     image: lineservice
-    ports: 
+    ports:
       - 3002:3002
     depends_on:
       - rabbitmq
+    mem_limit: 200M
+
   network:
     image: networkservice
-    ports: 
+    ports:
       - 3003:3003
     depends_on:
       - rabbitmq
+    mem_limit: 200M
+  eCharts:
+    image: echarts
+    ports:
+      - 4007:4007
+    
   upload:
     image: upload
-    ports: 
+    ports:
       - 3000:3000
+    mem_limit: 200M
+
   myDiagrams:
     image: mydiagrams
-    ports: 
+    ports:
       - 3008:3008
     depends_on:
       - rabbitmq
+    mem_limit: 200M
+
   purchaseService:
     image: purchaseservice
-    ports: 
-    - 3011:3011
+    ports:
+      - 3011:3011
     depends_on:
-    - rabbitmq
+      - rabbitmq
+    mem_limit: 200M
+
   donwloadSvg:
     image: donwloadsvg
-    ports: 
-    - 3012:3012
+    ports:
+      - 3012:3012
     depends_on:
-    - rabbitmq
+      - rabbitmq
     volumes:
-    - svgFiles:/app/utils/Files/svg
+      - svgFiles:/app/utils/Files/svg
+    mem_limit: 200M
+
   donwloadPdf:
-    image: donwloadpdf 
-    ports: 
-    - 3013:3013
+    image: donwloadpdf
+    ports:
+      - 3013:3013
     depends_on:
-    - rabbitmq
+      - rabbitmq
     volumes:
-    - pdfFiles:/app/utils/Files/pdf
+      - pdfFiles:/app/utils/Files/pdf
+    mem_limit: 200M
+
   donwloadPng:
     image: donwloadpng
-    ports: 
-    - 3014:3014
+    ports:
+      - 3014:3014
     depends_on:
-    - rabbitmq
+      - rabbitmq
     volumes:
-    - pngFiles:/app/utils/Files/png
+      - pngFiles:/app/utils/Files/png
+    mem_limit: 200M
+
   donwloadHtml:
-    image: donwloadhtml 
-    ports: 
-    - 3015:3015
+    image: donwloadhtml
+    ports:
+      - 3015:3015
     depends_on:
-    - rabbitmq
+      - rabbitmq
     volumes:
-    - htmlFiles:/app/utils/Files/html
+      - htmlFiles:/app/utils/Files/html
+    mem_limit: 200M
+
   redis:
     image: redis
     ports:
       - 6379:6379
+    mem_limit: 200M
+
   lineannotations:
     image: lineannotationsservice
-    ports: 
+    ports:
       - 3005:3005
     depends_on:
       - rabbitmq
+    mem_limit: 200M
+
   mongodb:
     image: mongo
     container_name: mongodb
     ports:
       - 27017:27017
-
     volumes:
       - mongodb_data:/data/db
-
+    mem_limit: 500M
 
   mongo-express:
     image: mongo-express
@@ -124,14 +157,16 @@ services:
     environment:
       - ME_CONFIG_MONGODB_SERVER=mongodb
       - ME_CONFIG_MONGODB_PORT=27017
-  
+    mem_limit: 200M
+
   demo:
     image: demoservice
     ports:
-      - 3016:3016 
+      - 3016:3016
     volumes:
-    - csvFiles:/app/utils/Files/csv
-    
+      - csvFiles:/app/utils/Files/csv
+    mem_limit: 200M
+
 volumes:
   mongodb_data:
   svgFiles:
@@ -139,5 +174,3 @@ volumes:
   pngFiles:
   htmlFiles:
   csvFiles:
-
-  
