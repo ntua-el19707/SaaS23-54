@@ -1,0 +1,37 @@
+title,,
+text,align,
+Path length ,left,
+Xaxis,,
+text,align,
+n,center,
+Yaxis,,
+text,align,
+Length,right,
+series,,
+name,datax,datay
+Installation & Developers,2010,43934
+,2011,48656
+,2012,65165
+,2013,81827
+,2014,112143
+,2015,142383
+,2016,171533
+,2017,165174
+,2018,155157
+,2019,161454
+,2020,154610
+,END,END
+series,,
+name,datax,datay
+Manufacturing,2010,24916
+,2011,37941
+,2012,29742
+,2013,29851
+,2014,32490
+,2015,30282
+,2016,38121
+,2017,36885
+,2018,33726
+,2019,34243
+,2020,31050
+,END,END
