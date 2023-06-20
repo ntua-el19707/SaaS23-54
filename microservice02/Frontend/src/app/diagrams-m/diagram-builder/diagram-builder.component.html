@@ -14,9 +14,11 @@
                 </mat-card-header>
                 <mat-drawer-container autosize>
                     <mat-drawer #drawer mode="side" class="col-2">
-                        <h4 style="text-align: center;">Please select the type of digram</h4>
+                        <h4 style=" text-align: center;">Please select the type of digram</h4>
                         <div *ngFor="let d of getDiagrams()">
                             <button mat-button class="col-1 overflow-y-scroll" (click)="navigate(d)">
+
+
                                 <highcharts-chart [Highcharts]="highcharts" [options]="d.options"
                                     style="width: 100%; display: block;height:300px">
                                 </highcharts-chart>
@@ -26,11 +28,14 @@
                     <!-- 
             Selected HighChart
             -->
-                    <div *ngIf="showHighChar()">
+                    <div *ngIf="showHighChar()" style="display: flex; justify-content: center;">
+                        <div style="background-color: white; flex: 1;"></div>
                         <highcharts-chart [Highcharts]="highcharts" [options]="getChartOptions()"
-                            style="width: 100%; height:fit-content; display: block;">
+                            style="width: fit-content; height: fit-content; display: block;">
                         </highcharts-chart>
+                        <div style="background-color: white; flex: 1;"></div>
                     </div>
+
                     <div>
                         <button type="button" mat-button (click)="drawer.toggle()"> Toggle sidenav
                         </button>
@@ -39,20 +44,47 @@
                 </mat-drawer-container>
             </mat-card>
             <br>
+            <div *ngIf="getDemoLoadingStatus()" style="display: flex; justify-content: center;">
+                <mat-spinner diameter="20"></mat-spinner> &nbsp; loading demo charts
+            </div>
             <mat-card class="col-1">
+
                 <mat-card-header>
 
                     <mat-card-subtitle>Demos for Chart</mat-card-subtitle>
+
+                    <mat-card-title *ngIf="getDemoServiceDown()">Demo service is temporary down</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
 
                         <mat-tab label="HigchChart">
                             <!--Higch Chart from as exampe  -->
+                            <br>
+                            <div *ngIf="showHighdemo()" style="display: flex; justify-content: center;">
+                                <div style="background-color: white; flex: 1;"></div>
+                                <highcharts-chart [Highcharts]="highcharts" [options]="getDemoChart()"
+                                    style="width: fit-content; height:fit-content; display: block;">
+                                </highcharts-chart>
+                                <div style="background-color: white; flex: 1;"></div>
+                            </div>
                         </mat-tab>
 
                         <mat-tab label="Csv">
                             <!--What would Like  in excel-->
+
+                            <table class="table-auto w-full">
+
+                                <tbody>
+                                    <tr *ngFor="let row of   gteCsv()" class="bg-gray-100">
+                                        <td *ngFor="let cell of row" class="px-4 py-2 border">{{ cell }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+
+
                         </mat-tab>
 
                     </mat-tab-group>
@@ -62,13 +94,13 @@
                     <div style="display: flex;text-align: center;">
                         <!--Split the width col-2-->
                         <section class="col-2">
-                            <button mat-button><mat-icon>navigate_before</mat-icon></button>
+                            <button (click)="previousDemo()" mat-button><mat-icon>navigate_before</mat-icon></button>
                         </section>
                         <section class="col-2">
-                            <button mat-button><mat-icon>navigate_next</mat-icon></button>
+                            <button mat-button (click)="nextDemo()"><mat-icon>navigate_next</mat-icon></button>
                         </section>
                     </div>
-                    <button mat-button>
+                    <button mat-button (click)="DownloadCsv() ">
                         <article class="flex flex-row" style="text-align: center;">
                             <i class="gg-software-download" style="align-self: center;"></i> &nbsp; demo.csv
                         </article>

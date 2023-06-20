@@ -39,7 +39,7 @@ export class UploadService {
     this.findEndpoint();
   }
 
-  findEndpoint() {
+  private findEndpoint() {
     switch (this.api) {
       case "api_Line":
         this.type_param = "line";
@@ -67,5 +67,10 @@ export class UploadService {
         this.service = "DepentancyWheelService";
         break;
     }
+  }
+  testConfirm() {
+    console.log(`/api_user/services/Diagrams/${this.service}`);
+    console.log(this.service === "LineService");
+    return this.http.get(`/api_user/services/Diagrams/${this.service}`);
   }
 }

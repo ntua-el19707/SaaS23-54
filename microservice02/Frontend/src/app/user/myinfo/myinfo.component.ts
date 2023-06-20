@@ -12,7 +12,7 @@ import { Router } from "@angular/router";
 @Component({
   selector: "app-myinfo",
   templateUrl: "./myinfo.component.html",
-  styleUrls: ["./myinfo.component.css", "../../app.component.css"],
+  styleUrls: ["./myinfo.component.css"],
 })
 export class MyinfoComponent implements AfterViewInit, OnInit {
   private user: User = {

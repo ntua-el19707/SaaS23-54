@@ -1,24 +1,24 @@
 {
      "/api_upload/*": {
-        "target": "http://saas23-54-upload-1:3000/",
+        "target": "http://localhost:3000/",
         "secure": false,
         "logLevel":"debug"     
     },
 
 
     "/api_Mydiagrams/*":{
-        "target": "http://saas23-54-myDiagrams-1:3008/",
+        "target": "http://localhost:3008/",
         "secure": false,
         "logLevel":"debug"
      
     },    "/api_Demos/*":{
-        "target": "http://saas23-54-demo-1:3016/",
+        "target": "http://localhost:3016/",
         "secure": false,
         "logLevel":"debug"
      
     }
    ,   "/api_user/*":{
-        "target": "http://saas23-54-auth-1:3010/",
+        "target": "http://localhost:3010/",
         "secure": false,
         "logLevel":"debug"     
         , "headers": {
@@ -27,27 +27,27 @@
      
     },
      "/api_purchase/*":{
-        "target": "http://saas23-54-purchaseService-1:3011/",
+        "target": "http://localhost:3011/",
         "secure": false,
         "logLevel":"debug"
      
     },      "/api_DonloadPng/*":{
-        "target": "http://saas23-54-donwloadPng-1:3014/",
+        "target": "http://localhost:3014/",
         "secure": false,
         "logLevel":"debug"
      
     },      "/api_DonloadHtml/*":{
-        "target": "http://saas23-54-donwloadHtml-1:3015/",
+        "target": "http://localhost:3015/",
         "secure": false,
         "logLevel":"debug"
      
     },      "/api_DonloadPdf/*":{
-        "target": "http://saas23-54-donwloadPdf-1:3013/",
+        "target": "http://localhost:3013/",
         "secure": false,
         "logLevel":"debug"
      
     },      "/api_DonloadSvg/*":{
-        "target": "http://saas23-54-donwloadSvg-1:3012/",
+        "target": "http://localhost:3012/",
         "secure": false,
         "logLevel":"debug"
      

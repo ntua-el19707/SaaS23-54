@@ -1,8 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { LoginComponent } from "./login/login.component";
-
 import { AboutComponent } from "./about/about.component";
 import { Page404Component } from "./page404/page404.component";
 import { ServicedownComponent } from "./servicedown/servicedown.component";
@@ -10,7 +8,6 @@ import { AuthGuard } from "./auth.guard";
 import { GeneralGuard } from "./general.guard";
 
 const routes: Routes = [
-  { path: "login", component: LoginComponent, canActivate: [AuthGuard] },
   {
     path: "buy",
     loadChildren: () => import("./buy/buy.module").then((m) => m.BuyModule),
@@ -37,8 +34,14 @@ const routes: Routes = [
     canActivate: [GeneralGuard],
   },
   { path: "", redirectTo: "/login", pathMatch: "full" },
-
+  {
+    path: "login",
+    loadChildren: () =>
+      import("./login-user/login-user.module").then((m) => m.LoginUserModule),
+    canActivate: [AuthGuard],
+  },
   { path: "About", component: AboutComponent },
+  { path: "down", component: ServicedownComponent },
   { path: "**", component: Page404Component },
 ];
 @NgModule({

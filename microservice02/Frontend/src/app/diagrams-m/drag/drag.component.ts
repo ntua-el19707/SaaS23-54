@@ -114,13 +114,34 @@ export class DragComponent implements OnInit, AfterViewInit {
   uploadTodb() {
     this.showSpinner = true;
     this.uploadText.nativeElement.innerText = "building diagram";
+    this.cancelBTN.nativeElement.disabled = true;
+
+    this.cancelBTN.nativeElement.classList.add(
+      "bg-gray-400",
+      "cursor-not-allowed",
+      "opacity-50"
+    );
     this.upploadService.confirm(this.fileName).subscribe(
-      (r) => {
+      (r: any) => {
         console.log(r);
-        this.buttonClick.emit(r);
+
+        if (r.res) {
+          if (
+            r.res.msg === "You have not enough credits to purchase a fiagram"
+          ) {
+            this.cancel();
+            this.errorOccurs.emit("not enough  credits");
+          } else {
+            this.buttonClick.emit(r);
+          }
+        } else {
+          this.cancel();
+          this.errorOccurs.emit("something went wrong");
+        }
       },
       (err) => {
         console.log("failed");
+        this.cancel();
         this.errorOccurs.emit("invalid Format");
         console.log(err);
       },
@@ -141,6 +162,7 @@ export class DragComponent implements OnInit, AfterViewInit {
   }
   cancel() {
     this.uploadin = false;
+    this.showSpinner = false;
     //remo file from uploadlist
   }
   // Clean Url

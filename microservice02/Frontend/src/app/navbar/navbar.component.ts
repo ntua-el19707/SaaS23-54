@@ -3,7 +3,7 @@ import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { Observable } from "rxjs";
 import { map, shareReplay } from "rxjs/operators";
 import { Routes } from "./routes";
-import { LoginService } from "../login/login.service";
+import { LoginService } from "../login-user/login/login.service";
 import { Router } from "@angular/router";
 
 @Component({
@@ -19,7 +19,7 @@ export class NavbarComponent implements OnInit {
       shareReplay()
     );
   private routes: Routes[] = []; // routes table
-  private title: string = "charti"; //title
+  private title: string = "eCharts"; //title
   private loginRoutes: Routes[] = [
     { display: "Home", path: "/diagrams" },
     { display: "My Diagrams", path: "/MyDiagrams" },

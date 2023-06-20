@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { User } from "../user/interfaces/user";
 
 @Component({
   selector: "app-welcome",
   templateUrl: "./welcome.component.html",
-  styleUrls: ["./welcome.component.css", "../../app.component.css"],
+  styleUrls: ["./welcome.component.css"],
 })
 export class WelcomeComponent {
   @Input() user: { username: string } = { username: "" };

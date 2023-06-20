@@ -14,6 +14,7 @@ import * as Highcharts from "highcharts";
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { DiagramOppsComponent } from "../diagram-opps/diagram-opps.component";
 import { ActivatedRoute, Router } from "@angular/router";
+import { saveAs } from "file-saver";
 import {
   DependencyWheelDiagram,
   LineAnotations,
@@ -33,11 +34,23 @@ export class DiagramBuilderComponent implements OnInit {
   public showfiller = false;
   private type: any = "";
   private Diagrams: Diagram[] = [];
+  private loadingDemos: Boolean = true;
+  private demoServiceDown: boolean = false;
   highcharts = Highcharts;
   private chartOptions: any = {};
   private showHighChart = false;
   private step: boolean = false; //this will be double  binded
   private Diagram: { chart: any; type: string } = { chart: {}, type: "" };
+  private demo: { jsonChart: any; filename: string; csvData: string[][] } = {
+    jsonChart: {},
+    filename: "",
+    csvData: [],
+  };
+  private displayDemo: boolean = false;
+
+  private demos: { jsonChart: any; filename: string; csvData: string[][] }[] =
+    [];
+  private counterDemo = 0;
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
@@ -80,13 +93,84 @@ export class DiagramBuilderComponent implements OnInit {
     } else {
       this.demoService.findEndpoint(this.getApi());
       this.demoService.getDemos().subscribe(
-        (r) => {
-          console.log(r);
+        (r: any) => {
+          console.log(r.demoArray);
+          if (r.demoArray) {
+            this.demos = r.demoArray;
+            if (this.demos.length !== 0) {
+              this.demo = this.demos[0];
+              this.demo.csvData = [
+                ["title", "", "", ""],
+                ["text", "align", "", ""],
+                [
+                  "Path length vs map size of a random Maze  NxN",
+                  "center",
+                  "",
+                  "",
+                ],
+                ["Xaxis", "", "", ""],
+                ["text", "align", "", ""],
+                ["N", "center", "", ""],
+                ["Yaxis", "", "", ""],
+                ["text", "align", "", ""],
+                ["Length", "right", "", ""],
+                ["series", "", "", ""],
+                ["type", "name", "datax", "datay"],
+                ["XY", "A* algorythm", "10", "2508"],
+                ["", "", "20", "6792"],
+                ["", "", "30", "10588"],
+                ["", "", "40", "15408"],
+                ["", "", "50", "20056"],
+                ["", "", "60", "22400"],
+                ["", "", "70", "27332"],
+                ["", "", "80", "30196"],
+                ["", "", "90", "33688"],
+                ["", "", "100", "37628"],
+                ["", "", "END", "END"],
+                ["series", "", "", ""],
+                ["type", "name", "datax", "datay"],
+                ["XY", "Best First algorythm", "10", "2536"],
+                ["", "", "20", "7148"],
+                ["", "", "30", "12192"],
+                ["", "", "40", "17572"],
+                ["", "", "50", "24800"],
+                ["", "", "60", "27016"],
+                ["", "", "70", "35048"],
+                ["", "", "80", "39024"],
+                ["", "", "90", "44500"],
+                ["", "", "100", "48100"],
+                ["", "", "END", "END"],
+                ["series", "", "", ""],
+                ["type", "name", "datax", "datay"],
+                ["XY", "Dijkstras algorythm", "10", "2508"],
+                ["", "", "20", "6792"],
+                ["", "", "30", "10588"],
+                ["", "", "40", "15408"],
+                ["", "", "50", "20056"],
+                ["", "", "60", "22400"],
+                ["", "", "70", "27332"],
+                ["", "", "80", "30196"],
+                ["", "", "90", "33688"],
+                ["", "", "100", "37628"],
+                ["", "", "END", "END"],
+              ];
+
+              this.counterDemo = 0;
+              this.displayDemo = true;
+
+              console.log(this.demo);
+            }
+          }
         },
         (err) => {
-          console.log(err);
+          if (err.status === 504) {
+            this.demoServiceDown = true;
+          }
         },
-        () => {}
+        () => {
+          this.loadingDemos = false;
+          //set configurations  for mat dialog
+        }
       );
     }
   }
@@ -172,5 +256,71 @@ export class DiagramBuilderComponent implements OnInit {
   }
   getDiagram(): { chart: any; type: string } {
     return this.Diagram;
+  }
+  showHighdemo(): boolean {
+    return this.displayDemo;
+  }
+  getDemoChart() {
+    return this.demo.jsonChart;
+  }
+
+  nextDemo() {
+    console.log("hey");
+    ++this.counterDemo;
+    if (this.counterDemo >= this.demos.length) {
+      this.counterDemo = 0;
+      console.log("right  overflow");
+    }
+    if (this.demos.length !== 0) {
+      this.demo = this.demos[this.counterDemo];
+      this.displayDemo = false;
+      setTimeout(() => {
+        this.displayDemo = true;
+      }, 10);
+    }
+  }
+  previousDemo() {
+    --this.counterDemo;
+
+    if (this.counterDemo < 0) {
+      this.counterDemo = this.demos.length - 1;
+      if (this.counterDemo < 0) {
+        this.counterDemo = 0;
+      }
+      console.log("left  overflow");
+    }
+    if (this.demos.length !== 0) {
+      this.demo = this.demos[this.counterDemo];
+      this.displayDemo = false;
+      setTimeout(() => {
+        this.displayDemo = true;
+      }, 10);
+    }
+  }
+  /**DownloadCsv - download  csv of chart id
+   *
+   *
+   */
+  DownloadCsv() {
+    this.demoService.downloadFileName(this.demo.filename).subscribe(
+      (r) => {
+        console.log(r);
+        try {
+          saveAs(r, `demo.csv`);
+        } catch (err) {}
+      },
+      (err) => {},
+      () => {}
+    );
+  }
+
+  gteCsv() {
+    return this.demo.csvData;
+  }
+  getDemoLoadingStatus(): Boolean {
+    return this.loadingDemos;
+  }
+  getDemoServiceDown(): boolean {
+    return this.demoServiceDown;
   }
 }

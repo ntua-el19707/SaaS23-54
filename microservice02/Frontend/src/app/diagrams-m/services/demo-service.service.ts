@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
 @Injectable({
@@ -33,5 +33,11 @@ export class DemoServiceService {
   getDemos() {
     console.log(this.service);
     return this.http.get(this.service);
+  }
+  downloadFileName(file: string) {
+    return this.http.get(`${this.url}/download/${file}`, {
+      responseType: "blob",
+      headers: new HttpHeaders().append("Content-Type", "application/json"),
+    });
   }
 }

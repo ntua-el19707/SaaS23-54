@@ -17,7 +17,7 @@ export class PurchaseService {
 
   PostOffer(
     plan: Packet,
-    creditCard: { 
+    creditCard: {
       creditCardNumber: number;
       expM: number;
       expY: number;
@@ -25,5 +25,8 @@ export class PurchaseService {
     }
   ) {
     return this.http.post(`/api_user/services/Purchase`, { plan, creditCard });
+  }
+  up() {
+    return this.http.get(`/api_user/services/Purchase/up`);
   }
 }
