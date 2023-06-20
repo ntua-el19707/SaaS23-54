@@ -63,73 +63,40 @@ function axis(axis) {
   }
   return true;
 }
-const series_types = ["XY", "double"];
+
 function series(s) {
   let rsp = true;
   s.forEach((series) => {
     //console.log(s);
-    if (series.type) {
-      if (!series_types.includes(series.type)) {
-        rsp = false;
-      }
 
-      switch (series.type) {
-        case "XY":
-          if (!series.datax) {
-            rsp = false;
-          }
-          if (!Array.isArray(series.datax)) {
-            rsp = false;
-          } else {
-            const x = series.datax;
-            x.forEach((d) => {
-              if (isNaN(d)) {
-                return false;
-              }
-            });
-          }
-          if (!series.datay) {
-            rsp = false;
-          }
-          if (!Array.isArray(series.datay)) {
-            rsp = false;
-          } else {
-            const y = series.datay;
-
-            y.forEach((d) => {
-              if (isNaN(d)) {
-                rsp = false;
-              }
-            });
-          }
-
-          break;
-        case "double":
-          if (!series.data) {
-            rsp = false;
-          }
-          if (!Array.isArray(series.data)) {
-            return false;
-          } else {
-            const data = series.data;
-
-            data.forEach((d) => {
-              if (isNaN(d)) {
-                rsp = false;
-              }
-            });
-          }
-
-          break;
-      }
-    } else {
-      if (!series.data) {
-        rsp = false;
-      }
-      if (!Array.isArray(series.data)) {
-        rsp = false;
-      }
+    if (!series.datax) {
+      rsp = false;
     }
+    if (!Array.isArray(series.datax)) {
+      rsp = false;
+    } else {
+      const x = series.datax;
+      x.forEach((d) => {
+        if (isNaN(d)) {
+          return false;
+        }
+      });
+    }
+    if (!series.datay) {
+      rsp = false;
+    }
+    if (!Array.isArray(series.datay)) {
+      rsp = false;
+    } else {
+      const y = series.datay;
+
+      y.forEach((d) => {
+        if (isNaN(d)) {
+          rsp = false;
+        }
+      });
+    }
+
     if (!series.name) {
       rsp = false;
     }
@@ -146,7 +113,7 @@ function validateInput(data) {
   if (!data.title || !data.series) {
     return false;
   }
-  /*
+
   if (data.Xaxis) {
     if (!axis(data.Xaxis)) {
       return false;
@@ -156,7 +123,7 @@ function validateInput(data) {
     if (!axis(data.Yaxis)) {
       return false;
     }
-  }*/
+  }
 
   if (data.Subtitle) {
     if (!subtitle(data.Subtitle)) {

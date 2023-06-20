@@ -4,6 +4,7 @@
  *
  */
 
+const { error } = require("console");
 const { readFileSync, unlinkSync } = require("fs");
 const pathM = require("path");
 /**
@@ -88,23 +89,19 @@ function readSeries(lines, index) {
   let data0 = lines[++index].split("\r")[0].split(",");
 
   const size = lines.length;
-  let posType = fields.indexOf("type");
-  let pos = fields.indexOf("data");
+
   let posx = fields.indexOf("datax");
   let posy = fields.indexOf("datay");
   let json = {};
   let dataArray = [];
   let dataArrayy = [];
-  let two = false;
-  if (posType !== -1) {
-    if (data0[posType] === "XY") two = true;
-    //console.log(fields);
+  let two = true;
+
+  if (posx === posy && posx === -1) {
+    throw new Error("field datax and datay is required");
   }
   for (let i = 0; i < fields.length; i++) {
     if (!two) {
-      if (i === pos) {
-        dataArray = [data0[i]];
-      }
     } else {
       if (i === posx) {
         // console.log(i);
@@ -118,40 +115,25 @@ function readSeries(lines, index) {
   }
 
   while (index < size) {
-    if (!two) {
-      ++index;
+    ++index;
 
-      let data = splitr(lines[index]);
-      if (!data.valid) {
-        break;
-      }
-      data = data.split.split(",");
-
-      if (data[pos] === "END") {
-        break;
-      }
-      dataArray.push(data[pos]);
-    } else {
-      ++index;
-
-      let data = splitr(lines[index]);
-      if (!data.valid) {
-        break;
-      }
-      data = data.split.split(",");
-      if (valid_3.includes(data[0])) {
-        throw "not valid input";
-      }
-      if (data[posx] === "END" && data[posy] === "END") {
-        break;
-      } else if (data[posx] === "END" && data[posy] !== "END") {
-        throw "not valid input";
-      } else if (data[posx] !== "END" && data[posy] === "END") {
-        throw "not valid input";
-      }
-      dataArray.push(data[posx]);
-      dataArrayy.push(data[posy]);
+    let data = splitr(lines[index]);
+    if (!data.valid) {
+      break;
     }
+    data = data.split.split(",");
+    if (valid_3.includes(data[0])) {
+      throw "not valid input";
+    }
+    if (data[posx] === "END" && data[posy] === "END") {
+      break;
+    } else if (data[posx] === "END" && data[posy] !== "END") {
+      throw "not valid input";
+    } else if (data[posx] !== "END" && data[posy] === "END") {
+      throw "not valid input";
+    }
+    dataArray.push(data[posx]);
+    dataArrayy.push(data[posy]);
   }
   if (two) {
     json.datax = dataArray;
