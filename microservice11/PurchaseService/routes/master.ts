@@ -7,6 +7,9 @@ import {
 import { auth } from "../middlewares/auth";
 
 const MasterRouter = Router();
+MasterRouter.get("/", (req, res) => {
+  res.status(200).json({ msg: "service  is  up" });
+});
 MasterRouter.use(auth);
 
 MasterRouter.route("/PurchasedDiagram/:id").post(PurchaseChart);
