@@ -1,0 +1,32 @@
+title,,,,
+text,align,,,
+Weather Forecast,left,,,
+xAxis,,,,
+format,,,,
+Day,,,,
+title,,,,
+Date,,,,
+rangeDescription
+2023-07-01,2023-07-07,,,
+yAxis,,,,
+format,,,,
+Temperature (°C),,,
+title,,,,
+Temperature,,,,
+rangeDescription
+0,40,,,
+annotations,,,,
+labels,,,,
+0,0,2023-07-01,30,Sunny
+0,0,2023-07-02,28,Cloudy
+0,0,2023-07-03,32,Sunny
+0,0,2023-07-04,35,Hot
+0,0,2023-07-05,29,Cloudy
+series,,,,
+Forecast,,,,
+elevation_data,,,,
+2023-07-01,32,,,
+2023-07-02,30,,,
+2023-07-03,34,,,
+2023-07-04,38,,,
+2023-07-05,31,,,
