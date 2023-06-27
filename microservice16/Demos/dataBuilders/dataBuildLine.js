@@ -1,133 +1,149 @@
-const valid_3 = ["title", "Subtitle", "Xaxis", "Yaxis"]; //?for start i am gon eimpemnte for straight line if it works for all i make  it module acessible to all services
-const axisvalid = [];
+"use strict";
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.buildLineOptions = exports.csvJSON = void 0;
+var valid_3 = ["title", "Subtitle", "Xaxis", "Yaxis"];
+var axisvalid = [];
 function csvJSON(csv) {
-    let json = {}; //create an mpty json to store  return
-    const lines = csv.split("\n");
-    let series = [];
-    let index = 0;
-    const size = lines.length;
-    let valid = true;
-    while (index < size) {
-        const field = lines[index].split("/r")[0].split(",")[0];
-        let data = "";
-        field.replaceAll(/\s/g, "");
+    var json = {};
+    var lines = csv.split("\n");
+    var series = [];
+    var index = 0;
+    var size = lines.length;
+    var valid = true;
+    var _loop_1 = function () {
+        var field = lines[index].split("/r")[0].split(",")[0];
+        var data = "";
+        field.split(/\s/).join("");
         if (valid_3.includes(field)) {
             data = readFields(lines[index + 1], lines[index + 2]);
             index += 3;
             json[field] = data.json;
-        } else if (field === "series") {
-            let out = readSeries(lines, index + 1);
+        }
+        else if (field === "series") {
+            var out = readSeries(lines, index + 1);
             series.push(out.json);
-
             index = out.index;
             ++index;
-        } else if (axisvalid.includes(field)) {
+        }
+        else if (axisvalid.includes(field)) {
             data = readFields(lines[index + 1], lines[index + 2]);
             index += 3;
-            // console.log(data);
-            data.json.forEach(([key, value]) => {
-                if (titleSchema.includes(key)) {
-                    json[field].title[key] = value;
-                }
+            data.json.forEach(function (_a) {
+                var key = _a[0], value = _a[1];
+                //titleschema?
+                json[field].title[key] = value;
                 if (key === "format") {
                     json[field].format = value;
                 }
             });
-        } else {
-            //wrong input
-
-            valid = false;
-            break;
         }
+        else {
+            valid = false;
+            return "break";
+        }
+    };
+    while (index < size) {
+        var state_1 = _loop_1();
+        if (state_1 === "break")
+            break;
     }
     json.series = series;
     return json;
 }
+exports.csvJSON = csvJSON;
 function splitr(line) {
-    let split = line.split("\r")[0];
+    var split = line.split("\r")[0];
     if (split) {
-        return { split, valid: true };
+        return { split: split, valid: true };
     }
     return { valid: false };
 }
 function readFields(line, data) {
-    let fields = line.split("\r")[0].split(",");
-    let dataL = data.split("\r")[0].split(",");
-    let json = {};
-
-    const size = fields.length;
-    for (let i = 0; i < size; i++) {
+    var fields = line.split("\r")[0].split(",");
+    var dataL = data.split("\r")[0].split(",");
+    var json = {};
+    var size = fields.length;
+    for (var i = 0; i < size; i++) {
         if (fields[i] !== "") {
             json[fields[i]] = dataL[i];
         }
     }
-    return { json, fields };
+    return { json: json, fields: fields };
 }
-
 function readSeries(lines, index) {
-    let fields = lines[index].split("\r")[0].split(",");
-    let data0 = lines[++index].split("\r")[0].split(",");
-
-    const size = lines.length;
-    let posType = fields.indexOf("type");
-    let pos = fields.indexOf("data");
-    let posx = fields.indexOf("datax");
-    let posy = fields.indexOf("datay");
-    let json = {};
-    let dataArray = [];
-    let dataArrayy = [];
-    let two = false;
+    var fields = lines[index].split("\r")[0].split(",");
+    var data0 = lines[++index].split("\r")[0].split(",");
+    var size = lines.length;
+    var posType = fields.indexOf("type");
+    var pos = fields.indexOf("data");
+    var posx = fields.indexOf("datax");
+    var posy = fields.indexOf("datay");
+    var json = {};
+    var dataArray = [];
+    var dataArrayy = [];
+    var two = false;
     if (posType !== -1) {
-        if (data0[posType] === "XY") two = true;
-        //console.log(fields);
+        if (data0[posType] === "XY")
+            two = true;
     }
-    for (let i = 0; i < fields.length; i++) {
+    for (var i = 0; i < fields.length; i++) {
         if (!two) {
             if (i === pos) {
                 dataArray = [data0[i]];
             }
-        } else {
+        }
+        else {
             if (i === posx) {
-                // console.log(i);
                 dataArray = [data0[i]];
             }
             if (i === posy) {
                 dataArrayy = [data0[i]];
             }
         }
-        if (fields[i] !== "") json[fields[i]] = data0[i];
+        if (fields[i] !== "")
+            json[fields[i]] = data0[i];
     }
-
     while (index < size) {
         if (!two) {
             ++index;
-
-            let data = splitr(lines[index]);
+            var data = splitr(lines[index]);
             if (!data.valid) {
                 break;
             }
-            data = data.split.split(",");
-
-            if (data[pos] === "END") {
+            //changed from data to data0
+            data0 = data.split.split(",");
+            if (data0[pos] === "END") {
                 break;
             }
-            dataArray.push(data[pos]);
-        } else {
+            dataArray.push(data0[pos]);
+        }
+        else {
             ++index;
-
-            let data = splitr(lines[index]);
+            var data = splitr(lines[index]);
             if (!data.valid) {
                 break;
             }
-            data = data.split.split(",");
-            if (valid_3.includes(data[0])) {
+            //changed from data to data0
+            data0 = data.split.split(",");
+            if (valid_3.includes(data0[0])) {
                 throw "not valid input";
             }
             if (data[posx] === "END" && data[posy] === "END") {
                 break;
-            } else if (data[posx] === "END" && data[posy] !== "END") {
+            }
+            else if (data[posx] === "END" && data[posy] !== "END") {
                 throw "not valid input";
-            } else if (data[posx] !== "END" && data[posy] === "END") {
+            }
+            else if (data[posx] !== "END" && data[posy] === "END") {
                 throw "not valid input";
             }
             dataArray.push(data[posx]);
@@ -137,27 +153,24 @@ function readSeries(lines, index) {
     if (two) {
         json.datax = dataArray;
         json.datay = dataArrayy;
-    } else {
+    }
+    else {
         json.data = dataArray;
     }
-    return { json, index };
+    return { json: json, index: index };
 }
-
 function buildLineOptions(data) {
     data.series = buildSeries(data.series);
-    // console.log(JSON.stringify(data.data));
-    let series = [];
-
-    data.series.forEach((s) => {
+    var series = [];
+    data.series.forEach(function (s) {
         series.push({
             type: "line",
             data: s.data,
             name: s.name,
         });
     });
-    let options = {
+    var options = {
         title: data.title,
-
         series: series,
     };
     if (data.Subtitle) {
@@ -165,106 +178,97 @@ function buildLineOptions(data) {
     }
     if (data.Xaxis) {
         options.xAxis = {};
-
-        let title = {};
+        var title = {};
         if (data.Xaxis.text) {
             title.text = data.Xaxis.text;
             options.xAxis.title = title;
         }
-
         if (data.Xaxis.format) {
-            options.xAxis.format = `'value:${data.Xaxis.format}'`;
+            options.xAxis.format = "'value:".concat(data.Xaxis.format, "'");
         }
     }
     if (data.Yaxis) {
-        let title = {};
+        var title = {};
         options.yAxis = {};
         if (data.Yaxis.text) {
             title.text = data.Yaxis.text;
             options.yAxis.title = title;
         }
-
         if (data.Yaxis.format) {
-            options.yAxis.format = `'value:${data.Yaxis.format}'`;
+            options.yAxis.format = "'value:".concat(data.Yaxis.format, "'");
         }
     }
     return options;
 }
-
+exports.buildLineOptions = buildLineOptions;
 function buildSeries(series) {
-    let return_seires = [];
-    series.forEach((s) => {
+    var return_seires = [];
+    series.forEach(function (s) {
         if (s.type == "XY") {
-            let xarray = [];
-            let yarray = [];
+            var xarray_1 = [];
+            var yarray_1 = [];
             s.data = [];
-            s.datax.forEach((x) => {
-                xarray.push(parseFloat(x));
+            s.datax.forEach(function (x) {
+                xarray_1.push(parseFloat(x));
             });
-            s.datay.forEach((y) => {
-                yarray.push(parseFloat(y));
+            s.datay.forEach(function (y) {
+                yarray_1.push(parseFloat(y));
             });
-            let data = [];
-            for (let i = 0; i < xarray.length; i++) {
-                data.push([xarray[i], yarray[i]]);
+            var data = [];
+            for (var i = 0; i < xarray_1.length; i++) {
+                data.push([xarray_1[i], yarray_1[i]]);
             }
-            return_seires = [
-                ...return_seires,
+            return_seires = __spreadArray(__spreadArray([], return_seires, true), [
                 {
                     name: s.name,
                     data: data,
                 },
-            ];
-        } else if (s.type == "X") {
-            let datax = [];
-
-            s.datax.forEach((d) => {
-                datax.push(parseFloat(d));
+            ], false);
+        }
+        else if (s.type == "X") {
+            var datax_1 = [];
+            s.datax.forEach(function (d) {
+                datax_1.push(parseFloat(d));
             });
-            let data = [];
-            for (let i = 0; i < data.length; i++) {
-                data.push([datax[i], s.datay[i]]);
+            var data = [];
+            for (var i = 0; i < data.length; i++) {
+                data.push([datax_1[i], s.datay[i]]);
             }
-            return_seires = [
-                ...return_seires,
+            return_seires = __spreadArray(__spreadArray([], return_seires, true), [
                 {
                     name: s.name,
                     data: data,
                 },
-            ];
-        } else if (s.type == "Y") {
-            let datay = [];
-
-            s.datay.forEach((d) => {
-                datay.push(parseFloat(d));
+            ], false);
+        }
+        else if (s.type == "Y") {
+            var datay_1 = [];
+            s.datay.forEach(function (d) {
+                datay_1.push(parseFloat(d));
             });
-
-            let data = [];
-            for (let i = 0; i < datay.length; i++) {
-                data.push([s.datax[i], datay[i]]);
+            var data = [];
+            for (var i = 0; i < datay_1.length; i++) {
+                data.push([s.datax[i], datay_1[i]]);
             }
-            return_seires = [
-                ...return_seires,
+            return_seires = __spreadArray(__spreadArray([], return_seires, true), [
                 {
                     name: s.name,
                     data: data,
                 },
-            ];
-        } else {
-            let data = [];
-            for (let i = 0; i < s.datay.length; i++) {
-                data.push([s.datax[i]], s.datay[y]);
+            ], false);
+        }
+        else {
+            var data = [];
+            for (var i = 0; i < s.datay.length; i++) {
+                data.push([s.datax[i]], s.datay[i]);
             }
-            return_seires = [
-                ...return_seires,
+            return_seires = __spreadArray(__spreadArray([], return_seires, true), [
                 {
                     name: s.name,
                     data: data,
                 },
-            ];
+            ], false);
         }
     });
     return return_seires;
 }
-
-module.exports = { csvJSON, buildLineOptions };

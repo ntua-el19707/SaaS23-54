@@ -352,6 +352,4 @@ function buildLinewithAnnotationsOptions(data: JSONData) {
 
     return options;
 }
-
-
 export { csvJSON, buildLinewithAnnotationsOptions };

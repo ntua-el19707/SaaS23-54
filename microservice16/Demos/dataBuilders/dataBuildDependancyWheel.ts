@@ -1,4 +1,5 @@
 function csvJSON(csv: string): any {
+    console.log("in");
     let json: any = {};
     const lines = csv.split("\n");
     json.series = [];
@@ -110,5 +111,11 @@ function buildDependancyWheelOptions(data: any): any {
     //TODO  implement options builder
     return options;
 }
+
+
+
+console.log("hery")
+csvJSON("");
+
 
 export { csvJSON, buildDependancyWheelOptions };
