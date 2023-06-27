@@ -16,29 +16,29 @@ interface DB {
 //The database and collection that this modules wiil acsess and modify
 const LineDemo: DB = {
   db: "DemoCharts",
-  collection: "Line",
+  collection: "LineDemo",
 };
 const LinewithAnnotationsDemo: DB = {
   db: "DemoCharts",
-  collection: "LinewithAnnotations",
+  collection: "LinewithAnnotationsDemo",
 };
 const PolarDemo: DB = {
   db: "DemoCharts",
-  collection: "Polar",
+  collection: "PolarDemo",
 };
 const DependancyWheelDemo: DB = {
   db: "DemoCharts",
-  collection: "DependancyWheel",
+  collection: "DependancyWheelDemo",
 };
 
 const NetworkDemo: DB = {
   db: "DemoCharts",
-  collection: "Network",
+  collection: "NetworkDemo",
 };
 
 const ColumnDemo: DB = {
   db: "DemoCharts",
-  collection: "Column",
+  collection: "ColumnDemo",
 };
 
 /**
@@ -88,10 +88,7 @@ async function closeConnection(client: MongoClient): Promise<boolean> {
 }
 
 //
-async function insertDemo(
-  collectionName: string,
-  filename: string
-): Promise<void> {
+async function insertDemo(  collectionName: string, filename: string  ): Promise<void> {
   const client = StartConnection();
   if (typeof client === "boolean") {
     throw new Error("No URL for DB");
