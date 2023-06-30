@@ -17,9 +17,10 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { ReactiveFormsModule } from "@angular/forms";
+import { ServicedownComponent } from "./servicedown/servicedown.component";
 
 @NgModule({
-  declarations: [MyDigramsComponent],
+  declarations: [MyDigramsComponent, ServicedownComponent],
   imports: [
     CommonModule,
     MatCardModule,
@@ -29,7 +30,7 @@ import { ReactiveFormsModule } from "@angular/forms";
     HighchartsChartModule,
     MatIconModule,
     MatPaginatorModule,
-
+    MatDialogModule,
     MatTableModule,
   ],
 })

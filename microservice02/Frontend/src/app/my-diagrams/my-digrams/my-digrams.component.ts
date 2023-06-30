@@ -15,6 +15,8 @@ import { GetDiagramsService } from "./services/get-diagrams.service";
 import HighchartsMore from "highcharts/highcharts-more";
 import * as Highcharts from "highcharts";
 import { diagramFromMongoLight } from "src/app/diagrams-m/interfaces/digramid";
+import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
+import { ServicedownComponent } from "../servicedown/servicedown.component";
 
 HighchartsMore(Highcharts);
 Highcharts.setOptions({
@@ -55,12 +57,13 @@ export class MyDigramsComponent implements OnInit {
   constructor(
     private download: DonwloadService,
     private getDiagrams: GetDiagramsService,
-
+    private dialog: MatDialog,
     private renderer: Renderer2,
     private host: ElementRef,
     private changeDetector: ChangeDetectorRef
   ) {}
   ngOnInit() {
+    console.log(1);
     this.getDiagrams.getMyDiagrams().subscribe(
       (r) => {
         console.log(r);
@@ -128,8 +131,11 @@ export class MyDigramsComponent implements OnInit {
             this.data[indx].Download.happenpng = false;
           },
           (err) => {
-            console.log(err);
             this.data[indx].Download.happenpng = false;
+            if (err.status === 504) {
+              console.log("service down");
+              this.call_dialog();
+            }
           },
           () => {}
         );
@@ -152,6 +158,10 @@ export class MyDigramsComponent implements OnInit {
           },
           (err) => {
             this.data[indx].Download.happenhtml = false;
+            if (err.status === 504) {
+              console.log("service down");
+              this.call_dialog();
+            }
           },
           () => {}
         );
@@ -174,10 +184,14 @@ export class MyDigramsComponent implements OnInit {
               saveAs(r, `${el.Type}-${el.Download.name}.svg`);
             } catch (err) {}
           },
-          (err) => {},
-          () => {
+          (err) => {
             this.data[indx].Download.happensvg = false;
-          }
+            if (err.status === 504) {
+              console.log("service down");
+              this.call_dialog();
+            }
+          },
+          () => {}
         );
       }
     }
@@ -195,10 +209,16 @@ export class MyDigramsComponent implements OnInit {
           (r) => {
             saveAs(r, `${el.Type}-${el.Download.name}.pdf`);
           },
-          (err) => {},
-          () => {
+          (err) => {
+            console.log(err);
+            console.log(err.status);
             this.data[indx].Download.happenpdf = false;
-          }
+            if (err.status === 504) {
+              console.log("service down");
+              this.call_dialog();
+            }
+          },
+          () => {}
         );
       }
     }
@@ -251,6 +271,20 @@ export class MyDigramsComponent implements OnInit {
   }
   getFetchDiagram(el: ChartElements) {
     return this.fetchingDiagram && this.preview === el.Preview;
+  }
+  /**
+   * funcion call_error_dialog() "call error dialog"
+   *  @param err_msg string
+   */
+  call_dialog(): void {
+    //set configurations  for mat dialog
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = false;
+    dialogConfig.width = "320px";
+    dialogConfig.height = "max-contend";
+    //open dialog
+    this.dialog.open(ServicedownComponent, dialogConfig);
   }
 }
 
