@@ -24,6 +24,6 @@ MasterRouter.route("/getPolar").get(getPolar);
 MasterRouter.route("/getLinewithAnnotations").get(getLinewithAnnotations);
 MasterRouter.route("/getNetwork").get(getNetwork);
 MasterRouter.route("/getLine").get(getLine);
-MasterRouter.route("/getColumn").get(getNetwork);
+MasterRouter.route("/getColumn").get(getColumn);
 
 export { MasterRouter };
