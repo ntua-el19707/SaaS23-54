@@ -16,6 +16,14 @@ export class GetDiagramsService {
     return this.http.get(url); //get http request
   }
   /**
+   * up() - return service is  up
+   * @returns Observable<any>
+   */
+  public up(): Observable<any> {
+    let url: string = `${this.url}/up`;
+    return this.http.get(url); //get http request
+  }
+  /**
    * getADiagrams - return a build chart of id in json
    * @returns Observable<any>
    */

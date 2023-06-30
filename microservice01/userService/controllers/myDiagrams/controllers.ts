@@ -48,7 +48,46 @@ const GetJsonArray = (req: AuthRequest, res: Response, next: NextFunction) => {
     res.status(400).json({ errmsg: "MyDiagrams does not exist in env file" });
   }
 };
+/**
+ * Controller: GetJsonArray
+ * @params     req - AuthRequest object
+ *             res - Response object
+ *             next - NextFunction
+ * returns  void
+ */
+const GetUp = (req: AuthRequest, res: Response, next: NextFunction) => {
+  const MydiagramsService: string | undefined = process.env.MYDIAGRAMSSERVICE;
+  if (MydiagramsService) {
+    let config: AxiosRequestConfig = {
+      method: req.method,
+      url: `${MydiagramsService}/up`,
+      headers: req.headers,
+      data: req.body,
+      responseType: "json",
+      validateStatus: (status) => status >= 200 && status < 400,
+      responseEncoding: "utf8",
+    };
 
+    axios(config)
+      .then((response) => {
+        // Do something with the response if needed
+        console.log(response.data);
+        console.log("forward rsp");
+        let msg = "";
+        if (response.data.msg) {
+          msg = response.data.msg;
+        }
+        res.status(200).json({ msg });
+      })
+      .catch((error) => {
+        // Handle any errors if necessary
+        if (error) console.log(error);
+        res.status(400).json({ err: error });
+      });
+  } else {
+    res.status(400).json({ errmsg: "MyDiagrams does not exist in env file" });
+  }
+};
 /**
  * Controller: GetSpeciffic
  * Parameters: req - AuthRequest object
