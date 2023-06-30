@@ -58,8 +58,20 @@ export class DiagramsModuleGuard implements CanActivate {
             );
           }
         );
-
-        Promise.all([testUploadConfirm])
+        let testUploa: Promise<void> = new Promise((resolve, reject) => {
+          this.upload.testUpload().subscribe(
+            (r) => {
+              console.log(r);
+              resolve();
+            },
+            (err) => {
+              console.log(err);
+              reject(`Service ${type} is  down`);
+            },
+            () => {}
+          );
+        });
+        Promise.all([testUploadConfirm, testUploa])
           .then(() => {
             resolve(true);
           })

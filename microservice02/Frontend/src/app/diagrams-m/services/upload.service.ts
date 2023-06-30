@@ -68,6 +68,9 @@ export class UploadService {
         break;
     }
   }
+  testUpload() {
+    return this.http.get("/api_upload");
+  }
   testConfirm() {
     console.log(`/api_user/services/Diagrams/${this.service}`);
     console.log(this.service === "LineService");

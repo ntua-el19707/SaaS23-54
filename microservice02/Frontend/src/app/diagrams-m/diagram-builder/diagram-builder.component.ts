@@ -95,65 +95,11 @@ export class DiagramBuilderComponent implements OnInit {
       this.demoService.getDemos().subscribe(
         (r: any) => {
           console.log(r.demoArray);
+          console.log(r);
           if (r.demoArray) {
             this.demos = r.demoArray;
             if (this.demos.length !== 0) {
               this.demo = this.demos[0];
-              this.demo.csvData = [
-                ["title", "", "", ""],
-                ["text", "align", "", ""],
-                [
-                  "Path length vs map size of a random Maze  NxN",
-                  "center",
-                  "",
-                  "",
-                ],
-                ["Xaxis", "", "", ""],
-                ["text", "align", "", ""],
-                ["N", "center", "", ""],
-                ["Yaxis", "", "", ""],
-                ["text", "align", "", ""],
-                ["Length", "right", "", ""],
-                ["series", "", "", ""],
-                ["type", "name", "datax", "datay"],
-                ["XY", "A* algorythm", "10", "2508"],
-                ["", "", "20", "6792"],
-                ["", "", "30", "10588"],
-                ["", "", "40", "15408"],
-                ["", "", "50", "20056"],
-                ["", "", "60", "22400"],
-                ["", "", "70", "27332"],
-                ["", "", "80", "30196"],
-                ["", "", "90", "33688"],
-                ["", "", "100", "37628"],
-                ["", "", "END", "END"],
-                ["series", "", "", ""],
-                ["type", "name", "datax", "datay"],
-                ["XY", "Best First algorythm", "10", "2536"],
-                ["", "", "20", "7148"],
-                ["", "", "30", "12192"],
-                ["", "", "40", "17572"],
-                ["", "", "50", "24800"],
-                ["", "", "60", "27016"],
-                ["", "", "70", "35048"],
-                ["", "", "80", "39024"],
-                ["", "", "90", "44500"],
-                ["", "", "100", "48100"],
-                ["", "", "END", "END"],
-                ["series", "", "", ""],
-                ["type", "name", "datax", "datay"],
-                ["XY", "Dijkstras algorythm", "10", "2508"],
-                ["", "", "20", "6792"],
-                ["", "", "30", "10588"],
-                ["", "", "40", "15408"],
-                ["", "", "50", "20056"],
-                ["", "", "60", "22400"],
-                ["", "", "70", "27332"],
-                ["", "", "80", "30196"],
-                ["", "", "90", "33688"],
-                ["", "", "100", "37628"],
-                ["", "", "END", "END"],
-              ];
 
               this.counterDemo = 0;
               this.displayDemo = true;
@@ -163,6 +109,7 @@ export class DiagramBuilderComponent implements OnInit {
           }
         },
         (err) => {
+          console.log(err);
           if (err.status === 504) {
             this.demoServiceDown = true;
           }
@@ -261,6 +208,7 @@ export class DiagramBuilderComponent implements OnInit {
     return this.displayDemo;
   }
   getDemoChart() {
+    console.log(this.demo.jsonChart);
     return this.demo.jsonChart;
   }
 

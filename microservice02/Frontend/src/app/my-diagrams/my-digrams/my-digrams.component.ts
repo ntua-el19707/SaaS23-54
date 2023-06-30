@@ -180,6 +180,7 @@ export class MyDigramsComponent implements OnInit {
         this.download.DownLoadSvg(el.Download._id).subscribe(
           (r) => {
             console.log(r);
+            this.data[indx].Download.happensvg = false;
             try {
               saveAs(r, `${el.Type}-${el.Download.name}.svg`);
             } catch (err) {}
@@ -207,6 +208,7 @@ export class MyDigramsComponent implements OnInit {
         this.data[indx].Download.happenpdf = true;
         this.download.DownLoadPdf(el.Download._id).subscribe(
           (r) => {
+            this.data[indx].Download.happenpdf = false;
             saveAs(r, `${el.Type}-${el.Download.name}.pdf`);
           },
           (err) => {
