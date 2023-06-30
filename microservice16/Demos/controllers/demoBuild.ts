@@ -33,6 +33,7 @@ import {
 const path = require("path");
 
 import { readFileSync } from "fs";
+import { csvTablesC } from "../utils/lib/columnReader";
 
 interface demoObject {
   filename: string;
@@ -41,18 +42,50 @@ interface demoObject {
   jsonChart: any;
 }
 
-let lineDemoArray = ["lineDemo1.csv", "lineDemo2.csv", "lineDemo3.csv", "lineDemo4.csv", "lineDemo5.csv"]
-let linewithannotationsDemoArray = ["linewithannotationsDemo1.csv", "linewithannotationsDemo2.csv", "linewithannotationsDemo3.csv", "linewithannotationsDemo4.csv", "linewithannotationsDemo5.csv"];
-let columnDemoArray = ["columnDemo1.csv", "columnDemo2.csv", "columnDemo3.csv", "columnDemo4.csv", "columnDemo5.csv"];
-let networkDemoArray = ["networkDemo1.csv", "networkDemo2.csv", "networkDemo3.csv", "networkDemo4.csv", "networkDemo5.csv"];
-let polarDemoArray = ["polarDemo1.csv", "polarDemo2.csv", "polarDemo3.csv", "polarDemo4.csv", "polarDemo5.csv"];
-let dependancywheelDemoArray = ["dependancywheelDemo1.csv", "dependancywheelDemo2.csv", "dependancywheelDemo3.csv", "dependancywheelDemo4.csv", "dependancywheelDemo5.csv"];
-
-
-
+let lineDemoArray = [
+  "lineDemo1.csv",
+  "lineDemo2.csv",
+  "lineDemo3.csv",
+  "lineDemo4.csv",
+  "lineDemo5.csv",
+];
+let linewithannotationsDemoArray = [
+  "linewithannotationsDemo1.csv",
+  "linewithannotationsDemo2.csv",
+  "linewithannotationsDemo3.csv",
+  "linewithannotationsDemo4.csv",
+  "linewithannotationsDemo5.csv",
+];
+let columnDemoArray = [
+  "columnDemo1.csv",
+  "columnDemo2.csv",
+  "columnDemo3.csv",
+  "columnDemo4.csv",
+  "columnDemo5.csv",
+];
+let networkDemoArray = [
+  "networkDemo1.csv",
+  "networkDemo2.csv",
+  "networkDemo3.csv",
+  "networkDemo4.csv",
+  "networkDemo5.csv",
+];
+let polarDemoArray = [
+  "polarDemo1.csv",
+  "polarDemo2.csv",
+  "polarDemo3.csv",
+  "polarDemo4.csv",
+  "polarDemo5.csv",
+];
+let dependancywheelDemoArray = [
+  "dependancywheelDemo1.csv",
+  "dependancywheelDemo2.csv",
+  "dependancywheelDemo3.csv",
+  "dependancywheelDemo4.csv",
+  "dependancywheelDemo5.csv",
+];
 
 const getDependancyWheel = (req: Request, res: Response) => {
-
   let demoArray: demoObject[] = [];
   dependancywheelDemoArray.forEach((filename) => {
     const filePath = path.join(__dirname, "../utils/Files/csv/", filename);
@@ -73,7 +106,6 @@ const getDependancyWheel = (req: Request, res: Response) => {
 };
 
 const getPolar = (req: Request, res: Response) => {
-
   let demoArray: demoObject[] = [];
   polarDemoArray.forEach((filename) => {
     const filePath = path.join(__dirname, "../utils/Files/csv/", filename);
@@ -90,11 +122,9 @@ const getPolar = (req: Request, res: Response) => {
     demoArray.push(demo);
   });
   res.status(200).json({ demoArray });
-
 };
 
 const getLinewithAnnotations = (req: Request, res: Response) => {
-
   let demoArray: demoObject[] = [];
   linewithannotationsDemoArray.forEach((filename) => {
     const filePath = path.join(__dirname, "../utils/Files/csv/", filename);
@@ -102,7 +132,7 @@ const getLinewithAnnotations = (req: Request, res: Response) => {
     const data = readFileSync(filePath, { encoding: "utf8", flag: "r" });
     //console.log("data");
     const { rsp: dataArray, max: columnCount } = csvTables(data);
-   
+
     let json = csvJSONLinewithAnnotations(data);
     let jsonChart = buildLinewithAnnotationsOptions(json);
     let demo: demoObject = {
@@ -117,7 +147,6 @@ const getLinewithAnnotations = (req: Request, res: Response) => {
 };
 
 const getNetwork = (req: Request, res: Response) => {
-
   let demoArray: demoObject[] = [];
   networkDemoArray.forEach((filename) => {
     const filePath = path.join(__dirname, "../utils/Files/csv/", filename);
@@ -138,7 +167,6 @@ const getNetwork = (req: Request, res: Response) => {
 };
 
 const getLine = (req: Request, res: Response) => {
-
   let demoArray: demoObject[] = [];
   lineDemoArray.forEach((filename) => {
     const filePath = path.join(__dirname, "../utils/Files/csv/", filename);
@@ -155,22 +183,20 @@ const getLine = (req: Request, res: Response) => {
     demoArray.push(demo);
   });
   res.status(200).json({ demoArray });
-
 };
 
 const getColumn = (req: Request, res: Response) => {
-
   let demoArray: demoObject[] = [];
   columnDemoArray.forEach((filename) => {
     const filePath = path.join(__dirname, "../utils/Files/csv/", filename);
     //const filePath =`../utils/Files/CSV/${filename}` ;
     const data = readFileSync(filePath, { encoding: "utf8", flag: "r" });
-    const { data: dataArray, columnCount: columnCount } = parseCSV(data);
+    const { data: dataArray, columnCount: columnCount } = csvTablesC(data);
     console.log(data);
     let json = csvJSONColumn(data);
     //console.log(json);
     let jsonChart = buildColumnOptions(json);
-    console.log("bonjour")
+    console.log("bonjour");
     let demo: demoObject = {
       filename: filename,
       max_columns: columnCount,
@@ -180,11 +206,12 @@ const getColumn = (req: Request, res: Response) => {
     demoArray.push(demo);
   });
   res.status(200).json({ demoArray });
-
 };
 
-
-function parseCSV(csvString: string): { data: string[][], columnCount: number } {
+function parseCSV(csvString: string): {
+  data: string[][];
+  columnCount: number;
+} {
   const lines = csvString.split(/\r\n|\n/);
   const result: string[][] = [];
   let maxColumnCount = 0;
@@ -211,8 +238,6 @@ function spliter2(lines: string[], index: number): string[] {
   return rsp;
 }
 
-
-
 function csvTables(csv) {
   const lines = csv.split("\n");
   let max = 0;
@@ -230,7 +255,7 @@ function csvTables(csv) {
     }
   }
 
-  return {rsp, max};
+  return { rsp, max };
 }
 
 function spliter(lines, index) {
@@ -238,7 +263,6 @@ function spliter(lines, index) {
 
   return fields;
 }
-
 
 export {
   getDependancyWheel,
