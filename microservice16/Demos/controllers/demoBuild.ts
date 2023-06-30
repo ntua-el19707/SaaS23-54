@@ -165,7 +165,7 @@ const getColumn = (req: Request, res: Response) => {
     const filePath = path.join(__dirname, "../utils/Files/csv/", filename);
     //const filePath =`../utils/Files/CSV/${filename}` ;
     const data = readFileSync(filePath, { encoding: "utf8", flag: "r" });
-    const { rsp: dataArray, max: columnCount } = csvTables(data);
+    const { data: dataArray, columnCount: columnCount } = parseCSV(data);
     console.log(data);
     let json = csvJSONColumn(data);
     //console.log(json);
@@ -182,6 +182,35 @@ const getColumn = (req: Request, res: Response) => {
   res.status(200).json({ demoArray });
 
 };
+
+
+function parseCSV(csvString: string): { data: string[][], columnCount: number } {
+  const lines = csvString.split(/\r\n|\n/);
+  const result: string[][] = [];
+  let maxColumnCount = 0;
+
+  for (let i = 0; i < lines.length; i++) {
+    const fields = spliter2(lines, i);
+    result.push(fields);
+    maxColumnCount = Math.max(maxColumnCount, fields.length);
+  }
+
+  return { data: result, columnCount: maxColumnCount };
+}
+
+function spliter2(lines: string[], index: number): string[] {
+  let fields = lines[index].split("\r")[0].split(",");
+  fields = fields.filter(function (e) {
+    return e.split(/(\r\n|\n|\r)/gm).join("");
+  });
+  let rsp: string[] = [];
+  fields.forEach((e) => {
+    rsp.push(e.split(/\s/).join(""));
+  });
+
+  return rsp;
+}
+
 
 
 function csvTables(csv) {
