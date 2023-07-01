@@ -91,6 +91,7 @@ function readSeries(lines, index) {
     if (data[0] === "end") {
       break;
     }
+
     rsp.data.push(data[dataP]);
     ++index;
     data = spliter(lines, index);

@@ -142,29 +142,43 @@ function series(s) {
   });
   return rsp;
 }
+
+function validateSeriesObject(series) {
+  const validKeys = ["from", "to", "weight"];
+
+  if (
+    typeof series === "object" &&
+    series !== null &&
+    "name" in series &&
+    "keys" in series &&
+    "data" in series &&
+    Array.isArray(series.keys) &&
+    Array.isArray(series.data)
+  ) {
+    if (typeof series.name === "string") {
+      for (let key of series.keys) {
+        if (!validKeys.includes(key)) {
+          return false;
+        }
+      }
+
+      for (let item of series.data) {
+        if (!Array.isArray(item) || item.length !== series.keys.length) {
+          return false;
+        }
+
+        if (isNaN(item[2])) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+  }
+
+  return false;
+}
 function validateInput(data) {
-  return true
-  if (!data.title || !data.series) {
-    return false;
-  }
-  /*
-  if (data.Xaxis) {
-    if (!axis(data.Xaxis)) {
-      return false;
-    }
-  }
-  if (data.Yaxis) {
-    if (!axis(data.Yaxis)) {
-      return false;
-    }
-  }*/
-
-  if (data.Subtitle) {
-    if (!subtitle(data.Subtitle)) {
-      return false;
-    }
-  }
-
-  return title(data.title) && series(data.series);
+  return validateSeriesObject(data.series) && title(data.title);
 }
 module.exports = { validateInput };

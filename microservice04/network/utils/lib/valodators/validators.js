@@ -49,9 +49,32 @@ function subtitle(subtitle) {
   }
   return true;
 }
+function validateSeries(series) {
+  if (!series) {
+    return false;
+  }
+  let seriesD = series.data;
+  if (!Array.isArray(seriesD)) {
+    return false;
+  }
+
+  for (let item of seriesD) {
+    if (!Array.isArray(item) || item.length !== 2) {
+      return false;
+    }
+
+    if (!item.every((element) => typeof element === "string")) {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 function validateInput(data) {
-  return true;
-  return title(data.title) && subtitle(data.subtitle);
+  console.log(data);
+  return (
+    title(data.title) && subtitle(data.subtitle) && validateSeries(data.series)
+  );
 }
 module.exports = { validateInput };

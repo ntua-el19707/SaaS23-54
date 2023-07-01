@@ -142,29 +142,53 @@ function series(s) {
   });
   return rsp;
 }
-function validateInput(data) {
-  return true
-  if (!data.title || !data.series) {
+function validAnot(annL) {
+  if (annL.labels) {
+    if (!Array.isArray(annL.labels)) {
+      return false;
+    }
+    for (let label of annL.labels) {
+      console.log(label);
+      const point = label.point;
+      if (point) {
+        if (
+          isNaN(point.xAxis) ||
+          isNaN(point.yAxis) ||
+          isNaN(point.x) ||
+          isNaN(point.y)
+        ) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+    return true;
+  } else {
     return false;
   }
-  /*
-  if (data.Xaxis) {
-    if (!axis(data.Xaxis)) {
-      return false;
-    }
+}
+function valiodateSeries(series) {
+  console.log(series);
+  if (!Array.isArray(series)) {
+    return false;
+  } else {
+    let rsp = true;
+    series.forEach((s) => {
+      if (!s.data) {
+        rsp = false;
+      } else {
+        if (!Array.isArray(s.data)) {
+          rsp = false;
+        } else {
+          s.data.forEach((d) => {});
+        }
+      }
+    });
+    return rsp;
   }
-  if (data.Yaxis) {
-    if (!axis(data.Yaxis)) {
-      return false;
-    }
-  }*/
-
-  if (data.Subtitle) {
-    if (!subtitle(data.Subtitle)) {
-      return false;
-    }
-  }
-
-  return title(data.title) && series(data.series);
+}
+function validateInput(data) {
+  return validAnot(data.annotations) && valiodateSeries(data.series);
 }
 module.exports = { validateInput };

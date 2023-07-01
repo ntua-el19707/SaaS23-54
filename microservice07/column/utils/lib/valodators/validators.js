@@ -63,11 +63,51 @@ function axis(axis) {
   }
   return true;
 }
+function validateXAxis(xAxis) {
+  if (typeof xAxis === "object" && xAxis !== null && "categories" in xAxis) {
+    if (Array.isArray(xAxis.categories)) {
+      for (let category of xAxis.categories) {
+        if (typeof category !== "number") {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+  return false;
+}
+function validateSeriesArray(series) {
+  let rsp = true;
 
- 
-
-
+  if (Array.isArray(series)) {
+    series.forEach((s) => {
+      if (s.name && s.data) {
+        if (!Array.isArray(s.data)) {
+          rsp = false;
+        } else {
+          s.data.forEach((d) => {
+            console.log(d);
+            if (isNaN(d)) {
+              rsp = false;
+            }
+          });
+        }
+      } else {
+        rsp = false;
+      }
+    });
+  } else {
+    rsp = false;
+  }
+  return rsp;
+}
 function validateInput(data) {
-return  true ;
+  if (!data.xAxis) {
+    return false;
+  }
+
+  return (
+    validateXAxis(data.xAxis) && title(data.title) && subtitle(data.subtitle)
+  );
 }
 module.exports = { validateInput };

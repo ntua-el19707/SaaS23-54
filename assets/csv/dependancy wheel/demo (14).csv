@@ -1,0 +1,25 @@
+title,,
+text,,
+Dependancy Wheel,,
+series,,
+name,,
+Countries,,
+keys,,
+from,to,weight
+data,,
+Brazil,Portugal,5
+Iceland,Norway,4
+Cyprus,Greece,5
+Serbia,Croatia,5
+Greece,Serbia,2
+Iceland,Sweden,4
+Cyprus,Greece,5
+Serbia,Croatia,5
+Greece,Serbia,2
+Sweden,Norway,4
+Sweden,Greece,1
+Iceland,Sweden,3
+Cyprus,Serbia,1
+Cyprus,Sweden,1
+Croatia,Portugal,2
+Portugal,Sweden,1
