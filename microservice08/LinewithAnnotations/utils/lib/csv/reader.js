@@ -65,16 +65,15 @@ function csvJSON(csv) {
       if (field === "series") {
         let data = readSeries(lines, index + 1);
         //console.log(data.rsp);
-        json.series.push(
-          {
-              data: data.rsp,
-              name: data.name,
-              fillOpacity: 0.5,
-              marker: {
-                  enabled: false
-              },
-              threshold: null
-          });
+        json.series.push({
+          data: data.rsp,
+          name: data.name,
+          fillOpacity: 0.5,
+          marker: {
+            enabled: false,
+          },
+          threshold: null,
+        });
         index = data.index;
       } else if (field === "annotations") {
         const data = readAnnotations(lines, index + 1);
@@ -106,7 +105,7 @@ function csvJSON(csv) {
     //console.log(json.yAxis);
     //console.log(json.title)
 
-    console.log(json)
+    console.log(json);
     return json;
   } catch (err) {
     throw err;
@@ -126,7 +125,6 @@ function getJsonFromFile(file) {
  */
 function readSeries(lines, index) {
   try {
-
     let data = spliter(lines, index);
     let name = data[0];
     const size = lines.length;
@@ -136,12 +134,12 @@ function readSeries(lines, index) {
 
     while (index < size) {
       data = spliter(lines, index);
-      if(data[0] === "series"){
+      if (data[0] === "series") {
         index--;
         break;
       }
       //console.log(data);
-      
+
       data[0] = parseFloat(data[0]);
       data[1] = parseFloat(data[1]);
 
@@ -155,7 +153,6 @@ function readSeries(lines, index) {
     */
     let rsp = elevation_data;
 
-
     return { rsp, index, name };
   } catch (err) {
     throw err;
@@ -168,17 +165,16 @@ function readSeries(lines, index) {
  * @returns json object
  */
 function readFields(lines, index) {
-    
-    index++
-    let data = spliter(lines, index);
-    title_text = data[0];
-    title_alignment = data[1];
+  index++;
+  let data = spliter(lines, index);
+  title_text = data[0];
+  title_alignment = data[1];
 
-    json = {
-        text: title_text,
-        align: title_alignment
-    }
-    return json;
+  json = {
+    text: title_text,
+    align: title_alignment,
+  };
+  return json;
 }
 
 function readAnnotations(lines, index) {
@@ -311,8 +307,5 @@ function destroyCSV(filename) {
     return false;
   }
 }
-
-let filename = "reader.csv"
-getJsonFromFile(filename)
 
 module.exports = { getJsonFromFile, destroyCSV };
