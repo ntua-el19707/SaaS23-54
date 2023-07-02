@@ -9,3 +9,5 @@
   
   
   
+./build.sh #biuld  the containers
+docker-compose  -f PackApp.yaml up
