@@ -1,132 +1,208 @@
 series,
-Proto Indo-European,Balto-Slavic
-Proto Indo-European,Germanic
-Proto Indo-European,Celtic
-Proto Indo-European,Italic
-Proto Indo-European,Hellenic
-Proto Indo-European,Anatolian
-Proto Indo-European,Indo-Iranian
-Proto Indo-European,Tocharian
-Indo-Iranian,Dardic
-Indo-Iranian,Indic
-Indo-Iranian,Iranian
-Iranian,Old Persian
-Old Persian,Middle Persian
-Indic,Sanskrit
-Italic,Osco-Umbrian
-Italic,Latino-Faliscan
-Latino-Faliscan,Latin
-Celtic,Brythonic
-Celtic,Goidelic
-Germanic,North Germanic
-Germanic,West Germanic
-Germanic,East Germanic
-North Germanic,Old Norse
-North Germanic,Old Swedish
-North Germanic,Old Danish
-West Germanic,Old English
-West Germanic,Old Frisian
-West Germanic,Old Dutch
-West Germanic,Old Low German
-West Germanic,Old High German
-Old Norse,Old Icelandic
-Old Norse,Old Norwegian
-Old Norwegian,Middle Norwegian
-Old Swedish,Middle Swedish
-Old Danish,Middle Danish
-Old English,Middle English
-Old Dutch,Middle Dutch
-Old Low German,Middle Low German
-Old High German,Middle High German
-Balto-Slavic,Baltic
-Balto-Slavic,Slavic
-Slavic,East Slavic
-Slavic,West Slavic
-Slavic,South Slavic
-Proto Indo-European,Phrygian
-Proto Indo-European,Armenian
-Proto Indo-European,Albanian
-Proto Indo-European,Thracian
-Tocharian,Tocharian A
-Tocharian,Tocharian B
-Anatolian,Hittite
-Anatolian,Palaic
-Anatolian,Luwic
-Anatolian,Lydian
-Iranian,Balochi
-Iranian,Kurdish
-Iranian,Pashto
-Iranian,Sogdian
-Old Persian,Pahlavi
-Middle Persian,Persian
-Hellenic,Greek
-Dardic,Dard
-Sanskrit,Sindhi
-Sanskrit,Romani
-Sanskrit,Urdu
-Sanskrit,Hindi
-Sanskrit,Bihari
-Sanskrit,Assamese
-Sanskrit,Bengali
-Sanskrit,Marathi
-Sanskrit,Gujarati
-Sanskrit,Punjabi
-Sanskrit,Sinhalese
-Osco-Umbrian,Umbrian
-Osco-Umbrian,Oscan
-Latino-Faliscan,Faliscan
-Latin,Portugese
-Latin,Spanish
-Latin,French
-Latin,Romanian
-Latin,Italian
-Latin,Catalan
-Latin,Franco-Provençal
-Latin,Rhaeto-Romance
-Brythonic,Welsh
-Brythonic,Breton
-Brythonic,Cornish
-Brythonic,Cuymbric
-Goidelic,Modern Irish
-Goidelic,Scottish Gaelic
-Goidelic,Manx
-East Germanic,Gothic
-Middle Low German,Low German
-Middle High German,(High) German
-Middle High German,Yiddish
-Middle English,English
-Middle Dutch,Hollandic
-Middle Dutch,Flemish
-Middle Dutch,Dutch
-Middle Dutch,Limburgish
-Middle Dutch,Brabantian
-Middle Dutch,Rhinelandic
-Old Frisian,Frisian
-Middle Danish,Danish
-Middle Swedish,Swedish
-Middle Norwegian,Norwegian
-Old Norse,Faroese
-Old Icelandic,Icelandic
-Baltic,Old Prussian
-Baltic,Lithuanian
-Baltic,Latvian
-West Slavic,Polish
-West Slavic,Slovak
-West Slavic,Czech
-West Slavic,Wendish
-East Slavic,Bulgarian
-East Slavic,Old Church Slavonic
-East Slavic,Macedonian
-East Slavic,Serbo-Croatian
-East Slavic,Slovene
-South Slavic,Russian
-South Slavic,Ukrainian
-South Slavic,Belarusian
-South Slavic,Rusyn
+Mammals,Birds
+Mammals,Reptiles
+Mammals,Amphibians
+Mammals,Fish
+Mammals,Insects
+Birds,Mammals
+Birds,Reptiles
+Birds,Amphibians
+Birds,Fish
+Birds,Insects
+Reptiles,Mammals
+Reptiles,Birds
+Reptiles,Amphibians
+Reptiles,Fish
+Reptiles,Insects
+Amphibians,Mammals
+Amphibians,Birds
+Amphibians,Reptiles
+Amphibians,Fish
+Amphibians,Insects
+Fish,Mammals
+Fish,Birds
+Fish,Reptiles
+Fish,Amphibians
+Fish,Insects
+Insects,Mammals
+Insects,Birds
+Insects,Reptiles
+Insects,Amphibians
+Insects,Fish
+Mammals,Cats
+Mammals,Dogs
+Mammals,Elephants
+Mammals,Giraffes
+Mammals,Lions
+Birds,Eagles
+Birds,Owls
+Birds,Penguins
+Birds,Parrots
+Birds,Hummingbirds
+Reptiles,Turtles
+Reptiles,Snakes
+Reptiles,Lizards
+Reptiles,Crocodiles
+Reptiles,Alligators
+Amphibians,Frogs
+Amphibians,Salamanders
+Amphibians,Newts
+Amphibians,Toads
+Amphibians,Caecilians
+Fish,Salmon
+Fish,Tuna
+Fish,Carp
+Fish,Sharks
+Fish,Clownfish
+Insects,Bees
+Insects,Butterflies
+Insects,Beetles
+Insects,Ants
+Insects,Dragonflies
+Cats,Lions
+Cats,Tigers
+Cats,Leopards
+Cats,Jaguars
+Cats,Cheetahs
+Dogs,Wolves
+Dogs,Foxes
+Dogs,Huskies
+Dogs,Poodles
+Dogs,Bulldogs
+Elephants,African Elephants
+Elephants,Asian Elephants
+Elephants,Mammoths
+Elephants,Mastodons
+Elephants,Miniature Elephants
+Giraffes,Reticulated Giraffes
+Giraffes,Masai Giraffes
+Giraffes,Angolan Giraffes
+Giraffes,South African Giraffes
+Giraffes,Thornicroft's Giraffes
+Eagles,Bald Eagles
+Eagles,Golden Eagles
+Eagles,Harpy Eagles
+Eagles,White-tailed Eagles
+Eagles,Steller's Sea Eagles
+Owls,Barn Owls
+Owls,Great Horned Owls
+Owls,Snowy Owls
+Owls,Burrowing Owls
+Owls,Long-eared Owls
+Penguins,Emperor Penguins
+Penguins,King Penguins
+Penguins,Gentoo Penguins
+Penguins,Adelie Penguins
+Penguins,Chinstrap Penguins
+Parrots,African Grey Parrots
+Parrots,Cockatiels
+Parrots,Macaws
+Parrots,Lovebirds
+Parrots,Budgerigars
+Turtles,Green Turtles
+Turtles,Loggerhead Turtles
+Turtles,Leatherback Turtles
+Turtles,Snapping Turtles
+Turtles,Box Turtles
+Snakes,Pythons
+Snakes,Boas
+Snakes,Rattlesnakes
+Snakes,Cobras
+Snakes,Vipers
+Lizards,Geckos
+Lizards,Iguanas
+Lizards,Chameleons
+Lizards,Skinks
+Lizards,Monitor Lizards
+Crocodiles,Nile Crocodiles
+Crocodiles,Saltwater Crocodiles
+Crocodiles,American Crocodiles
+Crocodiles,Gharials
+Crocodiles,Cuban Crocodiles
+Alligators,American Alligators
+Alligators,Chinese Alligators
+Alligators,Black Caimans
+Alligators,Morelet's Crocodiles
+Alligators,Orinoco Crocodiles
+Frogs,Green Tree Frogs
+Frogs,Red-eyed Tree Frogs
+Frogs,Golden Poison Frogs
+Frogs,Dart Frogs
+Frogs,Bullfrogs
+Salamanders,Tiger Salamanders
+Salamanders,Hellbenders
+Salamanders,Mudpuppies
+Salamanders,Fire Salamanders
+Salamanders,Newts
+Newts,Eastern Newts
+Newts,Marbled Newts
+Newts,Palmate Newts
+Newts,Alpine Newts
+Newts,Iberian Ribbed Newts
+Toads,Cane Toads
+Toads,Bufo Toads
+Toads,American Toads
+Toads,Sonoran Desert Toads
+Toads,Oregon Spotted Toads
+Caecilians,Indotyphlus worms
+Caecilians,Siphonops worms
+Caecilians,Chikilidae worms
+Caecilians,Ichthyophiidae worms
+Caecilians,Scolecomorphidae worms
+Salmon,Chinook Salmon
+Salmon,Coho Salmon
+Salmon,Sockeye Salmon
+Salmon,Atlantic Salmon
+Salmon,Pink Salmon
+Tuna,Yellowfin Tuna
+Tuna,Bluefin Tuna
+Tuna,Albacore Tuna
+Tuna,Bigeye Tuna
+Tuna,Skipjack Tuna
+Carp,Common Carp
+Carp,Mirror Carp
+Carp,Grass Carp
+Carp,Black Carp
+Carp,Asian Carp
+Sharks,Great White Sharks
+Sharks,Tiger Sharks
+Sharks,Hammerhead Sharks
+Sharks,Bull Sharks
+Sharks,Whale Sharks
+Clownfish,Orange Clownfish
+Clownfish,Pink Skunk Clownfish
+Clownfish,Maroon Clownfish
+Clownfish,Saddleback Clownfish
+Clownfish,Clarkii Clownfish
+Bees,Honey Bees
+Bees,Bumblebees
+Bees,Mason Bees
+Bees,Leafcutter Bees
+Bees,Carpenter Bees
+Butterflies,Monarch Butterflies
+Butterflies,Swallowtail Butterflies
+Butterflies,Painted Lady Butterflies
+Butterflies,Peleides Blue Morpho Butterflies
+Butterflies,Cabbage White Butterflies
+Beetles,Ladybugs
+Beetles,Scarab Beetles
+Beetles,Fireflies
+Beetles,Rhinoceros Beetles
+Beetles,Stag Beetles
+Ants,Carpenter Ants
+Ants,Fire Ants
+Ants,Leafcutter Ants
+Ants,Army Ants
+Ants,Bullet Ants
+Dragonflies,Common Green Darner Dragonflies
+Dragonflies,Blue Dasher Dragonflies
+Dragonflies,Black Saddlebags Dragonflies
+Dragonflies,Eastern Pondhawk Dragonflies
+Dragonflies,Four-spotted Skimmer Dragonflies
 end,
 title,
 text,align
-The Indo-European Language Tree,left
+Animal Taxonomy,center
 Subtitle,
 text,align
-A Force-Directed Network Graph in Highcharts,center
+A Network Graph Illustrating Relationships Between Animal Species,center

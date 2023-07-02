@@ -1,25 +1,26 @@
 title,,
 text,,
-Dependancy Wheel,,
+Music Genres and Subgenres,,
 series,,
 name,,
-Countries,,
+Genres,,
 keys,,
 from,to,weight
 data,,
-Brazil,Portugal,5
-Iceland,Norway,4
-Cyprus,Greece,5
-Serbia,Croatia,5
-Greece,Serbia,2
-Iceland,Sweden,4
-Cyprus,Greece,5
-Serbia,Croatia,5
-Greece,Serbia,2
-Sweden,Norway,4
-Sweden,Greece,1
-Iceland,Sweden,3
-Cyprus,Serbia,1
-Cyprus,Sweden,1
-Croatia,Portugal,2
-Portugal,Sweden,1
+Rock,Alternative Rock,4
+Rock,Classic Rock,5
+Rock,Indie Rock,4
+Rock,Punk Rock,3
+Pop,Pop Rock,4
+Pop,Electropop,5
+Pop,Indie Pop,4
+Pop,Dance Pop,3
+Hip Hop,Rap,5
+Hip Hop,Trap,4
+Hip Hop,R&B,4
+Electronic,House,5
+Electronic,Techno,4
+Electronic,Dubstep,3
+Country,Country Pop,4
+Country,Bluegrass,5
+Country,Honky Tonk,4

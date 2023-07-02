@@ -1,25 +1,34 @@
 title,,
 text,,
-Dependancy Wheel,,
+Programming Languages and Frameworks,,
 series,,
 name,,
-Countries,,
+Languages,,
 keys,,
 from,to,weight
 data,,
-Brazil,Portugal,5
-Iceland,Norway,4
-Cyprus,Greece,5
-Serbia,Croatia,5
-Greece,Serbia,2
-Iceland,Sweden,4
-Cyprus,Greece,5
-Serbia,Croatia,5
-Greece,Serbia,2
-Sweden,Norway,4
-Sweden,Greece,1
-Iceland,Sweden,3
-Cyprus,Serbia,1
-Cyprus,Sweden,1
-Croatia,Portugal,2
-Portugal,Sweden,1
+Python,Django,5
+Python,Flask,4
+Python,NumPy,3
+Python,Pandas,4
+JavaScript,React,5
+JavaScript,Node.js,4
+JavaScript,Vue.js,4
+JavaScript,Angular,3
+Java,Spring Boot,5
+Java,Hibernate,4
+Java,Apache Struts,3
+C++,Qt,4
+C++,Boost,3
+C++,STL,4
+Ruby,Ruby on Rails,5
+Ruby,Sinatra,4
+Ruby,Hanami,3
+Python,Pyramid,3
+Python,Tkinter,2
+Java,JavaFX,3
+Java,Struts,3
+C#,ASP.NET,4
+C#,Unity,4
+C#,WPF,3
+Ruby,Ruby on Rails,5

@@ -1,25 +1,27 @@
 title,,
 text,,
-Dependancy Wheel,,
+Movie Genres and Subgenres,,
 series,,
 name,,
-Countries,,
+Genres,,
 keys,,
 from,to,weight
 data,,
-Brazil,Portugal,5
-Iceland,Norway,4
-Cyprus,Greece,5
-Serbia,Croatia,5
-Greece,Serbia,2
-Iceland,Sweden,4
-Cyprus,Greece,5
-Serbia,Croatia,5
-Greece,Serbia,2
-Sweden,Norway,4
-Sweden,Greece,1
-Iceland,Sweden,3
-Cyprus,Serbia,1
-Cyprus,Sweden,1
-Croatia,Portugal,2
-Portugal,Sweden,1
+Action,Thriller,5
+Action,Adventure,4
+Action,Crime,3
+Adventure,Fantasy,4
+Adventure,Sci-Fi,4
+Adventure,Action,3
+Thriller,Mystery,4
+Thriller,Crime,3
+Thriller,Action,3
+Drama,Romance,5
+Drama,Crime,4
+Drama,Comedy,4
+Comedy,Romantic Comedy,4
+Comedy,Action Comedy,3
+Comedy,Drama,3
+Horror,Thriller,5
+Horror,Supernatural,4
+Horror,Slasher,4

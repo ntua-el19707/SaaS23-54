@@ -1,48 +1,37 @@
 title,,,
 text,align,,
-Path length vs map size of a random Maze  NxN,center,,
+Mobile Operating System Market Share,center,,
 Xaxis,,,
 text,align,,
-N,center,,
+Year,center,,
 Yaxis,,,
 text,align,,
-Length,right,,
+Market Share (%),right,,
 series,,,
 ,name,datax,datay
-,A* algorythm,10,2508
-,,20,6792
-,,30,10588
-,,40,15408
-,,50,20056
-,,60,22400
-,,70,27332
-,,80,30196
-,,90,33688
-,,100,37628
+,Android,2017,85
+,,2018,86
+,,2019,87
+,,2020,88
 ,,END,END
 series,,,
 ,name,datax,datay
-,Best First algorythm,10,2536
-,,20,7148
-,,30,12192
-,,40,17572
-,,50,24800
-,,60,27016
-,,70,35048
-,,80,39024
-,,90,44500
-,,100,48100
+,iOS,2017,14
+,,2018,13
+,,2019,12
+,,2020,11
 ,,END,END
 series,,,
 ,name,datax,datay
-,Dijkstras algorythm,10,2508
-,,20,6792
-,,30,10588
-,,40,15408
-,,50,20056
-,,60,22400
-,,70,27332
-,,80,30196
-,,90,33688
-,,100,37628
+,Windows Phone,2017,1
+,,2018,0.5
+,,2019,0.3
+,,2020,0.2
+,,END,END
+series,,,
+,name,datax,datay
+,Other,2017,0.5
+,,2018,0.5
+,,2019,0.7
+,,2020,0.8
 ,,END,END

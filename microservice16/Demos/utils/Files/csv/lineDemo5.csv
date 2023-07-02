@@ -1,48 +1,41 @@
 title,,,
 text,align,,
-Path length vs map size of a random Maze  NxN,center,,
+Smartphone Battery Life Comparison,center,,
 Xaxis,,,
 text,align,,
-N,center,,
+Smartphone Model,center,,
 Yaxis,,,
 text,align,,
-Length,right,,
+Battery Life (Hours),right,,
 series,,,
 ,name,datax,datay
-,A* algorythm,10,2508
-,,20,6792
-,,30,10588
-,,40,15408
-,,50,20056
-,,60,22400
-,,70,27332
-,,80,30196
-,,90,33688
-,,100,37628
+,iPhone 12,1,8
+,,2,9
+,,3,8.5
+,,4,7.5
+,,5,8
 ,,END,END
 series,,,
 ,name,datax,datay
-,Best First algorythm,10,2536
-,,20,7148
-,,30,12192
-,,40,17572
-,,50,24800
-,,60,27016
-,,70,35048
-,,80,39024
-,,90,44500
-,,100,48100
+,Samsung Galaxy S21,1,9
+,,2,9.5
+,,3,9
+,,4,8
+,,5,8.5
 ,,END,END
 series,,,
 ,name,datax,datay
-,Dijkstras algorythm,10,2508
-,,20,6792
-,,30,10588
-,,40,15408
-,,50,20056
-,,60,22400
-,,70,27332
-,,80,30196
-,,90,33688
-,,100,37628
+,Google Pixel 5,1,7.5
+,,2,7
+,,3,7.5
+,,4,7
+,,5,6.5
+,,END,END
+series,,,
+,name,datax,datay
+,OnePlus 9,1,8.5
+,,2,8
+,,3,8.5
+,,4,8
+,,5,7.5
 ,,END,END
