@@ -162,7 +162,7 @@ function InserteUser(userName: string): Promise<any> {
             userName: userName,
             LastLogin: [LastLogin],
             role: "client",
-            credits: 3,
+            credits: 10,
             total: 0,
           };
 
@@ -183,7 +183,7 @@ function InserteUser(userName: string): Promise<any> {
                         await PruduceGifts(
                           us.user_id,
                           "Registarion Gift",
-                          3,
+                          10,
                           "RegistrationPacket"
                         );
                         resolve(us);

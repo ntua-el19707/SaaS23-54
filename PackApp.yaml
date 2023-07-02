@@ -19,6 +19,8 @@ services:
     depends_on:
       - rabbitmq
     mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
 
   pollar:
     image: pollarservice
@@ -27,6 +29,8 @@ services:
     depends_on:
       - rabbitmq
     mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
 
   collumn:
     image: collumnservice
@@ -35,6 +39,8 @@ services:
     depends_on:
       - rabbitmq
     mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
 
   depedencywheel:
     image: depedencywheel
@@ -43,6 +49,8 @@ services:
     depends_on:
       - rabbitmq
     mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
 
   line:
     image: lineservice
@@ -51,6 +59,8 @@ services:
     depends_on:
       - rabbitmq
     mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
 
   network:
     image: networkservice
@@ -59,16 +69,23 @@ services:
     depends_on:
       - rabbitmq
     mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
+
   eCharts:
     image: echarts
     ports:
       - 4007:4007
-    
+    environment:
+      - BASE_URL=192.168.0.200
+
   upload:
     image: upload
     ports:
       - 3000:3000
     mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
 
   myDiagrams:
     image: mydiagrams
@@ -77,6 +94,8 @@ services:
     depends_on:
       - rabbitmq
     mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
 
   purchaseService:
     image: purchaseservice
@@ -85,6 +104,8 @@ services:
     depends_on:
       - rabbitmq
     mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
 
   donwloadSvg:
     image: donwloadsvg
@@ -95,6 +116,8 @@ services:
     volumes:
       - svgFiles:/app/utils/Files/svg
     mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
 
   donwloadPdf:
     image: donwloadpdf
@@ -105,6 +128,8 @@ services:
     volumes:
       - pdfFiles:/app/utils/Files/pdf
     mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
 
   donwloadPng:
     image: donwloadpng
@@ -115,6 +140,8 @@ services:
     volumes:
       - pngFiles:/app/utils/Files/png
     mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
 
   donwloadHtml:
     image: donwloadhtml
@@ -125,12 +152,16 @@ services:
     volumes:
       - htmlFiles:/app/utils/Files/html
     mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
 
   redis:
     image: redis
     ports:
       - 6379:6379
     mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
 
   lineannotations:
     image: lineannotationsservice
@@ -139,26 +170,88 @@ services:
     depends_on:
       - rabbitmq
     mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
 
-  mongodb:
+  authdb:
     image: mongo
-    container_name: mongodb
+    container_name: authdb
     ports:
       - 27017:27017
     volumes:
-      - mongodb_data:/data/db
-    mem_limit: 500M
+      - authdb_data:/data/db
 
+  mydiagramsdb:
+    image: mongo
+    container_name: mydiagramsdb
+    ports:
+      - 27020:27017
+    volumes:
+      - myDiagramsdbData:/data/db
+
+  downloadSvgMongo:
+    image: mongo
+    container_name: downloadsvgmongo
+    ports:
+      - 27018:27017
+    volumes:
+      - downloadSvgMongoData:/data/db
+    mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
+
+  downloadPngMongo:
+    image: mongo
+    container_name: downloadpngmongo
+    ports:
+      - 27019:27017
+    volumes:
+      - downloadPngMongoData:/data/db
+    mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
+
+  purchaseLogMongo:
+    image: mongo
+    container_name: purchaselogmongo
+    ports:
+      - 27021:27017
+    volumes:
+      - purchaseLogMongoData:/data/db
+    mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
+
+  downloadHtmlMongo:
+    image: mongo
+    container_name: downloadhtmlmongo
+    ports:
+      - 27022:27017
+    volumes:
+      - downloadHtmlMongoData:/data/db
+    mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
+
+  downloadPdfMongo:
+    image: mongo
+    container_name: downloadpdfmongo
+    ports:
+      - 27023:27017
+    volumes:
+      - downloadPdfMongoData:/data/db
+    mem_limit: 200M
+    environment:
+      - BASE_URL=192.168.0.200
   mongo-express:
     image: mongo-express
     container_name: mongo-express
     ports:
       - 8081:8081
     environment:
-      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_SERVER=authdb
       - ME_CONFIG_MONGODB_PORT=27017
     mem_limit: 200M
-
   demo:
     image: demoservice
     ports:
@@ -166,11 +259,16 @@ services:
     volumes:
       - csvFiles:/app/utils/Files/csv
     mem_limit: 200M
-
 volumes:
-  mongodb_data:
   svgFiles:
   pdfFiles:
   pngFiles:
   htmlFiles:
   csvFiles:
+  authdb_data:
+  downloadSvgMongoData:
+  downloadPngMongoData:
+  myDiagramsdbData:
+  purchaseLogMongoData:
+  downloadHtmlMongoData:
+  downloadPdfMongoData:

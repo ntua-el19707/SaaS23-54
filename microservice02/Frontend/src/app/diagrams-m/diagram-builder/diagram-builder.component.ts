@@ -89,13 +89,13 @@ export class DiagramBuilderComponent implements OnInit {
     this.type = this.route.snapshot.paramMap.get("type");
     if (!valid_Types.includes(this.type)) {
       //wrong url
-      console.log("Wrong url");
+      // console.log("Wrong url");
     } else {
       this.demoService.findEndpoint(this.getApi());
       this.demoService.getDemos().subscribe(
         (r: any) => {
-          console.log(r.demoArray);
-          console.log(r);
+          //// console.log(r.demoArray);
+          //// console.log(r);
           if (r.demoArray) {
             this.demos = r.demoArray;
             if (this.demos.length !== 0) {
@@ -104,12 +104,12 @@ export class DiagramBuilderComponent implements OnInit {
               this.counterDemo = 0;
               this.displayDemo = true;
 
-              console.log(this.demo);
+              //  // console.log(this.demo);
             }
           }
         },
         (err) => {
-          console.log(err);
+          // console.log(err);
           if (err.status === 504) {
             this.demoServiceDown = true;
           }
@@ -135,7 +135,7 @@ export class DiagramBuilderComponent implements OnInit {
    */
   call_error_dialog(event: any): void {
     const err_msg = event;
-    console.log(event);
+    // console.log(event);
     //set configurations  for mat dialog
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -187,7 +187,7 @@ export class DiagramBuilderComponent implements OnInit {
   }
   navigate(d: Diagram) {
     this.chartOptions = d.options;
-    console.log(this.chartOptions);
+    // console.log(this.chartOptions);
     this.router.navigate([`/diagrams/ChartBuild/${d.redirect}`]).then(() => {
       window.location.reload();
     });
@@ -197,7 +197,7 @@ export class DiagramBuilderComponent implements OnInit {
     return this.step;
   }
   handlePurchase(event: any) {
-    console.log(event);
+    // console.log(event);
     this.Diagram = event.res.rsp;
     this.step = true;
   }
@@ -208,16 +208,16 @@ export class DiagramBuilderComponent implements OnInit {
     return this.displayDemo;
   }
   getDemoChart() {
-    console.log(this.demo.jsonChart);
+    // console.log(this.demo.jsonChart);
     return this.demo.jsonChart;
   }
 
   nextDemo() {
-    console.log("hey");
+    // console.log("hey");
     ++this.counterDemo;
     if (this.counterDemo >= this.demos.length) {
       this.counterDemo = 0;
-      console.log("right  overflow");
+      // console.log("right  overflow");
     }
     if (this.demos.length !== 0) {
       this.demo = this.demos[this.counterDemo];
@@ -235,7 +235,7 @@ export class DiagramBuilderComponent implements OnInit {
       if (this.counterDemo < 0) {
         this.counterDemo = 0;
       }
-      console.log("left  overflow");
+      // console.log("left  overflow");
     }
     if (this.demos.length !== 0) {
       this.demo = this.demos[this.counterDemo];
@@ -252,7 +252,7 @@ export class DiagramBuilderComponent implements OnInit {
   DownloadCsv() {
     this.demoService.downloadFileName(this.demo.filename).subscribe(
       (r) => {
-        console.log(r);
+        // console.log(r);
         try {
           saveAs(r, `demo.csv`);
         } catch (err) {}
