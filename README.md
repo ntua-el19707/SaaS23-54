@@ -40,7 +40,7 @@ chmod -x ./build.sh
 docker-compose  -f PackApp.yaml up
 # ./build.sh has  also the options  ./build.sh 1 for  auth  #1-15 folders
 # There  is  A Danger that  The Rabbit-Mq  will exited 
-# if  it exited stop the project stop and use
+# if  it exited stop the project and use
 docker start some-rabbit # wait 1 minute
 docker-compose  -f PackApp.yaml up
 # The Project will function corectly when wvry microservice log in Terminal wiating for Messages...
