@@ -35,7 +35,7 @@ Also the are some  extra Services that we are using  containers
 # All the DBMS  Are  in Atlas  Machine  Must Have  ip 147.102.1.169 *each microservice  has diferent DB
 # if  you have not that ip  append  Mongo DMMS (auth , Purchase  ,My Diagrams , Download  Svg,  Download  Pdf,  Download  Png, Download  Html) and set the envirmonet variable  mongo_url 
 # Run 
-chmod -x ./build.sh 
+chmod +x ./build.sh 
 ./build.sh 
 docker-compose  -f PackApp.yaml up
 # ./build.sh has  also the options  ./build.sh 1 for  auth  #1-15 folders
