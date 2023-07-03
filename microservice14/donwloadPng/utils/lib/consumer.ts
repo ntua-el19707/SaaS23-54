@@ -78,7 +78,7 @@ async function consumeFile() {
       });
     } catch (err) {
       //   console.error("Error consuming file:", err);
-      setTimeout(consumeFile, 1000);
+      setTimeout(consumeFile, 5000);
     }
   }
 }

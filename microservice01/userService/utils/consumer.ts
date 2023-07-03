@@ -43,7 +43,7 @@ async function consumeCharge() {
       });
     } catch (err) {
       console.error("Error consuming file:", err);
-      setTimeout(consumeCharge, 1000);
+      setTimeout(consumeCharge, 5000);
     }
   }
 }
@@ -88,7 +88,7 @@ async function consumePacket() {
       });
     } catch (err) {
       console.error("Error consuming file:", err);
-      setTimeout(consumePacket, 1000);
+      setTimeout(consumePacket, 5000);
     }
   }
 }

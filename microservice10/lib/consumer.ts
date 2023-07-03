@@ -65,7 +65,7 @@ async function consumeChartLine() {
       });
     } catch (err) {
       console.error("Error consuming file:", err);
-      setTimeout(consumeChartLine, 1000);
+      setTimeout(consumeChartLine, 5000);
     }
   }
 }
@@ -115,7 +115,7 @@ async function consumeChartNetwork() {
       });
     } catch (err) {
       console.error("Error consuming file:", err);
-      setTimeout(consumeChartNetwork, 1000);
+      setTimeout(consumeChartNetwork, 5000);
     }
   }
 }
@@ -164,7 +164,7 @@ async function consumeChartPollar() {
       });
     } catch (err) {
       console.error("Error consuming file:", err);
-      setTimeout(consumeChartPollar, 1000);
+      setTimeout(consumeChartPollar, 5000);
     }
   }
 }
@@ -212,7 +212,7 @@ async function consumeChartCollumn() {
       });
     } catch (err) {
       console.error("Error consuming file:", err);
-      setTimeout(consumeChartCollumn, 1000);
+      setTimeout(consumeChartCollumn, 5000);
     }
   }
 }
@@ -259,7 +259,7 @@ async function consumeChartDependancy() {
       });
     } catch (err) {
       console.error("Error consuming file:", err);
-      setTimeout(consumeChartDependancy, 1000);
+      setTimeout(consumeChartDependancy, 5000);
     }
   }
 }
@@ -308,7 +308,7 @@ async function consumeLineAnnotation() {
       });
     } catch (err) {
       console.error("Error consuming file:", err);
-      setTimeout(consumeLineAnnotation, 1000);
+      setTimeout(consumeLineAnnotation, 5000);
     }
   }
 }

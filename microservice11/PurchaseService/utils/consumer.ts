@@ -48,7 +48,7 @@ async function consumeGiftMessages() {
       });
     } catch (err) {
       console.error(err);
-      setTimeout(consumeGiftMessages, 2000);
+      setTimeout(consumeGiftMessages, 5000);
     }
   }
 }
@@ -94,7 +94,7 @@ async function consumePurchases() {
       });
     } catch (err) {
       console.error(err);
-      setTimeout(consumePurchases, 2000);
+      setTimeout(consumePurchases, 5000);
     }
   }
 }

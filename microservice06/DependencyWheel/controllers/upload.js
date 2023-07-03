@@ -22,7 +22,7 @@ exports.saveDB = (req, res, next) => {
             const id = makeid(10); //dependencywheel
             console.log(`files  bu`);
             const redis = new Redis({
-              host: "saas23-54-redis-1", // the service name defined in the docker-compose.yml file
+              host:  process.env.Base_Url, // the service name defined in the docker-compose.yml file
               port: 6379, // the mapped port
             });
             // Retrieve the value

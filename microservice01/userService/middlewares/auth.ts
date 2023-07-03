@@ -21,9 +21,9 @@ const customauthCredits = (
       const user_id = user.user_id;
       const exp = user.exp;
       req.sub = user_id;
-
+      console.log(process.env.Base_Url)
       const redis = new Redis({
-        host: "saas23-54-redis-1", // the service name defined in the docker-compose.yml file
+        host:  process.env.Base_Url, // the service name defined in the docker-compose.yml file
         port: 6379, // the mapped port
       });
       // Retrieve the value
@@ -105,7 +105,7 @@ function RamTokkens(user_id: string, exp: number): Promise<void> {
     tokkens(user_id)
       .then(async (tokkens) => {
         const redis = new Redis({
-          host: "saas23-54-redis-1", // the service name defined in the docker-compose.yml file
+          host: process.env.Base_Url, // the service name defined in the docker-compose.yml file
           port: 6379, // the mapped port
         });
 

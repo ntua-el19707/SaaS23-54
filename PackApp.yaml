@@ -11,6 +11,7 @@ services:
       - RABBITMQ_DEFAULT_USER=v
       - RABBITMQ_DEFAULT_PASS=123456
     command: sh -c "rabbitmq-plugins enable rabbitmq_management && rabbitmq-server"
+    restart: on-failure
 
   auth:
     image: authservice
@@ -20,8 +21,17 @@ services:
       - rabbitmq
     mem_limit: 200M
     environment:
-      - BASE_URL=192.168.0.200
-
+      - LINESERVICE=http://192.168.56.110:3002/api_Line
+      - NETWORKSERVICE=http://192.168.56.110:3003/api_network
+      - POLLARSERVICE=http://192.168.56.110:3001/api_Pollar
+      - COLLUMNSERVICE=http://192.168.56.110:3006/api_column
+      - DEPENDANCYSERVICE=http://192.168.56.110:3004/api_DependancyWheel
+      - MYDIAGRAMSSERVICE=http://192.168.56.110:3008/api_Mydiagrams
+      - PURCHASESERVCIE=http://192.168.56.110:3011/api_purchase
+      - LINEANNOTATIONSERVICE=http://192.168.56.110:3005/api_LineAnotations
+      - Base_Url=192.168.56.110
+      - RABBITMQ_URL=amqp://v:123456@192.168.56.110:5672
+    restart: on-failure
   pollar:
     image: pollarservice
     ports:
@@ -31,6 +41,10 @@ services:
     mem_limit: 200M
     environment:
       - BASE_URL=192.168.0.200
+      - auth_service=http://192.168.56.110:3010
+      - RABBITMQ_URL=amqp://v:123456@192.168.56.110:5672
+      - Base_Url=192.168.56.110
+    restart: on-failure
 
   collumn:
     image: collumnservice
@@ -41,7 +55,10 @@ services:
     mem_limit: 200M
     environment:
       - BASE_URL=192.168.0.200
-
+      - auth_service=http://192.168.56.110:3010
+      - Base_Url=192.168.56.110
+      - RABBITMQ_URL=amqp://v:123456@192.168.56.110:5672
+    restart: on-failure
   depedencywheel:
     image: depedencywheel
     ports:
@@ -51,7 +68,10 @@ services:
     mem_limit: 200M
     environment:
       - BASE_URL=192.168.0.200
-
+      - auth_service=http://192.168.56.110:3010
+      - Base_Url=192.168.56.110
+      - RABBITMQ_URL=amqp://v:123456@192.168.56.110:5672
+    restart: on-failure
   line:
     image: lineservice
     ports:
@@ -60,7 +80,10 @@ services:
       - rabbitmq
     mem_limit: 200M
     environment:
-      - BASE_URL=192.168.0.200
+      - auth_service=http://192.168.56.110:3010
+      - Base_Url=192.168.56.110
+      - RABBITMQ_URL=amqp://v:123456@192.168.56.110:5672
+    restart: on-failure
 
   network:
     image: networkservice
@@ -70,14 +93,16 @@ services:
       - rabbitmq
     mem_limit: 200M
     environment:
-      - BASE_URL=192.168.0.200
+      - auth_service=http://192.168.56.110:3010
+      - Base_Url=192.168.56.110
+      - RABBITMQ_URL=amqp://v:123456@192.168.56.110:5672
+    restart: on-failure
 
   eCharts:
     image: echarts
     ports:
       - 4007:4007
-    environment:
-      - BASE_URL=192.168.0.200
+
 
   upload:
     image: upload
@@ -85,8 +110,10 @@ services:
       - 3000:3000
     mem_limit: 200M
     environment:
-      - BASE_URL=192.168.0.200
-
+      - auth_service=http://192.168.56.110:3010
+      - RABBITMQ_URL=amqp://v:123456@192.168.56.110:5672
+    restart: on-failure
+      
   myDiagrams:
     image: mydiagrams
     ports:
@@ -95,7 +122,9 @@ services:
       - rabbitmq
     mem_limit: 200M
     environment:
-      - BASE_URL=192.168.0.200
+     - auth_service=http://192.168.56.110:3010
+     - RABBITMQ_URL=amqp://v:123456@192.168.56.110:5672
+    restart: on-failure
 
   purchaseService:
     image: purchaseservice
@@ -105,7 +134,10 @@ services:
       - rabbitmq
     mem_limit: 200M
     environment:
-      - BASE_URL=192.168.0.200
+      - auth_service=http://192.168.56.110:3010
+      - Base_Url=192.168.56.110
+      - RABBITMQ_URL=amqp://v:123456@192.168.56.110:5672
+    restart: on-failure
 
   donwloadSvg:
     image: donwloadsvg
@@ -117,7 +149,9 @@ services:
       - svgFiles:/app/utils/Files/svg
     mem_limit: 200M
     environment:
-      - BASE_URL=192.168.0.200
+       - auth_service=http://192.168.56.110:3010/
+       - RABBITMQ_URL=amqp://v:123456@192.168.56.110:5672
+    restart: on-failure
 
   donwloadPdf:
     image: donwloadpdf
@@ -129,7 +163,9 @@ services:
       - pdfFiles:/app/utils/Files/pdf
     mem_limit: 200M
     environment:
-      - BASE_URL=192.168.0.200
+       - auth_service=http://192.168.56.110:3010/
+       - RABBITMQ_URL=amqp://v:123456@192.168.56.110:5672
+    restart: on-failure
 
   donwloadPng:
     image: donwloadpng
@@ -141,7 +177,9 @@ services:
       - pngFiles:/app/utils/Files/png
     mem_limit: 200M
     environment:
-      - BASE_URL=192.168.0.200
+      - auth_service=http://192.168.56.110:3010/
+      - RABBITMQ_URL=amqp://v:123456@192.168.56.110:5672
+    restart: on-failure
 
   donwloadHtml:
     image: donwloadhtml
@@ -154,6 +192,9 @@ services:
     mem_limit: 200M
     environment:
       - BASE_URL=192.168.0.200
+      - auth_service=http://192.168.56.110:3010/
+      - RABBITMQ_URL=amqp://v:123456@192.168.56.110:5672
+    restart: on-failure
 
   redis:
     image: redis
@@ -162,6 +203,7 @@ services:
     mem_limit: 200M
     environment:
       - BASE_URL=192.168.0.200
+    restart: on-failure
 
   lineannotations:
     image: lineannotationsservice
@@ -172,86 +214,11 @@ services:
     mem_limit: 200M
     environment:
       - BASE_URL=192.168.0.200
+      - RABBITMQ_URL=amqp://v:123456@192.168.56.110:5672
+    restart: on-failure
 
-  authdb:
-    image: mongo
-    container_name: authdb
-    ports:
-      - 27017:27017
-    volumes:
-      - authdb_data:/data/db
 
-  mydiagramsdb:
-    image: mongo
-    container_name: mydiagramsdb
-    ports:
-      - 27020:27017
-    volumes:
-      - myDiagramsdbData:/data/db
 
-  downloadSvgMongo:
-    image: mongo
-    container_name: downloadsvgmongo
-    ports:
-      - 27018:27017
-    volumes:
-      - downloadSvgMongoData:/data/db
-    mem_limit: 200M
-    environment:
-      - BASE_URL=192.168.0.200
-
-  downloadPngMongo:
-    image: mongo
-    container_name: downloadpngmongo
-    ports:
-      - 27019:27017
-    volumes:
-      - downloadPngMongoData:/data/db
-    mem_limit: 200M
-    environment:
-      - BASE_URL=192.168.0.200
-
-  purchaseLogMongo:
-    image: mongo
-    container_name: purchaselogmongo
-    ports:
-      - 27021:27017
-    volumes:
-      - purchaseLogMongoData:/data/db
-    mem_limit: 200M
-    environment:
-      - BASE_URL=192.168.0.200
-
-  downloadHtmlMongo:
-    image: mongo
-    container_name: downloadhtmlmongo
-    ports:
-      - 27022:27017
-    volumes:
-      - downloadHtmlMongoData:/data/db
-    mem_limit: 200M
-    environment:
-      - BASE_URL=192.168.0.200
-
-  downloadPdfMongo:
-    image: mongo
-    container_name: downloadpdfmongo
-    ports:
-      - 27023:27017
-    volumes:
-      - downloadPdfMongoData:/data/db
-    mem_limit: 200M
-    environment:
-      - BASE_URL=192.168.0.200
-  mongo-express:
-    image: mongo-express
-    container_name: mongo-express
-    ports:
-      - 8081:8081
-    environment:
-      - ME_CONFIG_MONGODB_SERVER=authdb
-      - ME_CONFIG_MONGODB_PORT=27017
-    mem_limit: 200M
   demo:
     image: demoservice
     ports:
@@ -259,16 +226,11 @@ services:
     volumes:
       - csvFiles:/app/utils/Files/csv
     mem_limit: 200M
+    restart: on-failure
+
 volumes:
   svgFiles:
   pdfFiles:
   pngFiles:
   htmlFiles:
   csvFiles:
-  authdb_data:
-  downloadSvgMongoData:
-  downloadPngMongoData:
-  myDiagramsdbData:
-  purchaseLogMongoData:
-  downloadHtmlMongoData:
-  downloadPdfMongoData:

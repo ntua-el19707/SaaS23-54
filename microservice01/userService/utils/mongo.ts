@@ -101,6 +101,7 @@ function FindUser(userName: string): Promise<user | null> {
  * @returns
  */
 function StartConection(): MongoClient | boolean {
+  console.log(process.env.mongo_url)
   if (process.env.mongo_url) {
     try {
       const client = new MongoClient(process.env.mongo_url, options);

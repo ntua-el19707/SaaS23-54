@@ -1,56 +1,50 @@
 {
-     "/api_upload/*": {
-        "target": "http://saas23-54-upload-1:3000/",
+    "/api_upload/*": {
+        "target": "http://192.168.56.110:3000/",
         "secure": false,
-        "logLevel":"debug"     
+        "logLevel": "debug"
     },
-
-
-    "/api_Mydiagrams/*":{
-        "target": "http://saas23-54-myDiagrams-1:3008/",
+    "/api_Mydiagrams/*": {
+        "target": "http://192.168.56.110:3008/",
         "secure": false,
-        "logLevel":"debug"
-     
-    },    "/api_Demos/*":{
-        "target": "http://saas23-54-demo-1:3016/",
-        "secure": false,
-        "logLevel":"debug"
-     
-    }
-   ,   "/api_user/*":{
-        "target": "http://saas23-54-auth-1:3010/",
-        "secure": false,
-        "logLevel":"debug"     
-        , "headers": {
-      "Connection": "keep-alive"}
-    
-     
+        "logLevel": "debug"
     },
-     "/api_purchase/*":{
-        "target": "http://saas23-54-purchaseService-1:3011/",
+    "/api_Demos/*": {
+        "target": "http://192.168.56.110:3016/",
         "secure": false,
-        "logLevel":"debug"
-     
-    },      "/api_DonloadPng/*":{
-        "target": "http://saas23-54-donwloadPng-1:3014/",
+        "logLevel": "debug"
+    },
+    "/api_user/*": {
+        "target": "http://192.168.56.110:3010/",
         "secure": false,
-        "logLevel":"debug"
-     
-    },      "/api_DonloadHtml/*":{
-        "target": "http://saas23-54-donwloadHtml-1:3015/",
+        "logLevel": "debug",
+        "headers": {
+            "Connection": "keep-alive"
+        }
+    },
+    "/api_purchase/*": {
+        "target": "http://192.168.56.110:3011/",
         "secure": false,
-        "logLevel":"debug"
-     
-    },      "/api_DonloadPdf/*":{
-        "target": "http://saas23-54-donwloadPdf-1:3013/",
+        "logLevel": "debug"
+    },
+    "/api_DonloadPng/*": {
+        "target": "http://192.168.56.110:3014/",
         "secure": false,
-        "logLevel":"debug"
-     
-    },      "/api_DonloadSvg/*":{
-        "target": "http://saas23-54-donwloadSvg-1:3012/",
+        "logLevel": "debug"
+    },
+    "/api_DonloadHtml/*": {
+        "target": "http://192.168.56.110:3015/",
         "secure": false,
-        "logLevel":"debug"
-     
+        "logLevel": "debug"
+    },
+    "/api_DonloadPdf/*": {
+        "target": "http://192.168.56.110:3013/",
+        "secure": false,
+        "logLevel": "debug"
+    },
+    "/api_DonloadSvg/*": {
+        "target": "http://192.168.56.110:3012/",
+        "secure": false,
+        "logLevel": "debug"
     }
-
 }
