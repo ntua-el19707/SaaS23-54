@@ -32,17 +32,17 @@ Also the are some  extra Services that we are using  containers
 18 - Redis # Ram to hold user credits  in  order to await constant connection with atlas  to get  his credits uses (auth(put them ) , Diagram Builder (read and  charge)  ,Purchage service (increase))
 
 # Notes  for Building
-# All the DBMS  Are  in Atlas  Machine  Must Have  ip 147.102.1.169 *each microservice  has diferent DB
-# if  you have not that ip  append  Mongo DMMS (auth , Purchase  ,My Diagrams , Download  Svg,  Download  Pdf,  Download  Png, Download  Html) and set the envirmonet variable  mongo_url 
+ All the DBMS  Are  in Atlas  Machine  Must Have  ip 147.102.1.169 *each microservice  has diferent DB
+ if  you have not that ip  append  Mongo DMMS (auth , Purchase  ,My Diagrams , Download  Svg,  Download  Pdf,  Download  Png, Download  Html) and set the envirmonet variable  mongo_url 
 # Run 
 chmod +x ./build.sh 
 ./build.sh 
 docker-compose  -f PackApp.yaml up
-# ./build.sh has  also the options  ./build.sh 1 for  auth  #1-15 folders
+ ./build.sh has  also the options  ./build.sh 1 for  auth  #1-15 folders
 # There  is  A Danger that  The Rabbit-Mq  will exited 
-# if  it exited stop the project and use
+ if  it exited stop the project and use
 docker start some-rabbit # wait 1 minute
 docker-compose  -f PackApp.yaml up
-# The Project will function corectly when wvry microservice log in Terminal wiating for Messages...
+# The Project will function correctly when evry microservice log in Terminal waiting for Messages...
 # if  one microservice  is down or its  consumer failed "due to try listening Rabbit-mq when it was not ready " when you restart the service will get the messages
 
