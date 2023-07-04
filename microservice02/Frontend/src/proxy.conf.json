@@ -1,21 +1,21 @@
 {
     "/api_upload/*": {
-        "target": "http://192.168.56.110:3000/",
+        "target": "http://147.102.1.169:3000/",
         "secure": false,
         "logLevel": "debug"
     },
     "/api_Mydiagrams/*": {
-        "target": "http://192.168.56.110:3008/",
+        "target": "http://147.102.1.169:3008/",
         "secure": false,
         "logLevel": "debug"
     },
     "/api_Demos/*": {
-        "target": "http://192.168.56.110:3016/",
+        "target": "http://147.102.1.169:3016/",
         "secure": false,
         "logLevel": "debug"
     },
     "/api_user/*": {
-        "target": "http://192.168.56.110:3010/",
+        "target": "http://147.102.1.169:3010/",
         "secure": false,
         "logLevel": "debug",
         "headers": {
@@ -23,27 +23,27 @@
         }
     },
     "/api_purchase/*": {
-        "target": "http://192.168.56.110:3011/",
+        "target": "http://147.102.1.169:3011/",
         "secure": false,
         "logLevel": "debug"
     },
     "/api_DonloadPng/*": {
-        "target": "http://192.168.56.110:3014/",
+        "target": "http://147.102.1.169:3014/",
         "secure": false,
         "logLevel": "debug"
     },
     "/api_DonloadHtml/*": {
-        "target": "http://192.168.56.110:3015/",
+        "target": "http://147.102.1.169:3015/",
         "secure": false,
         "logLevel": "debug"
     },
     "/api_DonloadPdf/*": {
-        "target": "http://192.168.56.110:3013/",
+        "target": "http://147.102.1.169:3013/",
         "secure": false,
         "logLevel": "debug"
     },
     "/api_DonloadSvg/*": {
-        "target": "http://192.168.56.110:3012/",
+        "target": "http://147.102.1.169:3012/",
         "secure": false,
         "logLevel": "debug"
     }
