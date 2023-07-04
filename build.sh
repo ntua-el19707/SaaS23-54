@@ -47,6 +47,9 @@ case "$1" in
   15)
     docker build -t donwloadhtml ./microservice15/donwloadHtml
     ;;
+  16)
+docker  build -t demoservice  ./microservice16/Demos
+    ;;
   *)
    docker build -t echarts ./microservice02/Frontend
  docker  build -t authservice ./microservice01/userService
