@@ -27,6 +27,14 @@ exports.saveDB = (req, res, next) => {
             //now charts  have build 2 thing  chaerge  and save  db
 
             const id = makeid(12);
+                        const redis = new Redis({
+              host:  process.env.Base_Url, // the service name defined in the docker-compose.yml file
+              port: 6379, // the mapped port
+            });
+            // Retrieve the value
+
+            redis.set(`${req.sub}Credits`, --req.credits);
+
             UpdateApis(file.file, owner, data, id)
               .then(() => {
                 res.status(200).json({

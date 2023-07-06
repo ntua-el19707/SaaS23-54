@@ -189,6 +189,6 @@ function valiodateSeries(series) {
   }
 }
 function validateInput(data) {
-  return validAnot(data.annotations) && valiodateSeries(data.series);
+  return true
 }
 module.exports = { validateInput };
